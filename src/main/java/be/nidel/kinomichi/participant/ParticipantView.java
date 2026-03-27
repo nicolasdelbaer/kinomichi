@@ -7,8 +7,8 @@ import java.util.Optional;
 import java.util.Scanner;
 
 public class ParticipantView implements KinomichiView {
-    private Menu context;
     private ParticipantController controller;
+    private Menu context;
 
     public ParticipantView(ParticipantController controller) {
         this.controller = controller;

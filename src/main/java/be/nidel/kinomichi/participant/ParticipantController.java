@@ -9,11 +9,6 @@ public class ParticipantController {
     private final ParticipantModel model = new ParticipantModel();
     private final ParticipantView view = new ParticipantView(this);
 
-    public ParticipantController() {
-
-    }
-
-
     public List<Participant> getAllParticipant(){
         return model.fetchAllParticipant();
     }
