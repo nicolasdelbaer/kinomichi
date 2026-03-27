@@ -14,7 +14,7 @@ public class DateUtils {
     }
 
     public static LocalTime StringTimeToLocalTime(String stringTime) {
-        var extractDate = stringTime.split("h");
+        var extractDate = stringTime.split(":");
         int hour = Integer.parseInt(extractDate[0]);
         int minute = Integer.parseInt(extractDate[1]);
         return LocalTime.of(hour,minute);
