@@ -1,9 +1,9 @@
-package be.nidel.kinomichi;
+package be.nidel.kinomichi.participant;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroupParticipant {
+public class ParticipantGroup {
 
     public boolean add(Participant participant) {
         return participantList.add(participant);

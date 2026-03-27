@@ -1,6 +1,7 @@
 package be.nidel.kinomichi;
 
 import be.nidel.kinomichi.participant.Participant;
+import be.nidel.kinomichi.participant.ParticipantController;
 import be.nidel.kinomichi.participant.ParticipantType;
 import be.nidel.utils.DateUtils;
 import be.nidel.utils.OutputUtils;
@@ -18,6 +19,7 @@ public class Kinomichi {
 
     //TODO use view & model
 
+    ParticipantController participantController = new ParticipantController();
 
     public void showMainMenu() {
         OutputUtils.sOutTitle("--- Stage Kinomichi ---");
@@ -26,135 +28,76 @@ public class Kinomichi {
     private void displayMenu() {
         Menu menu = new Menu();
         menu.addItem("Create a new participant", "1", () -> {
-            participantList.add(createParticipantHandler("Add New Participant"));
-            showMainMenu();
+            participantController.showMenu(menu);
         });
-        menu.addItem("Create a new animation", "2", () -> {
-            Animation animation = createAnimationHandler("Add New Animation");
-            animationList.add(animation);
-            animationReport(animation);
-            showMainMenu();
-        });
-        menu.addItem("Quit", "q", this::quitHandler);
+//        menu.addItem("Create a new animation", "2", () -> {
+//            Animation animation = createAnimationHandler("Add New Animation");
+//            animationList.add(animation);
+//            animationReport(animation);
+//            showMainMenu();
+//        });
+//        menu.addItem("Quit", "q", this::quitHandler);
         menu.interact();
     }
+//
+//    private Animation createAnimationHandler(String inputRequest) {
+//        OutputUtils.sOutInfo(inputRequest);
+//        Scanner scanner = new Scanner(System.in);
+//        Animation animation = new Animation(askInput(scanner, "Title of the event"));
+//
+//        boolean configureDay = (askInput(
+//                scanner,
+//                "Type (d) for configuring a day or (any key) for a single period ?")
+//        ).equals("d");
+//
+//        if(configureDay){
+//            handleNewDay(scanner, animation);
+//        }else{
+//            handleNewPeriod(scanner, animation);
+//        }
+//        return  animation;
+//    }
+//
+//    private void handleNewDay(Scanner scanner, Animation animation) {
+//        boolean addNewDay = false;
+//        int amount = 1;
+//        do{
+//            OutputUtils.sOutInfo("A day needs the date, starting time & the number of periods");
+//            animation.addNewDay(
+//                    askDate(scanner, "Day1 (dd/mm/yyyy)"),
+//                    askTime(scanner, "From Time (hh:mm)"),
+//                    askInt(scanner, "How many periods from the start ?")
+//            );
+//
+//            addNewDay = (askInput(
+//                    scanner,
+//                    "Type (d) for continue adding days or (any key) to continue")
+//            ).equals("d");
+//        }while(addNewDay);
+//    }
+//
+//    private void handleNewPeriod(Scanner scanner, Animation animation) {
+//        boolean addNewPeriod = false;
+//        do{
+//            OutputUtils.sOutInfo("A period needs the date, time & trainer");
+//            Period period = animation.addNewPeriod(
+//                    askDate(scanner, "Day1 (dd/mm/yyyy)"),
+//                    askTime(scanner, "From Time (hh:mm)")
+//            );
+//            period.setTrainer(createParticipantHandler("Add New Trainer"));
+//
+//            addNewPeriod = (askInput(
+//                    scanner,
+//                    "Type (a) for adding or (any key) to continue")
+//            ).equals("a");
+//
+//        }while(addNewPeriod);
+//    }
 
-    private Animation createAnimationHandler(String inputRequest) {
-        OutputUtils.sOutInfo(inputRequest);
-        Scanner scanner = new Scanner(System.in);
-        Animation animation = new Animation(askInput(scanner, "Title of the event"));
-
-        boolean configureDay = (askInput(
-                scanner,
-                "Type (d) for configuring a day or (any key) for a single period ?")
-        ).equals("d");
-
-        if(configureDay){
-            handleNewDay(scanner, animation);
-        }else{
-            handleNewPeriod(scanner, animation);
-        }
-        return  animation;
-    }
-
-    private void handleNewDay(Scanner scanner, Animation animation) {
-        boolean addNewDay = false;
-        int amount = 1;
-        do{
-            OutputUtils.sOutInfo("A day needs the date, starting time & the number of periods");
-            animation.addNewDay(
-                    askDate(scanner, "Day1 (dd/mm/yyyy)"),
-                    askTime(scanner, "From Time (hh:mm)"),
-                    askInt(scanner, "How many periods from the start ?")
-            );
-
-            addNewDay = (askInput(
-                    scanner,
-                    "Type (d) for continue adding days or (any key) to continue")
-            ).equals("d");
-        }while(addNewDay);
-    }
-
-    private void handleNewPeriod(Scanner scanner, Animation animation) {
-        boolean addNewPeriod = false;
-        do{
-            OutputUtils.sOutInfo("A period needs the date, time & trainer");
-            Period period = animation.addNewPeriod(
-                    askDate(scanner, "Day1 (dd/mm/yyyy)"),
-                    askTime(scanner, "From Time (hh:mm)")
-            );
-            period.setTrainer(createParticipantHandler("Add New Trainer"));
-
-            addNewPeriod = (askInput(
-                    scanner,
-                    "Type (a) for adding or (any key) to continue")
-            ).equals("a");
-
-        }while(addNewPeriod);
-    }
-
-    private LocalTime askTime(Scanner scanner, String s) {
-        LocalTime time = DateUtils.StringTimeToLocalTime(askInput(scanner, s));
-        return time;
-    }
-
-    private LocalDate askDate(Scanner scanner, String s) {
-        LocalDate date = DateUtils.StringDateToLocalDate(askInput(scanner, s));
-        return date;
-    }
-
-    private int askInt(Scanner scanner, String inputRequest) {
-        Integer result = null;
-        do{
-            try{
-                result = Integer.parseInt(askInput(scanner, inputRequest));
-            } catch (NumberFormatException e) {}
-        }while(Objects.isNull(result));
-
-        return result;
-    }
-
-    public Participant createParticipantHandler(String inputRequest) {
-        OutputUtils.sOutInfo(inputRequest);
-        Scanner scanner = new Scanner(System.in);
-
-        Participant participant = new Participant.Builder()
-                .setFirstName(askInput(scanner, "First name?"))
-                .setLastName(askInput(scanner, "Last name?"))
-                .setPhone(askInput(scanner, "Phone ?"))
-                .setEmail(askInput(scanner, "Email ?"))
-                .setClubName(askInput(scanner, "Club Name ?"))
-                .setType(requestParticipantType(scanner))
-                .build();
-
-        return participant;
-    }
-
-    private ParticipantType requestParticipantType(Scanner scanner) {
-        OutputUtils.sOutInfo(ParticipantType.values().toString());
-        Optional<ParticipantType> type = null;
-
-        do{
-            int id = -1; //-1 because of the enum id = 0
-            id = askInt(scanner, "1. Attendee | 2. Trainer | 3. VIP");
-            type = ParticipantType.getByOrdinal(id-1); //-1 for handling ids from 1 in input
-
-        }while(!type.isPresent());
-
-        return type.get();
-    }
 
     private void quitHandler() {
         participantList.forEach(p -> OutputUtils.sOutWarning(p.toString()));
     }
-
-    private String askInput(Scanner scanner, String inputRequest) {
-        OutputUtils.sOutInfo(inputRequest);
-        return scanner.nextLine();
-    }
-
-
-
 
     //TODO refactor - move somewhere else
     public void debug() {

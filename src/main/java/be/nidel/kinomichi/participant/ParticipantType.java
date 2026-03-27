@@ -1,4 +1,4 @@
-package be.nidel.kinomichi;
+package be.nidel.kinomichi.participant;
 
 import java.util.Arrays;
 import java.util.Optional;

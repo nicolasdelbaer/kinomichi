@@ -1,16 +1,18 @@
 package be.nidel.kinomichi;
 
+import be.nidel.kinomichi.participant.ParticipantGroup;
+import be.nidel.kinomichi.participant.Participant;
+import be.nidel.kinomichi.participant.ParticipantType;
+
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class Period {
     private int duration = 90;
 
-    private GroupParticipant attendeeGroup = new GroupParticipant();
+    private ParticipantGroup attendeeGroup = new ParticipantGroup();
     private Participant trainer;
     private LocalDate day;
     private LocalTime start;
@@ -70,4 +72,7 @@ public class Period {
         return duration;
     }
 
+    public LocalTime getTime() {
+        return start;
+    }
 }

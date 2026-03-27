@@ -1,4 +1,4 @@
-package be.nidel.kinomichi;
+package be.nidel.kinomichi.participant;
 
 public class Participant {
 
