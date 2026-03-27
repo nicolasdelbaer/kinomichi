@@ -69,6 +69,7 @@ public class Participant {
             p.firstName = firstName;
             p.lastName = lastName;
             p.phone = phone;
+            p.email = email;
             p.clubName = clubName;
             p.type = type;
             return p;
