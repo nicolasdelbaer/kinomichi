@@ -13,16 +13,68 @@ public class Participant {
 
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getClubName() {
+        return clubName;
+    }
+
+    public void setClubName(String clubName) {
+        this.clubName = clubName;
+    }
+
+    public ParticipantType getType() {
+        return type;
+    }
+
+    public void setType(ParticipantType type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "Participant{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", phone='" + phone + '\'' +
-                ", email='" + email + '\'' +
-                ", clubName='" + clubName + '\'' +
-                ", type=" + type +
+                firstName + ", " +
+                lastName + ", " +
+                phone + ", " +
+                email + ", " +
+                clubName + ", " +
+                type +
                 '}';
+    }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
     }
 
 
