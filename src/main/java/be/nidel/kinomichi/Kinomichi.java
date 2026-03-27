@@ -99,24 +99,33 @@ public class Kinomichi {
         menu.interact();
     }
 
-    private void createAnimationHandler() {
-        OutputUtils.sOutInfo("Add Animation");
+    private Animation createAnimationHandler(String inputRequest) {
+        OutputUtils.sOutInfo(inputRequest);
         Scanner scanner = new Scanner(System.in);
-        Animation animation = new Animation.Builder()
-                .setTitle(askInput(scanner, "Title of the event"))
-//                .addDayHelper(
-//                        askInput(scanner, "Day1 (dd/mm/yyyy)"),
-//                        askInput(scanner, "Number of periods"),
-//                        askInput(scanner, "From Time (hh:mm)"),
-//                        askInput(scanner, "Trainer id?"),
-//                )
-                .build();
+        Animation animation = new Animation(askInput(scanner, "Title of the event"));
+
+        Period period = animation.addNewPeriod(
+                askDate(scanner, "Day1 (dd/mm/yyyy)"),
+                askTime(scanner, "From Time (hh:mm)")
+        );
+        period.setTrainer(createParticipantHandler("Add New Trainer"));
 
         animationList.add(animation);
+        return  animation;
     }
 
-    public void createParticipantHandler() {
-        OutputUtils.sOutInfo("Add Participant");
+    private LocalTime askTime(Scanner scanner, String s) {
+        LocalTime time = DateUtils.StringTimeToLocalTime("12h30");
+        return time;
+    }
+
+    private LocalDate askDate(Scanner scanner, String s) {
+        LocalDate date = DateUtils.StringDateToLocalDate("29/03/2026");
+        return date;
+    }
+
+    public Participant createParticipantHandler(String inputRequest) {
+        OutputUtils.sOutInfo(inputRequest);
         Scanner scanner = new Scanner(System.in);
 
         Participant participant = new Participant.Builder()
@@ -126,10 +135,30 @@ public class Kinomichi {
                 .setEmail(askInput(scanner, "Email ?"))
                 .setClubName(askInput(scanner, "Club Name ?"))
                 //TODO add Participant Type from int input
-                .setType(ParticipantType.Attendee)
+                .setType(requestParticipantType(scanner))
                 .build();
 
         participantList.add(participant);
+        return participant;
+    }
+
+    private ParticipantType requestParticipantType(Scanner scanner) {
+        OutputUtils.sOutInfo(ParticipantType.values().toString());
+        Optional<ParticipantType> type = null;
+
+        do{
+            //TODO refactor change enum ?
+            int id = -1; //-1 because of the enum id = 0
+            try {
+                id = Integer.parseInt(
+                        askInput(scanner, "1. Attendee | 2. Trainer | 3. VIP")
+                );
+                type = ParticipantType.getByOrdinal(id-1); //-1 for handling ids from 1 in input
+            } catch (NumberFormatException e) {
+            }
+        }while(!type.isPresent());
+
+        return type.get();
     }
 
     private void quitHandler() {
