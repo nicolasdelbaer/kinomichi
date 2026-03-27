@@ -1,5 +1,6 @@
-package be.nidel.kinomichi;
+package be.nidel.kinomichi.session;
 
+import be.nidel.kinomichi.KinomichiTrainerException;
 import be.nidel.kinomichi.participant.ParticipantGroup;
 import be.nidel.kinomichi.participant.Participant;
 import be.nidel.kinomichi.participant.ParticipantType;
@@ -7,10 +8,11 @@ import be.nidel.kinomichi.participant.ParticipantType;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
-public class Period {
-    private int duration = 90;
+public class Session {
+    private int duration;
 
     private ParticipantGroup attendeeGroup = new ParticipantGroup();
     private Participant trainer;
@@ -18,9 +20,13 @@ public class Period {
     private LocalTime start;
     private LocalTime end;
 
-    public Period(LocalDate day, LocalTime startTime) {
+    public Session(LocalDate day, LocalTime startTime) {
+        this(day, startTime, 90);
+    }
+    public Session(LocalDate day, LocalTime startTime, int duration) {
         this.day = day;
         this.start = startTime;
+        this.duration = duration;
         this.end = start.plusMinutes(duration);
     }
 
@@ -28,10 +34,9 @@ public class Period {
     public String toString() {
         return "Period{" +
                 ", day=" + day +
-                ", trainer=" + trainer.getFullName() +
+                ", trainer=" + ((Objects.nonNull(trainer))?trainer.getFullName():"n/a") +
                 ", start=" + start +
                 ", end=" + end +
-                ", trainer=" + trainer +
                 ",attendees=" + attendeeGroup +
                 '}';
     }
