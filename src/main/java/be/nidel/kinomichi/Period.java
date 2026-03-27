@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Period {
     private int duration = 90;
@@ -19,7 +20,6 @@ public class Period {
         this.day = day;
         this.start = startTime;
         this.end = start.plusMinutes(duration);
-        this.trainer = trainer;
     }
 
     @Override
@@ -46,8 +46,8 @@ public class Period {
         return day;
     }
 
-    public Participant getTrainer() {
-        return trainer;
+    public Optional<Participant> getTrainer() {
+        return Optional.ofNullable(trainer);
     }
 
     public void setTrainer(Participant trainer) {

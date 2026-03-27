@@ -32,12 +32,10 @@ public class Animation {
         return period;
     }
 
-    //TODO move ?
-    public void configureDay(LocalDate day, int numberOfPeriods, LocalTime time) {
-
+    public void addNewDay(LocalDate day, LocalTime startingTime, int numberOfPeriods) {
         for (int i = 0; i <numberOfPeriods; i++) {
-            Period period = addNewPeriod(day, time);
-            time = time.plusMinutes(period.getDuration());
+            Period period = addNewPeriod(day, startingTime);
+            startingTime = startingTime.plusMinutes(period.getDuration());
         }
     }
 
@@ -69,8 +67,12 @@ public class Animation {
         periodList.forEach(p -> {
             sb
             .append(OutputUtils.ANSI_PURPLE)
-            .append("Trainer: ")
-            .append(p.getTrainer().getFullName())
+            .append("Trainer: ");
+
+            Optional<Participant> trainer = p.getTrainer();
+            trainer.ifPresent(participant -> sb.append(participant.getFullName()));
+
+            sb
             .append(" - ")
             .append("day: ")
             .append(p.getDay())
