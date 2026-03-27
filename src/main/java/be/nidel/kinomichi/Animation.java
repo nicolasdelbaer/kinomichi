@@ -1,6 +1,5 @@
 package be.nidel.kinomichi;
 
-import be.nidel.utils.DateUtils;
 import be.nidel.utils.OutputUtils;
 
 import java.time.LocalDate;
@@ -11,7 +10,8 @@ public class Animation {
     private String title;
     private List<Period> periodList = new ArrayList<>();
 
-    private Animation() {
+    public Animation(String title) {
+        this.title = title;
     }
 
     public List<Participant> getAllAttendees() {
@@ -25,14 +25,18 @@ public class Animation {
         return periodList;
     }
 
-    private void addPeriod(Period period) {
+
+    public Period addNewPeriod(LocalDate day, LocalTime time) {
+        Period period = new Period(day, time);
         periodList.add(period);
+        return period;
     }
+
+    //TODO move ?
     public void configureDay(LocalDate day, int numberOfPeriods, LocalTime time) {
 
         for (int i = 0; i <numberOfPeriods; i++) {
-            Period period = new Period(day, time);
-            addPeriod(period);
+            Period period = addNewPeriod(day, time);
             time = time.plusMinutes(period.getDuration());
         }
     }
@@ -44,19 +48,14 @@ public class Animation {
                 .toList();
     }
 
-    public void addAttendeeToPeriod(Participant attendee, Period[] periods){
+    public void registerAttendeeToPeriod(Participant attendee, Period[] periods){
         for (Period period : periods) {
             period.addAttendee(attendee);
         }
     }
 
-    //region printing
 
-
-
-    //endregion
-
-    //TODO make view
+    //TODO Refactor -> make view
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder()
@@ -83,21 +82,5 @@ public class Animation {
             .append("\n");
         });
         return sb.toString();
-    }
-
-    public static class Builder{
-        private String title;
-
-        public Builder setTitle(String title){
-            this.title = title;
-            return this;
-        }
-
-        public Animation build(){
-            Animation animation = new Animation();
-            animation.title = title;
-            return animation;
-        }
-
     }
 }

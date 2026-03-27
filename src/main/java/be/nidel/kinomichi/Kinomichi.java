@@ -7,20 +7,20 @@ import be.technifutur.shared.Menu;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Kinomichi {
 
     List<Participant> participantList = new ArrayList<>();
     List<Animation> animationList = new ArrayList<>();
 
+    //TODO use view
     public void showMainMenu() {
         OutputUtils.sOutTitle("--- Stage Kinomichi ---");
         displayMenu();
     }
+
+    //TODO refactor - move somewhere else
     public void debug() {
         Participant mockTrainer = new Participant.Builder()
                 .setFirstName("Laurence")
@@ -50,9 +50,7 @@ public class Kinomichi {
         LocalDate dimanche = DateUtils.StringDateToLocalDate("29/03/2026");
         LocalTime midiStart = DateUtils.StringTimeToLocalTime("12h30");
 
-        Animation animation = new Animation.Builder()
-                .setTitle("Stage pour enfants - Découverte du Kinomichi")
-                .build();
+        Animation animation = new Animation("Stage pour enfants - Découverte du Kinomichi");
         animation.configureDay(samedi, 5, midiStart);
         animation.configureDay(dimanche, 3, midiStart);
 
@@ -61,22 +59,21 @@ public class Kinomichi {
         myPeriods.forEach(p -> p.setTrainer(mockTrainer));
 
         //Add participants to random periods
-        animation.addAttendeeToPeriod(mockParticipant, new Period[]{
-                myPeriods.get(gId(myPeriods.size())),
-                myPeriods.get(gId(myPeriods.size())),
-                myPeriods.get(gId(myPeriods.size()))
+        animation.registerAttendeeToPeriod(mockParticipant, new Period[]{
+                myPeriods.get(RandomUtils.getRandomInt(0, myPeriods.size())),
+                myPeriods.get(RandomUtils.getRandomInt(0, myPeriods.size())),
+                myPeriods.get(RandomUtils.getRandomInt(0, myPeriods.size()))
         });
-        animation.addAttendeeToPeriod(mockParticipant2, new Period[]{
-                myPeriods.get(gId(myPeriods.size())),
-                myPeriods.get(gId(myPeriods.size()))
+        animation.registerAttendeeToPeriod(mockParticipant2, new Period[]{
+                myPeriods.get(RandomUtils.getRandomInt(0, myPeriods.size())),
+                myPeriods.get(RandomUtils.getRandomInt(0, myPeriods.size()))
         });
-        animation.addAttendeeToPeriod(mockParticipant3, new Period[]{
-                myPeriods.get(gId(myPeriods.size())),
-                myPeriods.get(gId(myPeriods.size()))
+        animation.registerAttendeeToPeriod(mockParticipant3, new Period[]{
+                myPeriods.get(RandomUtils.getRandomInt(0, myPeriods.size())),
+                myPeriods.get(RandomUtils.getRandomInt(0, myPeriods.size()))
         });
 
         System.out.println(animation);
-
 
         //print entries
         System.out.println("———————————");
@@ -87,18 +84,15 @@ public class Kinomichi {
         System.out.println("———————————");
 
     }
-    private int gId(int size){
-        return RandomUtils.getRandomInt(0, size);
-    }
 
     private void displayMenu() {
         Menu menu = new Menu();
         menu.addItem("Create a new participant", "1", () -> {
-            createParticipantHandler();
+            createParticipantHandler("Add New Participant");
             showMainMenu();
         });
         menu.addItem("Create a new animation", "2", () -> {
-            createAnimationHandler();
+            createAnimationHandler("Add New Animation");
             showMainMenu();
         });
         menu.addItem("Quit", "q", this::quitHandler);
