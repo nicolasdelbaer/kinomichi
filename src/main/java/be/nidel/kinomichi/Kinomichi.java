@@ -1,5 +1,7 @@
 package be.nidel.kinomichi;
 
+import be.nidel.kinomichi.participant.Participant;
+import be.nidel.kinomichi.participant.ParticipantType;
 import be.nidel.utils.DateUtils;
 import be.nidel.utils.OutputUtils;
 import be.nidel.utils.RandomUtils;
@@ -215,7 +217,11 @@ public class Kinomichi {
         //print entries
         System.out.println("———————————");
         System.out.println("— RECAP —");
-        System.out.println(animation.getAllPeriods().stream().map(p -> p.getDay().getDayOfWeek() + ": " + p.getStart()).toList());
+        System.out.println(animation.getAllPeriods().stream()
+                .map(p ->
+                        p.getDay().getDayOfWeek() + " " +
+                                p.getStart()).toList()
+        );
         System.out.println(animation.getAllAttendees());
         System.out.println(animation.getAllDays());
         System.out.println("———————————");

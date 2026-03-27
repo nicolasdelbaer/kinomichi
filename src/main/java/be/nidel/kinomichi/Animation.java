@@ -1,5 +1,6 @@
 package be.nidel.kinomichi;
 
+import be.nidel.kinomichi.participant.Participant;
 import be.nidel.utils.OutputUtils;
 
 import java.time.LocalDate;
@@ -76,6 +77,8 @@ public class Animation {
             .append(" - ")
             .append("day: ")
             .append(p.getDay())
+            .append(" ")
+            .append(p.getTime())
             .append("\n")
             .append(OutputUtils.ANSI_RESET)
             .append("attendees:")

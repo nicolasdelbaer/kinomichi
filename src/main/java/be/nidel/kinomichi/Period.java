@@ -69,4 +69,5 @@ public class Period {
     public int getDuration() {
         return duration;
     }
+
 }
