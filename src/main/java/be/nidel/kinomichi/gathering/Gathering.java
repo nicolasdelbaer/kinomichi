@@ -1,5 +1,6 @@
-package be.nidel.kinomichi;
+package be.nidel.kinomichi.gathering;
 
+import be.nidel.kinomichi.session.Session;
 import be.nidel.kinomichi.participant.Participant;
 import be.nidel.utils.OutputUtils;
 
@@ -7,49 +8,49 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
-public class Animation {
+public class Gathering {
     private String title;
-    private List<Period> periodList = new ArrayList<>();
+    private List<Session> sessionList = new ArrayList<>();
 
-    public Animation(String title) {
+    public Gathering(String title) {
         this.title = title;
     }
 
     public List<Participant> getAllAttendees() {
-        return periodList.stream()
+        return sessionList.stream()
                 .flatMap(p -> p.getAttendees().stream())
                 .distinct()
                 .toList();
     }
 
-    public List<Period> getAllPeriods() {
-        return periodList;
+    public List<Session> getAllPeriods() {
+        return sessionList;
     }
 
 
-    public Period addNewPeriod(LocalDate day, LocalTime time) {
-        Period period = new Period(day, time);
-        periodList.add(period);
-        return period;
+    public Session addNewPeriod(LocalDate day, LocalTime time) {
+        Session session = new Session(day, time);
+        sessionList.add(session);
+        return session;
     }
 
     public void addNewDay(LocalDate day, LocalTime startingTime, int numberOfPeriods) {
         for (int i = 0; i <numberOfPeriods; i++) {
-            Period period = addNewPeriod(day, startingTime);
-            startingTime = startingTime.plusMinutes(period.getDuration());
+            Session session = addNewPeriod(day, startingTime);
+            startingTime = startingTime.plusMinutes(session.getDuration());
         }
     }
 
     public List<LocalDate> getAllDays() {
-        return periodList.stream()
-                .map(Period::getDay)
+        return sessionList.stream()
+                .map(Session::getDay)
                 .distinct()
                 .toList();
     }
 
-    public void registerAttendeeToPeriod(Participant attendee, Period[] periods){
-        for (Period period : periods) {
-            period.addAttendee(attendee);
+    public void registerAttendeeToPeriod(Participant attendee, Session[] sessions){
+        for (Session session : sessions) {
+            session.addAttendee(attendee);
         }
     }
 
@@ -65,7 +66,7 @@ public class Animation {
             .append(OutputUtils.ANSI_RESET)
         ;
 
-        periodList.forEach(p -> {
+        sessionList.forEach(p -> {
             sb
             .append(OutputUtils.ANSI_PURPLE)
             .append("Trainer: ");
