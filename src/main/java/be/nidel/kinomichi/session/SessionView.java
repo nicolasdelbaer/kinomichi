@@ -2,6 +2,7 @@ package be.nidel.kinomichi.session;
 
 import be.nidel.kinomichi.KinomichiView;
 import be.nidel.utils.OutputUtils;
+import be.nidel.utils.menu.MenuFactory;
 import be.technifutur.shared.Menu;
 
 import java.time.LocalDate;
@@ -19,13 +20,10 @@ public class SessionView implements KinomichiView {
     //TODO display view from gathering ? - QUESTION how to pass gathering data to here
     public void displayUserChoices(Menu context){
         this.context = context;
-        Menu defaultMenu = new Menu();
-        defaultMenu.addItem("create new period", "c", this::gatherNewSessionData);
-        defaultMenu.addItem("back", "b", () -> handleBack(context));
-        defaultMenu.addItem("quit", "q", () -> handleQuit(context));
-        defaultMenu.interact();
+        MenuFactory.backQuitTemplate(context)
+        .addItem("create new period", "c", this::gatherNewSessionData)
+        .interact();
     }
-
 
     private void gatherNewSessionData() {
         OutputUtils.sOutInfo("Create a new period:");

@@ -22,7 +22,6 @@ public class Kinomichi {
     List<Gathering> gatheringList = new ArrayList<>();
 
     //TODO use view & model
-
     GatheringController gatheringController;
     SessionController sessionController;
     ParticipantController participantController;
@@ -49,11 +48,11 @@ public class Kinomichi {
         menu.addItem("Create a new gathering", String.valueOf(id++), () -> {
             gatheringController.showMenu(menu);
         });
-        menu.addItem("Quit", "q", this::quitHandler);
+        menu.addItem("Quit", "q", this::quitApplication);
         menu.interact();
     }
 
-    private void quitHandler() {
+    private void quitApplication() {
         participantList.forEach(p -> OutputUtils.sOutWarning(p.toString()));
     }
 

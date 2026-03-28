@@ -1,5 +1,6 @@
 package be.nidel.kinomichi.participant;
 import be.nidel.kinomichi.KinomichiView;
+import be.nidel.utils.menu.MenuFactory;
 import be.nidel.utils.OutputUtils;
 import be.technifutur.shared.Menu;
 
@@ -16,11 +17,9 @@ public class ParticipantView implements KinomichiView {
 
     public void displayUserChoices(Menu context){
         this.context = context;
-        Menu defaultMenu = new Menu();
-        defaultMenu.addItem("create new participant", "c", this::gatherParticipantData);
-        defaultMenu.addItem("back", "b", () -> handleBack(context));
-        defaultMenu.addItem("quit", "q", () -> handleQuit(context));
-        defaultMenu.interact();
+        MenuFactory.backQuitTemplate(context)
+        .addItem("create new participant", "c", this::gatherParticipantData)
+        .interact();
     }
 
     private void gatherParticipantData() {
@@ -44,10 +43,9 @@ public class ParticipantView implements KinomichiView {
 
         do{
             int id = -1; //-1 because of the enum id = 0
-            //TODO id handling to refactor, hardcoded
+            //TODO id handling to refactor ->> hardcoded
             id = askInt(scanner, "1. Attendee | 2. Trainer | 3. VIP");
             type = ParticipantType.getByOrdinal(id-1); //-1 for handling ids from 1 in input
-
         }while(!type.isPresent());
 
         return type.get();

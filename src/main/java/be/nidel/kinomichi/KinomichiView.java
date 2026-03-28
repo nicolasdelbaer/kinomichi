@@ -36,11 +36,4 @@ public interface KinomichiView {
         OutputUtils.sOutInfo(inputRequest);
         return scanner.nextLine();
     }
-
-    default void handleBack(Menu context){
-        context.interact();
-    }
-    default void handleQuit(Menu context){
-        OutputUtils.sOutTitle("Bye bye !");
-    }
 }
