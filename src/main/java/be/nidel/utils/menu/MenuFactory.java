@@ -12,4 +12,13 @@ public class MenuFactory {
         menu.addItem("quit", "q", menuController::handleQuit);
         return menuController;
     }
+
+    public static MenuController confirmTemplate(Menu context, Runnable continueAction){
+        Menu menu = new Menu();
+        MenuController menuController = new MenuController(menu, context);
+        menu.addItem("yes", "y", continueAction);
+        menu.addItem("no", "n", menuController::handleBack);
+        menuController.setInteractionMessage("Continue doing this action? (y/n)");
+        return menuController;
+    }
 }

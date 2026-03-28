@@ -38,10 +38,8 @@ public class SessionView implements KinomichiView {
     }
 
     public void continueAddingSession(){
-        Menu defaultMenu = new Menu();
-        defaultMenu.addItem("yes", "y", this::gatherNewSessionData);
-        defaultMenu.addItem("no", "n", () -> handleBack(context));
-        OutputUtils.sOutWarning("Continue adding sessions ? (y/n)");
-        defaultMenu.interact();
+        MenuFactory.confirmTemplate(context, this::gatherNewSessionData)
+                .setInteractionMessage("Continue adding sessions ? (y/n)")
+                .interact();
     }
 }
