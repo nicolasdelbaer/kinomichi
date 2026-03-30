@@ -32,7 +32,7 @@ public class Session {
 
     @Override
     public String toString() {
-        return "Period{" +
+        return "Session{" +
                 ", day=" + day +
                 ", trainer=" + ((Objects.nonNull(trainer))?trainer.getFullName():"n/a") +
                 ", start=" + start +

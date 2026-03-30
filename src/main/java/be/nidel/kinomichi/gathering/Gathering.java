@@ -32,8 +32,8 @@ public class Gathering {
         sessionList.add(session);
     }
 
-    public void addNewDay(LocalDate day, LocalTime startingTime, int numberOfPeriods) {
-        for (int i = 0; i <numberOfPeriods; i++) {
+    public void batchSessionConfiguration(LocalDate day, LocalTime startingTime, int numberOfSessions) {
+        for (int i = 0; i <numberOfSessions; i++) {
             Session session = new Session(day, startingTime);
             addNewSession(session);
             startingTime = startingTime.plusMinutes(session.getDuration());
@@ -47,7 +47,7 @@ public class Gathering {
                 .toList();
     }
 
-    public void registerAttendeeToPeriod(Participant attendee, Session[] sessions){
+    public void registerAttendeeToSession(Participant attendee, Session[] sessions){
         for (Session session : sessions) {
             session.addAttendee(attendee);
         }
