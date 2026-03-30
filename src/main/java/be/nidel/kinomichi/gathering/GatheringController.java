@@ -14,6 +14,7 @@ public class GatheringController {
     }
 
     public void sessionMenuRequest(Menu menu, Integer gatheringId) {
+
         if(gatheringModel.isIdValid(gatheringId)) {
             //NOTE coupling by passing the model /!\
             Gathering gathering = gatheringModel.get(gatheringId);
@@ -25,8 +26,9 @@ public class GatheringController {
         }
     }
 
-    public void createGathering(GatheringDTO gatheringDTO) {
+    public Gathering createGathering(GatheringDTO gatheringDTO) {
         Gathering gathering = new Gathering(gatheringDTO.title());
         gatheringModel.addGathering(gathering);
+        return gathering;
     }
 }

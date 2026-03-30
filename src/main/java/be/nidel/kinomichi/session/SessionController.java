@@ -12,10 +12,11 @@ public class SessionController {
 
     GatheringPayload gatheringPayload;
 
-    public void createSession(SessionDTO sessionDTO) {
+    public Session createSession(SessionDTO sessionDTO) {
+        Session session = null;
         if(Objects.nonNull(gatheringPayload))
         {
-            Session session = new Session(
+            session = new Session(
                     sessionDTO.day(),
                     sessionDTO.start(),
                     sessionDTO.duration());
@@ -26,6 +27,7 @@ public class SessionController {
             OutputUtils.sOutError("Unknown gathering");
             view.refresh();
         }
+        return session;
     }
 
     public void showMenu(Menu context){

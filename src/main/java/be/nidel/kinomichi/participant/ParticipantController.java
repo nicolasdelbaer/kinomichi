@@ -13,7 +13,7 @@ public class ParticipantController {
         return model.fetchAllParticipant();
     }
 
-    public void createParticipant(ParticipantDTO input){
+    public Participant createParticipant(ParticipantDTO input){
         Participant participant = new Participant.Builder()
                 .setFirstName(input.firstName())
                 .setLastName(input.lastName())
@@ -24,6 +24,7 @@ public class ParticipantController {
                 .build();
 
         model.addParticipant(participant);
+        return participant;
     }
 
     public void showMenu(Menu context) {
