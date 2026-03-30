@@ -1,12 +1,11 @@
 package be.nidel.kinomichi;
 
-import be.nidel.kinomichi.gathering.Gathering;
-import be.nidel.kinomichi.gathering.GatheringController;
-import be.nidel.kinomichi.participant.Participant;
-import be.nidel.kinomichi.participant.ParticipantController;
-import be.nidel.kinomichi.participant.ParticipantType;
+import be.nidel.kinomichi.gathering.*;
+import be.nidel.kinomichi.participant.*;
 import be.nidel.kinomichi.session.Session;
 import be.nidel.kinomichi.session.SessionController;
+import be.nidel.kinomichi.session.SessionDTO;
+import be.nidel.kinomichi.session.SessionModel;
 import be.nidel.utils.DateUtils;
 import be.nidel.utils.OutputUtils;
 import be.nidel.utils.RandomUtils;
@@ -18,9 +17,6 @@ import java.util.*;
 
 public class Kinomichi {
 
-    List<Participant> participantList = new ArrayList<>();
-    List<Gathering> gatheringList = new ArrayList<>();
-
     //TODO use view & model
     GatheringController gatheringController;
     SessionController sessionController;
@@ -30,85 +26,39 @@ public class Kinomichi {
         gatheringController = new GatheringController();
         sessionController = new SessionController();
         participantController = new ParticipantController();
+
+        gatheringController.onSessionRequest.connect((GatheringPayload payload) -> sessionController.showManageMenu(payload));
+
+        defaultData();
     }
 
-    public void showMainMenu() {
-        OutputUtils.sOutTitle("--- Stage Kinomichi ---");
+    public void launch() {
+        OutputUtils.sOutTitle("--- Kinomichi Administration Console ---");
+        OutputUtils.sOutInfo("Hello, what do you want to do today?");
         displayMenu();
     }
     private void displayMenu() {
         int id = 1;
         Menu menu = new Menu();
-        menu.addItem("Create a new participant", String.valueOf(id++), () -> {
-            participantController.showMenu(menu);
-        });
-        menu.addItem("Create a new session", String.valueOf(id++), () -> {
-            sessionController.showMenu(menu);
-        });
         menu.addItem("Create a new gathering", String.valueOf(id++), () -> {
             gatheringController.showMenu(menu);
         });
+        menu.addItem("Create a new participant", String.valueOf(id++), () -> {
+            participantController.showMenu(menu);
+        });
+//        menu.addItem("Create a new session", String.valueOf(id++), () -> {
+//            sessionController.showMenu(menu);
+//        });
         menu.addItem("Quit", "q", this::quitApplication);
         menu.interact();
     }
 
     private void quitApplication() {
-        participantList.forEach(p -> OutputUtils.sOutWarning(p.toString()));
+
     }
 
-    //TODO refactor - move somewhere else
-    public void debug() {
-        Participant mockTrainer = new Participant.Builder()
-                .setFirstName("Laurence")
-                .setLastName("Sensei")
-                .setType(ParticipantType.Trainer)
-                .build();
 
-        Participant mockParticipant = new Participant.Builder()
-                .setFirstName("Al")
-                .setLastName("Paccino")
-                .setType(ParticipantType.Attendee)
-                .build();
-
-        Participant mockParticipant2 = new Participant.Builder()
-                .setFirstName("De")
-                .setLastName("Niro")
-                .setType(ParticipantType.Attendee)
-                .build();
-
-        Participant mockParticipant3 = new Participant.Builder()
-                .setFirstName("Patrick")
-                .setLastName("Demer")
-                .setType(ParticipantType.Attendee)
-                .build();
-
-        LocalDate samedi = DateUtils.StringDateToLocalDate("28/03/2026");
-        LocalDate dimanche = DateUtils.StringDateToLocalDate("29/03/2026");
-        LocalTime midiStart = DateUtils.StringTimeToLocalTime("12:30");
-
-        Gathering gathering = new Gathering("Stage pour enfants - Découverte du Kinomichi");
-        gathering.addNewDay(samedi, midiStart, 5);
-        gathering.addNewDay(dimanche, midiStart, 3);
-
-        List<Session> mySessions = gathering.getAllPeriods();
-
-        mySessions.forEach(p -> p.setTrainer(mockTrainer));
-
-        //Add participants to random periods
-        gathering.registerAttendeeToPeriod(mockParticipant, new Session[]{
-                mySessions.get(RandomUtils.getRandomInt(0, mySessions.size())),
-                mySessions.get(RandomUtils.getRandomInt(0, mySessions.size())),
-                mySessions.get(RandomUtils.getRandomInt(0, mySessions.size()))
-        });
-        gathering.registerAttendeeToPeriod(mockParticipant2, new Session[]{
-                mySessions.get(RandomUtils.getRandomInt(0, mySessions.size())),
-                mySessions.get(RandomUtils.getRandomInt(0, mySessions.size()))
-        });
-        gathering.registerAttendeeToPeriod(mockParticipant3, new Session[]{
-                mySessions.get(RandomUtils.getRandomInt(0, mySessions.size())),
-                mySessions.get(RandomUtils.getRandomInt(0, mySessions.size()))
-        });
-        animationReport(gathering);
+    public void defaultData() {
     }
 
     private void animationReport(Gathering gathering){
@@ -117,7 +67,7 @@ public class Kinomichi {
         //print entries
         System.out.println("———————————");
         System.out.println("— RECAP —");
-        System.out.println(gathering.getAllPeriods().stream()
+        System.out.println(gathering.getAllSessions().stream()
                 .map(p ->
                         p.getDay().getDayOfWeek() + " " +
                                 p.getStart()).toList()

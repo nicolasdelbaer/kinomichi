@@ -1,23 +1,31 @@
 package be.nidel.kinomichi.participant;
 
-import java.util.ArrayList;
+import be.nidel.kinomichi.KinomichiModel;
+import be.nidel.utils.OutputUtils;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class ParticipantModel {
+public class ParticipantModel implements KinomichiModel {
 
-    private List<Participant> participantList = new ArrayList<>();
-
+    private Map<Integer, Participant> participantList = new HashMap<>();
     public List<Participant> fetchAllParticipant() {
-        return participantList.stream().toList();
+        return participantList.values().stream().toList();
     }
 
-    public boolean addParticipant(Participant participant) {
+
+    public void addParticipant(Participant participant) {
         try{
-            participantList.add(participant);
+            //NOTE manual autoincrement because stuff is not "really deleted" but archived
+            int id = participantList.size()+1;
+            participantList.put(id, participant);
         } catch (Exception e) {
-            //TODO throw custom exception or handle error
-            return false;
+            OutputUtils.sOutError(e.getMessage());
         }
-        return true;
+    }
+
+    public boolean isIdValid(Integer instanceId) {
+        return participantList.containsKey(instanceId);
     }
 }

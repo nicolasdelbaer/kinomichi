@@ -23,20 +23,19 @@ public class Gathering {
                 .toList();
     }
 
-    public List<Session> getAllPeriods() {
+    public List<Session> getAllSessions() {
         return sessionList;
     }
 
 
-    public Session addNewPeriod(LocalDate day, LocalTime time) {
-        Session session = new Session(day, time);
+    public void addNewSession(Session session) {
         sessionList.add(session);
-        return session;
     }
 
     public void addNewDay(LocalDate day, LocalTime startingTime, int numberOfPeriods) {
         for (int i = 0; i <numberOfPeriods; i++) {
-            Session session = addNewPeriod(day, startingTime);
+            Session session = new Session(day, startingTime);
+            addNewSession(session);
             startingTime = startingTime.plusMinutes(session.getDuration());
         }
     }
@@ -88,5 +87,13 @@ public class Gathering {
             .append("\n");
         });
         return sb.toString();
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

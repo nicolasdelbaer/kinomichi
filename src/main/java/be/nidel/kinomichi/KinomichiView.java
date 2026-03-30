@@ -3,6 +3,7 @@ package be.nidel.kinomichi;
 import be.nidel.utils.DateUtils;
 import be.nidel.utils.OutputUtils;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
@@ -12,12 +13,22 @@ import be.technifutur.shared.Menu;
 public interface KinomichiView {
 
     default LocalTime askTime(Scanner scanner, String s) {
-        LocalTime time = DateUtils.StringTimeToLocalTime(askInput(scanner, s));
+        LocalTime time = null;
+        do{
+            try{
+                time = DateUtils.StringTimeToLocalTime(askInput(scanner, s));
+            } catch (IllegalArgumentException | DateTimeException ignored) {}
+        }while(Objects.isNull(time));
         return time;
     }
 
     default LocalDate askDate(Scanner scanner, String s) {
-        LocalDate date = DateUtils.StringDateToLocalDate(askInput(scanner, s));
+        LocalDate date = null;
+        do{
+            try{
+                date = DateUtils.StringDateToLocalDate(askInput(scanner, s));
+            } catch (IllegalArgumentException | DateTimeException ignored) {}
+        }while(Objects.isNull(date));
         return date;
     }
 
@@ -26,7 +37,7 @@ public interface KinomichiView {
         do{
             try{
                 result = Integer.parseInt(askInput(scanner, inputRequest));
-            } catch (NumberFormatException e) {}
+            } catch (IllegalArgumentException ignored) {}
         }while(Objects.isNull(result));
 
         return result;
@@ -36,4 +47,6 @@ public interface KinomichiView {
         OutputUtils.sOutInfo(inputRequest);
         return scanner.nextLine();
     }
+
+    void refresh();
 }

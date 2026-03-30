@@ -1,5 +1,6 @@
 package be.nidel.kinomichi.participant;
 import be.nidel.kinomichi.KinomichiView;
+import be.nidel.utils.menu.MenuController;
 import be.nidel.utils.menu.MenuFactory;
 import be.nidel.utils.OutputUtils;
 import be.technifutur.shared.Menu;
@@ -10,6 +11,7 @@ import java.util.Scanner;
 public class ParticipantView implements KinomichiView {
     private ParticipantController controller;
     private Menu context;
+    private MenuController current;
 
     public ParticipantView(ParticipantController controller) {
         this.controller = controller;
@@ -49,5 +51,10 @@ public class ParticipantView implements KinomichiView {
         }while(!type.isPresent());
 
         return type.get();
+    }
+
+    @Override
+    public void refresh() {
+        current.interact();
     }
 }

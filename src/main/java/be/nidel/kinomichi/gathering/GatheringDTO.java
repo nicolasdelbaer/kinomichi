@@ -1,4 +1,5 @@
 package be.nidel.kinomichi.gathering;
 
-public record GatheringDTO() {
-}
+import be.nidel.kinomichi.participant.ParticipantType;
+
+public record GatheringDTO(String title) { }

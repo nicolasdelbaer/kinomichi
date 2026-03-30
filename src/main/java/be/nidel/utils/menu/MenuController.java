@@ -62,5 +62,13 @@ public class MenuController {
         this.interactionMessage = interactionMessage;
         return this;
     }
+
+    public Menu getCurrentMenu() {
+        return currentMenu;
+    }
+
+    public Menu getBackMenu() {
+        return backMenu;
+    }
     //endregion
 }
