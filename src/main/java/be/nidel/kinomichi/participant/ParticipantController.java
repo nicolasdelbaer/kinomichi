@@ -9,8 +9,8 @@ public class ParticipantController {
     private final ParticipantModel model = new ParticipantModel();
     private final ParticipantView view = new ParticipantView(this);
 
-    public List<Participant> getAllParticipant(){
-        return model.fetchAllParticipant();
+    public List<Participant> getAllParticipants(){
+        return model.getAllParticipant().values().stream().toList();
     }
 
     public Participant createParticipant(ParticipantDTO input){

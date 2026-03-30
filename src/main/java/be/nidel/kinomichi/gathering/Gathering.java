@@ -10,7 +10,7 @@ import java.util.*;
 
 public class Gathering {
     private String title;
-    private List<Session> sessionList = new ArrayList<>();
+    private final List<Session> sessionList = new ArrayList<>();
 
     public Gathering(String title) {
         this.title = title;
@@ -30,14 +30,6 @@ public class Gathering {
 
     public void addNewSession(Session session) {
         sessionList.add(session);
-    }
-
-    public void batchSessionConfiguration(LocalDate day, LocalTime startingTime, int numberOfSessions) {
-        for (int i = 0; i <numberOfSessions; i++) {
-            Session session = new Session(day, startingTime);
-            addNewSession(session);
-            startingTime = startingTime.plusMinutes(session.getDuration());
-        }
     }
 
     public List<LocalDate> getAllDays() {
@@ -77,8 +69,11 @@ public class Gathering {
             .append(" - ")
             .append("day: ")
             .append(p.getDay())
-            .append(" ")
-            .append(p.getTime())
+            .append(" | ")
+            .append(p.getStart())
+            .append(" -> ")
+            .append(p.getEnd())
+            .append(" | ")
             .append("\n")
             .append(OutputUtils.ANSI_RESET)
             .append("attendees:")

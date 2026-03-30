@@ -53,11 +53,11 @@ public class Participant {
         this.clubName = clubName;
     }
 
-    public ParticipantType getType() {
+    public ParticipantType getParticipantType() {
         return type;
     }
 
-    public void setType(ParticipantType type) {
+    public void setParticipantType(ParticipantType type) {
         this.type = type;
     }
 

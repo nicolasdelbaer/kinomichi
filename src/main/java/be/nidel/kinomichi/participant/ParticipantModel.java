@@ -1,6 +1,7 @@
 package be.nidel.kinomichi.participant;
 
 import be.nidel.kinomichi.KinomichiModel;
+import be.nidel.kinomichi.gathering.Gathering;
 import be.nidel.utils.OutputUtils;
 
 import java.util.HashMap;
@@ -10,10 +11,10 @@ import java.util.Map;
 public class ParticipantModel implements KinomichiModel {
 
     private Map<Integer, Participant> participantList = new HashMap<>();
-    public List<Participant> fetchAllParticipant() {
-        return participantList.values().stream().toList();
-    }
 
+    public boolean isIdValid(Integer instanceId) {
+        return participantList.containsKey(instanceId);
+    }
 
     public void addParticipant(Participant participant) {
         try{
@@ -25,7 +26,10 @@ public class ParticipantModel implements KinomichiModel {
         }
     }
 
-    public boolean isIdValid(Integer instanceId) {
-        return participantList.containsKey(instanceId);
+    public Participant get(Integer participantId) {
+        return participantList.get(participantId);
+    }
+    public Map<Integer,Participant> getAllParticipant() {
+        return participantList;
     }
 }

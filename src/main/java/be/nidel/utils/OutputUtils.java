@@ -1,5 +1,8 @@
 package be.nidel.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class OutputUtils
 {
     // Source - https://stackoverflow.com/a/5762502
@@ -47,7 +50,7 @@ public class OutputUtils
     public static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
 
     public static void sOutTitle(String s) {
-        System.out.printf("%s%s%s%s%n", OutputUtils.ANSI_WHITE_BACKGROUND, OutputUtils.ANSI_BLACK, s, OutputUtils.ANSI_RESET);
+        System.out.printf("%s%s%s%s%n", OutputUtils.ANSI_WHITE_BACKGROUND, OutputUtils.ANSI_BLACK_BOLD, s, OutputUtils.ANSI_RESET);
     }
     public static void sOut(String s) {
         System.out.printf("%s%s%s%n", OutputUtils.ANSI_YELLOW, s, OutputUtils.ANSI_RESET);
@@ -60,5 +63,13 @@ public class OutputUtils
     }
     public static void sOutInfo(String s) {
         System.out.printf("%s%s%s%n", OutputUtils.ANSI_BLUE_ITALIC, s, OutputUtils.ANSI_RESET);
+    }
+
+    public static void sOutBye() {
+        final List<String> byeQuotes = List.of(
+            "Bye bye!", "See you soon", "See you next time!", "Have a great day"
+        );
+        String quote = byeQuotes.get(RandomUtils.getRandomInt(0,byeQuotes.size()));
+        System.out.printf("='.'= %s%s %s %s%n", OutputUtils.ANSI_BLACK_BACKGROUND, OutputUtils.ANSI_PURPLE_ITALIC, quote, OutputUtils.ANSI_RESET);
     }
 }

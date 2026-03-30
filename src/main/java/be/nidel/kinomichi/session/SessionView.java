@@ -1,6 +1,7 @@
 package be.nidel.kinomichi.session;
 
 import be.nidel.kinomichi.KinomichiView;
+import be.nidel.kinomichi.gathering.Gathering;
 import be.nidel.utils.OutputUtils;
 import be.nidel.utils.menu.MenuController;
 import be.nidel.utils.menu.MenuFactory;
@@ -14,6 +15,9 @@ public class SessionView implements KinomichiView {
     SessionController sessionController;
     private Menu context;
     private MenuController current;
+
+    //TODO make it immutable?
+    private Gathering gathering;
 
     public SessionView(SessionController sessionController) {
         this.sessionController = sessionController;
@@ -34,7 +38,7 @@ public class SessionView implements KinomichiView {
         LocalDate date = askDate(scanner, "Day (dd/mm/yyyy)");
         LocalTime time = askTime(scanner, "From Time (hh:mm)");
 
-        sessionController.createSession(new SessionDTO(90, date,time));
+        sessionController.createSession(new SessionDTO(90, date,time), gathering);
         continueAddingSession();
     }
 
@@ -47,5 +51,9 @@ public class SessionView implements KinomichiView {
     @Override
     public void refresh() {
         current.interact();
+    }
+
+    public void setGatheringData(Gathering gathering) {
+        this.gathering = gathering;
     }
 }

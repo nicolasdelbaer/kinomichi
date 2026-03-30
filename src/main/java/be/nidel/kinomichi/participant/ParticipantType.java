@@ -6,7 +6,9 @@ import java.util.Optional;
 public enum ParticipantType {
     Attendee,
     Trainer,
-    Sensei;
+    Sensei,
+    VIP
+    ;
 
     public static Optional<ParticipantType> getByOrdinal(int ord){
         return Arrays.stream(values())

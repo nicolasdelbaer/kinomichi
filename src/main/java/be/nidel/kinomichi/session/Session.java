@@ -59,7 +59,7 @@ public class Session {
 
     public void setTrainer(Participant trainer) {
         //TODO catcher l'exception
-        if(trainer.getType() != ParticipantType.Trainer)
+        if(trainer.getParticipantType() != ParticipantType.Trainer)
             throw new KinomichiTrainerException("Participant must be a trainer");
 
         this.trainer = trainer;

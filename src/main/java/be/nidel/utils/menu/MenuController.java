@@ -24,7 +24,7 @@ public class MenuController {
         backMenu.interact();
     }
     public void handleQuit(){
-        OutputUtils.sOutTitle("Bye bye !");
+        OutputUtils.sOutBye();
     }
 
 

@@ -1,7 +1,10 @@
 package be.nidel.kinomichi.gathering;
 
+import be.nidel.kinomichi.participant.Participant;
 import be.nidel.utils.OutputUtils;
 import be.technifutur.shared.Menu;
+
+import java.util.List;
 
 public class GatheringController {
     GatheringModel gatheringModel = new GatheringModel();
@@ -14,12 +17,12 @@ public class GatheringController {
     }
 
     public void sessionMenuRequest(Menu menu, Integer gatheringId) {
-
         if(gatheringModel.isIdValid(gatheringId)) {
             //NOTE coupling by passing the model /!\
             Gathering gathering = gatheringModel.get(gatheringId);
             gatheringView.showSessionsForGathering(gathering);
-            onSessionRequest.emit(new GatheringPayload(menu, gatheringId, gatheringModel, gathering));
+
+            onSessionRequest.emit(new GatheringPayload(menu, gathering));
         }else{
             OutputUtils.sOutError("INVALID ID");
             showMenu(menu);
@@ -30,5 +33,8 @@ public class GatheringController {
         Gathering gathering = new Gathering(gatheringDTO.title());
         gatheringModel.addGathering(gathering);
         return gathering;
+    }
+    public List<Gathering> getAllGatherings(){
+        return gatheringModel.getAllGathering().values().stream().toList();
     }
 }
