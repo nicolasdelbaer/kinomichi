@@ -1,12 +1,15 @@
 package be.nidel.kinomichi.participant;
 import be.nidel.kinomichi.base.BaseController;
 import be.nidel.kinomichi.base.BaseView;
+import be.nidel.kinomichi.session.SessionType;
 import be.nidel.utils.menu.MenuFactory;
 import be.nidel.utils.OutputUtils;
 import be.technifutur.shared.Menu;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import static be.nidel.utils.InputUtils.askInput;
 import static be.nidel.utils.InputUtils.askInt;
@@ -44,10 +47,13 @@ public class ParticipantView extends BaseView<ParticipantController> {
         Optional<ParticipantType> type = null;
 
         do{
-            int id = -1; //-1 because of the enum id = 0
-            //TODO id handling to refactor ->> hardcoded
-            id = askInt(scanner, "1. Attendee | 2. Trainer | 3. Sensei | 4. VIP");
-            type = ParticipantType.getByValue(id-1); //-1 for handling ids from 1 in input
+            int id = 0;
+            String enumString = Arrays
+                    .stream(ParticipantType.values())
+                    .map(st -> "%s. %s\t\t".formatted(st.ordinal(), st.name()))
+                    .collect(Collectors.joining());
+            id = askInt(scanner, enumString);
+            type = ParticipantType.getByValue(id);
         }while(!type.isPresent());
 
         return type.get();
