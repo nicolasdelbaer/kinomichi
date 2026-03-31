@@ -47,7 +47,7 @@ public class ParticipantView implements KinomichiView {
             int id = -1; //-1 because of the enum id = 0
             //TODO id handling to refactor ->> hardcoded
             id = askInt(scanner, "1. Attendee | 2. Trainer | 3. Sensei | 4. VIP");
-            type = ParticipantType.getByOrdinal(id-1); //-1 for handling ids from 1 in input
+            type = ParticipantType.getByValue(id-1); //-1 for handling ids from 1 in input
         }while(!type.isPresent());
 
         return type.get();

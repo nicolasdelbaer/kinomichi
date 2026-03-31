@@ -10,9 +10,11 @@ import be.technifutur.shared.Menu;
 
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 public class RegistrationView implements KinomichiView {
 
+    protected final Logger logger = Logger.getLogger(getClass().getName());
     private final RegistrationController controller;
     private Menu context;
     private MenuController current;
@@ -76,8 +78,6 @@ public class RegistrationView implements KinomichiView {
 
                     if (Objects.nonNull(result)){
                         isValid = true;
-                    //}else{
-                        //OutputUtils.sOutWarning("Issue while creating registration");
                     }
                 }
             }else{

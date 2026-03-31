@@ -9,8 +9,12 @@ import be.nidel.kinomichi.session.SessionModel;
 import be.technifutur.shared.Menu;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RegistrationController implements KinomichiController {
+    private final Logger logger = Logger.getLogger(getClass().getName());
+
     RegistrationModel model = new RegistrationModel();
     RegistrationView view = new RegistrationView(this);
 
@@ -26,6 +30,7 @@ public class RegistrationController implements KinomichiController {
         //sanity check
         boolean participantValid = participantModel.isIdValid(registrationDTO.participantId());
         boolean sessionValid = sessionModel.isIdValid(registrationDTO.sessionId());
+        logger.info("creating new registration");
 
         if(participantValid && sessionValid){
             registration = new Registration();
@@ -38,13 +43,15 @@ public class RegistrationController implements KinomichiController {
             Participant participant = participantModel.get(registrationDTO.participantId());
             Session session = sessionModel.get(registrationDTO.sessionId());
             view.showRegistrationFeedback(participant, session, registration);
-            //System.out.println(registrationModel.getAllRegistration());
+
+            logger.log(Level.FINE, "Registrations: {0}", model.getAllRegistration().toString());
+
         }else{
+            logger.info("participantId|sessionId not found");
             if(!participantValid)
                 view.displayParticipantError(registrationDTO.participantId());
             if(!sessionValid)
                 view.displaySessionError(registrationDTO.sessionId());
-
         }
         return registration;
     }

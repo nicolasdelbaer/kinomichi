@@ -3,6 +3,7 @@ package be.nidel.kinomichi;
 import be.nidel.utils.DateUtils;
 import be.nidel.utils.OutputUtils;
 
+import java.math.BigDecimal;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,7 +18,7 @@ public interface KinomichiView {
         do{
             try{
                 time = DateUtils.StringTimeToLocalTime(askInput(scanner, s));
-            } catch (IllegalArgumentException | DateTimeException ignored) {}
+            } catch (IllegalArgumentException | NullPointerException | DateTimeException ignored) {}
         }while(Objects.isNull(time));
         return time;
     }
@@ -27,7 +28,7 @@ public interface KinomichiView {
         do{
             try{
                 date = DateUtils.StringDateToLocalDate(askInput(scanner, s));
-            } catch (IllegalArgumentException | DateTimeException ignored) {}
+            } catch (IllegalArgumentException | NullPointerException | DateTimeException ignored) {}
         }while(Objects.isNull(date));
         return date;
     }
@@ -37,11 +38,23 @@ public interface KinomichiView {
         do{
             try{
                 result = Integer.parseInt(askInput(scanner, inputRequest));
-            } catch (IllegalArgumentException ignored) {}
+            } catch (IllegalArgumentException | NullPointerException ignored) {}
         }while(Objects.isNull(result));
 
         return result;
     }
+
+    default BigDecimal askBigDecimal(Scanner scanner, String inputRequest) {
+        BigDecimal result = null;
+        do{
+            try{
+                result = new BigDecimal(askInput(scanner, inputRequest));
+            } catch (IllegalArgumentException|NullPointerException ignored) {}
+        }while(Objects.isNull(result));
+
+        return result;
+    }
+
 
     default String askInput(Scanner scanner, String inputRequest) {
         OutputUtils.sOutInfo(inputRequest);

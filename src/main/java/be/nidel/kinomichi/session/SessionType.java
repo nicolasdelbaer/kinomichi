@@ -1,21 +1,21 @@
-package be.nidel.kinomichi.participant;
+package be.nidel.kinomichi.session;
 
 import java.util.Arrays;
 import java.util.Optional;
 
-public enum ParticipantType {
-    Attendee(100),
-    Trainer(200),
-    Sensei(400),
-    VIP(800)
+public enum SessionType {
+    Exhibition(100),
+    Dinner(200),
+    Accommodation(300)
     ;
 
     private final int value;
-    ParticipantType(int i) {
+
+    SessionType(int i) {
         value = i;
     }
 
-    public static Optional<ParticipantType> getByValue(int val){
+    public static Optional<SessionType> getByValue(int val){
         return Arrays.stream(values())
                 .filter(p -> p.ordinal() == val)
                 .findFirst();

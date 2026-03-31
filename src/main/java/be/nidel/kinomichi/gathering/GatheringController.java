@@ -1,9 +1,7 @@
 package be.nidel.kinomichi.gathering;
 
-import be.nidel.kinomichi.Kinomichi;
 import be.nidel.kinomichi.KinomichiController;
-import be.nidel.kinomichi.KinomichiModel;
-import be.nidel.utils.OutputUtils;
+import be.nidel.kinomichi.pricing.Pricing;
 import be.technifutur.shared.Menu;
 
 import java.util.List;
@@ -32,7 +30,15 @@ public class GatheringController implements KinomichiController {
     }
 
     public Gathering createGathering(GatheringDTO gatheringDTO) {
-        Gathering gathering = new Gathering(gatheringDTO.title());
+        Gathering gathering = new Gathering();
+        gathering.setTitle(gatheringDTO.title());
+        gathering.setPrices(gatheringDTO.priceList().stream()
+                .map(dto -> new Pricing(
+                        dto.participantType(),
+                        dto.sessionType(),
+                        dto.price()
+                        )).toList()
+        );
         model.addGathering(gathering);
         return gathering;
     }

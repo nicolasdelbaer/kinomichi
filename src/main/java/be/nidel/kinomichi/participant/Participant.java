@@ -78,6 +78,7 @@ public class Participant {
     }
 
 
+    //Builder pattern - Usage of internal class
     public static class Builder{
         private String firstName;
         private String lastName;

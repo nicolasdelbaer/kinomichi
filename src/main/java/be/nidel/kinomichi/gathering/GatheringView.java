@@ -1,16 +1,17 @@
 package be.nidel.kinomichi.gathering;
 
 import be.nidel.kinomichi.KinomichiView;
+import be.nidel.kinomichi.participant.ParticipantType;
+import be.nidel.kinomichi.pricing.PricingDTO;
 import be.nidel.kinomichi.session.Session;
+import be.nidel.kinomichi.session.SessionType;
 import be.nidel.utils.OutputUtils;
 import be.nidel.utils.menu.MenuController;
 import be.nidel.utils.menu.MenuFactory;
 import be.technifutur.shared.Menu;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GatheringView implements KinomichiView {
@@ -37,8 +38,23 @@ public class GatheringView implements KinomichiView {
         Scanner scanner = new Scanner(System.in);
 
         String title = askInput(scanner,"Title of the gathering?");
+        List<PricingDTO> priceList = new ArrayList<>();
+        for (SessionType sessionType : SessionType.values()) {
+            for (ParticipantType participantType : ParticipantType.values()) {
+                priceList.add(
+                        new PricingDTO(participantType,
+                                sessionType,
+                                askBigDecimal(scanner,
+                                        "Please enter the price for %s -> %s:".formatted(
+                                                sessionType.name(),
+                                                participantType.name()
+                                ))
+                        )
+                );
+            }
+        }
 
-        controller.createGathering(new GatheringDTO(title));
+        controller.createGathering(new GatheringDTO(title, priceList));
         displayUserChoices(context);
     }
 

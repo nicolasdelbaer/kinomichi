@@ -2,21 +2,30 @@ package be.nidel.kinomichi;
 
 import be.nidel.kinomichi.gathering.*;
 import be.nidel.kinomichi.participant.*;
+import be.nidel.kinomichi.pricing.Pricing;
+import be.nidel.kinomichi.pricing.PricingDTO;
 import be.nidel.kinomichi.registration.RegistrationController;
 import be.nidel.kinomichi.session.Session;
 import be.nidel.kinomichi.session.SessionController;
 import be.nidel.kinomichi.session.SessionDTO;
+import be.nidel.kinomichi.session.SessionType;
 import be.nidel.utils.DateUtils;
 import be.nidel.utils.OutputUtils;
 import be.nidel.utils.RandomUtils;
 import be.technifutur.shared.Menu;
 
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 
 public class Kinomichi {
 
-    //TODO use view & model
+    private final Logger logger = Logger.getLogger(getClass().getName());
+
     GatheringController gatheringController;
     SessionController sessionController;
     ParticipantController participantController;
@@ -83,7 +92,7 @@ public class Kinomichi {
 
 
     public void defaultData() {
-        //System.out.println("DEBUG populating data");
+        logger.config("DEBUG populating data");
 
         participantController.createParticipant(new ParticipantDTO(
                 "Johnny", "Lawrence", "johnny@cobrai.com", "0477000001", "Cobra Kai", ParticipantType.Sensei
@@ -134,8 +143,27 @@ public class Kinomichi {
                     3);
         };
 
-        daysCreator.accept(gatheringController.createGathering(new GatheringDTO("Stage pour adolescents")));
-        daysCreator.accept(gatheringController.createGathering(new GatheringDTO("Stage pour adultes")));
+
+        List<PricingDTO> pricingList = List.of(
+                new PricingDTO(ParticipantType.Attendee, SessionType.Exhibition, new BigDecimal("10.00")),
+                new PricingDTO(ParticipantType.Attendee, SessionType.Dinner, new BigDecimal("15.00")),
+                new PricingDTO(ParticipantType.Attendee, SessionType.Accommodation, new BigDecimal("60.00")),
+
+                new PricingDTO(ParticipantType.VIP, SessionType.Exhibition, new BigDecimal("8.00")),
+                new PricingDTO(ParticipantType.VIP, SessionType.Dinner, new BigDecimal("10.00")),
+                new PricingDTO(ParticipantType.VIP, SessionType.Accommodation, new BigDecimal("40.00")),
+
+                new PricingDTO(ParticipantType.Sensei, SessionType.Exhibition, new BigDecimal("10.00")),
+                new PricingDTO(ParticipantType.Sensei, SessionType.Dinner, new BigDecimal("15.00")),
+                new PricingDTO(ParticipantType.Sensei, SessionType.Accommodation, new BigDecimal("60.00")),
+
+                new PricingDTO(ParticipantType.Trainer, SessionType.Exhibition, new BigDecimal("0.00")),
+                new PricingDTO(ParticipantType.Trainer, SessionType.Dinner, new BigDecimal("10.00")),
+                new PricingDTO(ParticipantType.Trainer, SessionType.Accommodation, new BigDecimal("60.00"))
+        );
+
+        daysCreator.accept(gatheringController.createGathering(new GatheringDTO("Stage pour adolescents",pricingList)));
+        daysCreator.accept(gatheringController.createGathering(new GatheringDTO("Stage pour adultes", pricingList)));
 
 
         List<Participant> participants = participantController.getAllParticipants();
@@ -155,8 +183,8 @@ public class Kinomichi {
             session.setTrainer(trainer);
         }
 
-        //System.out.println(gatheringController.getAllGatherings());
-        //System.out.println("DEBUG populating data -- COMPLETED");
+        System.out.println(gatheringController.getAllGatherings().toString());
+        logger.config("DEBUG populating data -- COMPLETED");
     }
 
 }
