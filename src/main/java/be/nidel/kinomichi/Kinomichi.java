@@ -2,6 +2,7 @@ package be.nidel.kinomichi;
 
 import be.nidel.kinomichi.gathering.*;
 import be.nidel.kinomichi.participant.*;
+import be.nidel.kinomichi.registration.RegistrationController;
 import be.nidel.kinomichi.session.Session;
 import be.nidel.kinomichi.session.SessionController;
 import be.nidel.kinomichi.session.SessionDTO;
@@ -19,16 +20,28 @@ public class Kinomichi {
     GatheringController gatheringController;
     SessionController sessionController;
     ParticipantController participantController;
+    RegistrationController registrationController;
 
     public Kinomichi() {
+        initControllers();
+
+        defaultData();
+    }
+
+    private void initControllers() {
         gatheringController = new GatheringController();
         sessionController = new SessionController();
         participantController = new ParticipantController();
+        registrationController = new RegistrationController();
 
+        //Link models for state sharing
+        registrationController.setModels(
+                participantController.getModel(),
+                sessionController.getModel()
+        );
+
+        //Mapping events for decoupling
         gatheringController.onSessionRequest.connect(this::handleSessionRequest);
-
-
-        defaultData();
     }
 
     private void handleSessionRequest(GatheringPayload gatheringPayload) {
@@ -36,13 +49,18 @@ public class Kinomichi {
     }
 
     public void launch() {
-        OutputUtils.sOutTitle("————————————————————————————————————————");
-        OutputUtils.sOutTitle("    Kinomichi Administration Console    ");
-        OutputUtils.sOutTitle("   Hello, what can I do for you today?  ");
-        OutputUtils.sOutTitle("                 ='.'=                  ");
-        OutputUtils.sOutTitle("————————————————————————————————————————");
+        displayWelcomePanel();
         displayMenu();
     }
+
+    private static void displayWelcomePanel() {
+        OutputUtils.sOutTitle("—————————————————————————————————————————————————————");
+        OutputUtils.sOutTitle("           Kinomichi Administration Console          ");
+        OutputUtils.sOutTitle("            Hello, how may I help you today?         ");
+        OutputUtils.sOutTitle("                        ='.'=                        ");
+        OutputUtils.sOutTitle("—————————————————————————————————————————————————————");
+    }
+
     private void displayMenu() {
         int id = 1;
         Menu menu = new Menu();
@@ -51,6 +69,9 @@ public class Kinomichi {
         });
         menu.addItem("Create a new participant", String.valueOf(id++), () -> {
             participantController.showMenu(menu);
+        });
+        menu.addItem("Handle subscriptions", String.valueOf(id++), () -> {
+            registrationController.showMenu(menu);
         });
         menu.addItem("Quit", "q", this::quitApplication);
         menu.interact();

@@ -1,0 +1,124 @@
+package be.nidel.kinomichi.registration;
+
+import be.nidel.kinomichi.KinomichiView;
+import be.nidel.kinomichi.participant.Participant;
+import be.nidel.kinomichi.session.Session;
+import be.nidel.utils.OutputUtils;
+import be.nidel.utils.menu.MenuController;
+import be.nidel.utils.menu.MenuFactory;
+import be.technifutur.shared.Menu;
+
+import java.util.Objects;
+import java.util.Scanner;
+
+public class RegistrationView implements KinomichiView {
+
+    private final RegistrationController controller;
+    private Menu context;
+    private MenuController current;
+
+    public RegistrationView(RegistrationController registrationController) {
+        this.controller = registrationController;
+    }
+
+    public void displayUserChoices(Menu context){
+        this.context = context;
+
+        OutputUtils.sOutTitle("—————————————————————————————————————————————————————");
+        OutputUtils.sOutTitle(" Code Status:                                        ");
+        OutputUtils.sOutTitle("    1 -> Registered                                  ");
+        OutputUtils.sOutTitle("    2 -> Withdrawn - cancelled before the event      ");
+        OutputUtils.sOutTitle("    3 -> Participation confirmed - need to pay       ");
+        OutputUtils.sOutTitle("    4 -> Payment done!                               ");
+        OutputUtils.sOutTitle("    5 -> Cancelled - didn't participate              ");
+        //OutputUtils.sOutTitle("—————————————————————————————————————————————————————");
+        //OutputUtils.sOutTitle(" [b -> back]  [q -> quit]                            ");
+        OutputUtils.sOutTitle("—————————————————————————————————————————————————————");
+        OutputUtils.sOutInfo( "      Enter: participant, session and status         ");
+
+        Scanner scanner = new Scanner(System.in);
+
+        Integer idParticipant = null;
+        Integer idSession = null;
+        Integer idStatus = null;
+        RegistrationStatus status = null;
+        int idPrice = 0;
+
+        boolean isValid = false;
+        boolean inputValid = false;
+        do{
+            String input = askInput(scanner,
+                    "                  Format: 1;4;1                      ");
+
+            String[] force = input.split("-");
+            String[] split = force[0].split(";");
+
+            if(split.length >= 3){
+                try{
+                    idParticipant = Integer.parseInt(split[0].trim());
+                    idSession = Integer.parseInt(split[1].trim());
+                    idStatus = Integer.parseInt(split[2].trim());
+                    status = RegistrationStatus.getByOrdinal(idStatus).get();
+                    inputValid = true;
+                }catch (RuntimeException e){
+                    OutputUtils.sOutWarning("Bad arguments, please try again");
+                    OutputUtils.sOutWarning("Participant ID; Session ID; statusCode");
+                }
+
+                if(inputValid) {
+                    //Sanity check for ids
+                    Registration result = controller.createRegistration(new RegistrationDTO(
+                            status,
+                            idParticipant,
+                            idSession,
+                            idPrice
+                    ));
+
+                    if (Objects.nonNull(result)){
+                        isValid = true;
+                    //}else{
+                        //OutputUtils.sOutWarning("Issue while creating registration");
+                    }
+                }
+            }else{
+                OutputUtils.sOutWarning("Please enter data with this format:");
+                OutputUtils.sOutWarning("Participant ID; Session ID; statusCode");
+            }
+
+        }while(!isValid);
+
+
+        continueAddingSession();
+    }
+
+    public void continueAddingSession(){
+        MenuFactory.confirmTemplate(context, () -> displayUserChoices(context))
+                .setInteractionMessage("Continue ? (y/n)")
+                .interact();
+    }
+
+    @Override
+    public void refresh() {
+        current.interact();
+    }
+
+    public void displayParticipantError(int id) {
+        OutputUtils.sOutError("Wrong participant id: " + id);
+    }
+
+    public void displaySessionError(int id) {
+        OutputUtils.sOutError("Wrong session id: " + id);
+    }
+
+    public void showRegistrationFeedback(Participant participant, Session session, Registration registration) {
+        OutputUtils.sOutWarning("%s %s \"%s\" %s %s [%s -> %s]".formatted(
+                participant.getFullName(),
+                "has been registered with status",
+                registration.getStatus().name(),
+                "for session:",
+                session.getDay(),
+                session.getStart(),
+                session.getEnd()
+                ));
+    }
+}
