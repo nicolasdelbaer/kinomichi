@@ -66,7 +66,7 @@ public class RegistrationController extends BaseController implements KinomichiM
     }
 
     @Override
-    public KinomichiModel getModel() {
-        return null;
+    public RegistrationModel getModel() {
+        return model;
     }
 }

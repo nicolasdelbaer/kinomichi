@@ -3,6 +3,7 @@ package be.nidel.kinomichi.gathering;
 import be.nidel.kinomichi.base.KinomichiModelOwner;
 import be.nidel.kinomichi.base.BaseController;
 import be.nidel.kinomichi.pricing.Pricing;
+import be.nidel.kinomichi.session.SessionRequestEvent;
 import be.technifutur.shared.Menu;
 
 import java.util.List;
@@ -49,6 +50,6 @@ public class GatheringController extends BaseController implements KinomichiMode
 
     @Override
     public GatheringModel getModel() {
-        return null;
+        return model;
     }
 }
