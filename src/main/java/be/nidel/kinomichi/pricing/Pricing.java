@@ -7,6 +7,7 @@ import be.nidel.kinomichi.session.SessionType;
 import java.math.BigDecimal;
 
 public class Pricing {
+    private int id = -1;
     SessionType sessionType;
     ParticipantType participantType;
     BigDecimal price = new BigDecimal("15");
@@ -39,5 +40,13 @@ public class Pricing {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

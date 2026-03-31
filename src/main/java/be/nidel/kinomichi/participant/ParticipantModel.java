@@ -19,6 +19,7 @@ public class ParticipantModel implements KinomichiModel {
         try{
             //NOTE manual autoincrement because stuff is not "really deleted" but archived
             int id = participantList.size()+1;
+            participant.setId(id);
             participantList.put(id, participant);
         } catch (Exception e) {
             OutputUtils.sOutError(e.getMessage());

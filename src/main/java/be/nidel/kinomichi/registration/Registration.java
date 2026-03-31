@@ -1,6 +1,7 @@
 package be.nidel.kinomichi.registration;
 
 public class Registration {
+    private int id = -1;
     private RegistrationStatus status = RegistrationStatus.REGISTERED;
     private int participantId;
     private int sessionId;
@@ -36,5 +37,13 @@ public class Registration {
 
     public void setPriceId(int priceId) {
         this.priceId = priceId;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

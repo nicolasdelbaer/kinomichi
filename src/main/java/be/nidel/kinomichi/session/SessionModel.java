@@ -16,6 +16,17 @@ public class SessionModel implements KinomichiModel {
     public List<Session> getAllSession() {
         return sessionList.values().stream().toList();
     }
+
+    public void addSession(Session session) {
+        try{
+            //NOTE manual autoincrement because stuff is not "really deleted" but archived
+            int id = sessionList.size()+1;
+            session.setId(id);
+            sessionList.put(id, session);
+        } catch (Exception e) {
+            OutputUtils.sOutError(e.getMessage());
+        }
+    }
     public Session get(Integer sessionId) {
         if(!sessionList.containsKey(sessionId))
             throw new NoSuchElementException("Session Id doesn't exist");
@@ -23,13 +34,4 @@ public class SessionModel implements KinomichiModel {
     }
 
 
-    public void addSession(Session session) {
-        try{
-            //NOTE manual autoincrement because stuff is not "really deleted" but archived
-            int id = sessionList.size()+1;
-            sessionList.put(id, session);
-        } catch (Exception e) {
-            OutputUtils.sOutError(e.getMessage());
-        }
-    }
 }

@@ -18,6 +18,7 @@ public class GatheringModel implements KinomichiModel {
         try{
             //NOTE manual autoincrement because stuff is not "really deleted" but archived
             int id = gatheringList.size()+1;
+            gathering.setId(id);
             gatheringList.put(id, gathering);
         } catch (Exception e) {
             OutputUtils.sOutError(e.getMessage());

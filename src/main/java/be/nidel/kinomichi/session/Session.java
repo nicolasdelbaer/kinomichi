@@ -14,6 +14,7 @@ import java.util.Optional;
 public class Session {
     private int duration;
 
+    private int id = -1;
     private ParticipantGroup attendeeGroup = new ParticipantGroup();
     private Participant trainer;
     private LocalDate day;
@@ -81,4 +82,11 @@ public class Session {
         return start;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

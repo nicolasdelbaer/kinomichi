@@ -4,6 +4,7 @@ import be.nidel.kinomichi.base.KinomichiModel;
 import be.nidel.utils.OutputUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -18,6 +19,7 @@ public class RegistrationModel implements KinomichiModel {
         try{
             //NOTE manual autoincrement because stuff is not "really deleted" but archived
             int id = registrationList.size()+1;
+            registration.setId(id);
             registrationList.put(id, registration);
         } catch (Exception e) {
             OutputUtils.sOutError(e.getMessage());
@@ -33,5 +35,13 @@ public class RegistrationModel implements KinomichiModel {
     }
     public Map<Integer, Registration> getAllRegistration() {
         return registrationList;
+    }
+
+    public List<Registration> getAllRegistrationBySessionId(int sessionId) {
+        return registrationList
+                .values()
+                .stream()
+                .filter(registration -> registration.getSessionId() == sessionId)
+                .toList();
     }
 }

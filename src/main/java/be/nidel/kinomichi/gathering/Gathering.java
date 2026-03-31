@@ -13,6 +13,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Gathering {
+    private int id = -1;
     private String title;
     private List<Pricing> priceList = new ArrayList<>();
     private List<Session> sessionList = new ArrayList<>();
@@ -55,65 +56,6 @@ public class Gathering {
     //endregion
 
 
-    //TODO Refactor -> make view
-    @Override
-    public String toString()
-    {
-        StringBuilder sb = new StringBuilder()
-            .append(OutputUtils.ANSI_YELLOW_BOLD)
-            .append("\n")
-            .append("- Title: ")
-            .append(title)
-            .append("\n")
-            .append(OutputUtils.ANSI_RESET)
-        ;
-
-        sessionList.forEach(session -> {
-            sb
-            .append(OutputUtils.ANSI_PURPLE)
-            .append("Trainer: ");
-
-            session.getTrainer().ifPresentOrElse(
-                    participant -> sb.append(participant.getFullName()),
-                    () -> sb.append("No trainer"));
-
-            sb
-            .append(" - ")
-            .append("day: ")
-            .append(session.getDay())
-            .append(" | ")
-            .append(session.getStart())
-            .append(" -> ")
-            .append(session.getEnd())
-            .append("\n")
-            .append(OutputUtils.ANSI_RESET)
-
-            .append("- Attendees:");
-            session.getAttendees().forEach(attendee -> sb.append(attendee.getFullName()).append(", "));
-            sb.delete(sb.length()-2, sb.length()); //remove last ", "
-            sb.append("\n");
-        });
-
-        sb.append("\n")
-          .append(OutputUtils.ANSI_YELLOW_BOLD)
-          .append("- Prices:\n")
-          .append(OutputUtils.ANSI_RESET);
-
-        priceList.forEach(price ->
-            sb
-            .append(price.getParticipantType().name())
-            .append(" - ")
-            .append(price.getSessionType().name())
-            .append(": ")
-            .append(OutputUtils.ANSI_CYAN_BOLD)
-            .append(FormatUtils.formatPrice(price.getPrice()))
-            .append(OutputUtils.ANSI_RESET)
-            .append("\n")
-        );
-        sb.append("\n");
-        return sb.toString();
-    }
-
     public String getTitle() {
         return title;
     }
@@ -124,5 +66,17 @@ public class Gathering {
 
     public void setPrices(List<Pricing> priceList) {
         this.priceList = priceList;
+    }
+
+    public List<Pricing> getPriceList() {
+        return priceList;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

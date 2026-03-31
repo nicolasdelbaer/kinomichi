@@ -1,7 +1,7 @@
 package be.nidel.kinomichi.participant;
 
 public class Participant {
-
+    private int id = -1;
     private String firstName;
     private String lastName;
     private String phone = "n/a";
@@ -77,6 +77,13 @@ public class Participant {
         return firstName + " " + lastName;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     //Builder pattern - Usage of internal class
     public static class Builder{
