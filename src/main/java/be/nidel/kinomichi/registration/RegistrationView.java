@@ -22,6 +22,7 @@ public class RegistrationView extends BaseView<RegistrationController> {
         super(controller);
     }
 
+    //TODO refactor this method by splitting :)
     public void displayUserChoices(Menu context){
         this.context = context;
 
