@@ -6,6 +6,7 @@ import be.nidel.kinomichi.participant.Participant;
 import be.nidel.kinomichi.participant.ParticipantType;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
@@ -80,4 +81,5 @@ public class Session {
     public LocalTime getTime() {
         return start;
     }
+
 }

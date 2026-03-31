@@ -1,10 +1,11 @@
 package be.nidel.kinomichi.participant;
 
+import be.nidel.kinomichi.KinomichiController;
 import be.technifutur.shared.Menu;
 
 import java.util.List;
 
-public class ParticipantController {
+public class ParticipantController implements KinomichiController {
 
     private final ParticipantModel model = new ParticipantModel();
     private final ParticipantView view = new ParticipantView(this);
@@ -29,5 +30,9 @@ public class ParticipantController {
 
     public void showMenu(Menu context) {
         view.displayUserChoices(context);
+    }
+
+    public ParticipantModel getModel() {
+        return model;
     }
 }

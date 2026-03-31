@@ -7,6 +7,7 @@ import be.nidel.utils.OutputUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 public class ParticipantModel implements KinomichiModel {
 
@@ -27,9 +28,12 @@ public class ParticipantModel implements KinomichiModel {
     }
 
     public Participant get(Integer participantId) {
+        if(!participantList.containsKey(participantId))
+            throw new NoSuchElementException("Participant Id doesn't exist");
         return participantList.get(participantId);
     }
     public Map<Integer,Participant> getAllParticipant() {
         return participantList;
     }
+
 }

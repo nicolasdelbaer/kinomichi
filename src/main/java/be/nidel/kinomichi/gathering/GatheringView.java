@@ -73,42 +73,8 @@ public class GatheringView implements KinomichiView {
         current.interact();
     }
 
-
-/*
-    private Gathering createGatheringHandler(String inputRequest) {
-        OutputUtils.sOutInfo(inputRequest);
-        Scanner scanner = new Scanner(System.in);
-        Gathering gathering = new Gathering(askInput(scanner, "Title of the event"));
-
-        boolean configureDay = (askInput(
-                scanner,
-                "Type (d) for configuring a day or (any key) for a single session ?")
-        ).equals("d");
-
-        if(configureDay){
-            handleNewDay(scanner, gathering);
-        }else{
-            gatheringController.sessionMenuRequest();
-        }
-        return  gathering;
+    public void showInvalidIdError(Integer id) {
+        OutputUtils.sOutError("INVALID ID" + id);
     }
 
-    private void handleNewDay(Scanner scanner, Gathering gathering) {
-        boolean addNewDay = false;
-        int amount = 1;
-        do{
-            OutputUtils.sOutInfo("A day needs the date, starting time & the number of sessions");
-            gathering.addNewDay(
-                    askDate(scanner, "Day1 (dd/mm/yyyy)"),
-                    askTime(scanner, "From Time (hh:mm)"),
-                    askInt(scanner, "How many sessions from the start ?")
-            );
-
-            addNewDay = (askInput(
-                    scanner,
-                    "Type (d) for continue adding days or (any key) to continue")
-            ).equals("d");
-        }while(addNewDay);
-    }
-*/
 }

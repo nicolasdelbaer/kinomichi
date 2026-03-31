@@ -1,16 +1,14 @@
 package be.nidel.kinomichi.session;
 
+import be.nidel.kinomichi.KinomichiController;
 import be.nidel.kinomichi.gathering.Gathering;
-import be.nidel.kinomichi.gathering.GatheringPayload;
-import be.nidel.utils.OutputUtils;
 import be.technifutur.shared.Menu;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 
-public class SessionController {
+public class SessionController implements KinomichiController {
     private final SessionModel model = new SessionModel();
     private final SessionView view = new SessionView(this);
 
@@ -26,7 +24,7 @@ public class SessionController {
             model.addSession(session);
             gathering.addNewSession(session);
         }else{
-            OutputUtils.sOutError("Unknown gathering");
+            view.showUnknownGatheringError();
             view.refresh();
         }
         return session;
@@ -48,7 +46,6 @@ public class SessionController {
         view.displayUserChoices(context);
     }
 
-    //TODO make gathering immutable?
     public void showManageMenu(Menu context, Gathering gathering) {
         //NOTE temporary usage of "display user choices" before proper menu
         view.displayUserChoices(context);
@@ -57,6 +54,10 @@ public class SessionController {
     }
 
     public List<Session> getAllSessions() {
-        return model.fetchAllSession();
+        return model.getAllSession();
+    }
+
+    public SessionModel getModel() {
+        return model;
     }
 }

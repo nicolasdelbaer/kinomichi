@@ -6,6 +6,7 @@ import be.nidel.utils.OutputUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class GatheringModel implements KinomichiModel {
@@ -28,6 +29,8 @@ public class GatheringModel implements KinomichiModel {
     }
 
     public Gathering get(Integer gatheringId) {
+        if(!gatheringList.containsKey(gatheringId))
+            throw new NoSuchElementException("Gathering Id doesn't exist");
         return gatheringList.get(gatheringId);
     }
     public Map<Integer, Gathering> getAllGathering() {

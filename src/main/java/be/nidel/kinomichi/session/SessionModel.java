@@ -1,18 +1,26 @@
 package be.nidel.kinomichi.session;
 
+import be.nidel.kinomichi.KinomichiModel;
+import be.nidel.kinomichi.registration.Registration;
 import be.nidel.utils.OutputUtils;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
-public class SessionModel {
+public class SessionModel implements KinomichiModel {
     private Map<Integer, Session> sessionList = new HashMap<>();
     public boolean isIdValid(Integer instanceId) {
         return sessionList.containsKey(instanceId);
     }
-    public List<Session> fetchAllSession() {
+    public List<Session> getAllSession() {
         return sessionList.values().stream().toList();
+    }
+    public Session get(Integer sessionId) {
+        if(!sessionList.containsKey(sessionId))
+            throw new NoSuchElementException("Session Id doesn't exist");
+        return sessionList.get(sessionId);
     }
 
 

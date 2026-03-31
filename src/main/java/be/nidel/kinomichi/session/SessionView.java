@@ -16,7 +16,6 @@ public class SessionView implements KinomichiView {
     private Menu context;
     private MenuController current;
 
-    //TODO make it immutable?
     private Gathering gathering;
 
     public SessionView(SessionController sessionController) {
@@ -55,5 +54,9 @@ public class SessionView implements KinomichiView {
 
     public void setGatheringData(Gathering gathering) {
         this.gathering = gathering;
+    }
+
+    public void showUnknownGatheringError() {
+        OutputUtils.sOutWarning("Trying to add session to unknown gathering");
     }
 }
