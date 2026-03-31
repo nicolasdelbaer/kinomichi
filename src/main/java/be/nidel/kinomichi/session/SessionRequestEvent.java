@@ -1,4 +1,6 @@
-package be.nidel.kinomichi.gathering;
+package be.nidel.kinomichi.session;
+
+import be.nidel.kinomichi.gathering.GatheringPayload;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
