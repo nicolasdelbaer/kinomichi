@@ -1,11 +1,12 @@
 package be.nidel.kinomichi.participant;
 
-import be.nidel.kinomichi.KinomichiController;
+import be.nidel.kinomichi.base.BaseController;
+import be.nidel.kinomichi.base.KinomichiModelOwner;
 import be.technifutur.shared.Menu;
 
 import java.util.List;
 
-public class ParticipantController implements KinomichiController {
+public class ParticipantController extends BaseController implements KinomichiModelOwner {
 
     private final ParticipantModel model = new ParticipantModel();
     private final ParticipantView view = new ParticipantView(this);

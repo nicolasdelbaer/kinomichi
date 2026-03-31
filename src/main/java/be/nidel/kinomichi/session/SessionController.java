@@ -1,6 +1,7 @@
 package be.nidel.kinomichi.session;
 
-import be.nidel.kinomichi.KinomichiController;
+import be.nidel.kinomichi.base.BaseController;
+import be.nidel.kinomichi.base.KinomichiModelOwner;
 import be.nidel.kinomichi.gathering.Gathering;
 import be.technifutur.shared.Menu;
 
@@ -8,7 +9,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 
-public class SessionController implements KinomichiController {
+public class SessionController extends BaseController implements KinomichiModelOwner {
     private final SessionModel model = new SessionModel();
     private final SessionView view = new SessionView(this);
 

@@ -1,6 +1,6 @@
 package be.nidel.kinomichi.registration;
 
-import be.nidel.kinomichi.KinomichiModel;
+import be.nidel.kinomichi.base.KinomichiModel;
 import be.nidel.utils.OutputUtils;
 
 import java.util.HashMap;

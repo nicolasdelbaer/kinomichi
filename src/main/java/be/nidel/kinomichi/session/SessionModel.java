@@ -1,7 +1,6 @@
 package be.nidel.kinomichi.session;
 
-import be.nidel.kinomichi.KinomichiModel;
-import be.nidel.kinomichi.registration.Registration;
+import be.nidel.kinomichi.base.KinomichiModel;
 import be.nidel.utils.OutputUtils;
 
 import java.util.HashMap;

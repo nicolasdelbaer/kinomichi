@@ -1,12 +1,11 @@
 package be.nidel.kinomichi.session;
 
-import be.nidel.kinomichi.KinomichiTrainerException;
+import be.nidel.kinomichi.base.KinomichiTrainerException;
 import be.nidel.kinomichi.participant.ParticipantGroup;
 import be.nidel.kinomichi.participant.Participant;
 import be.nidel.kinomichi.participant.ParticipantType;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;

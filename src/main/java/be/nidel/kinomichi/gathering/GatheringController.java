@@ -1,12 +1,13 @@
 package be.nidel.kinomichi.gathering;
 
-import be.nidel.kinomichi.KinomichiController;
+import be.nidel.kinomichi.base.KinomichiModelOwner;
+import be.nidel.kinomichi.base.BaseController;
 import be.nidel.kinomichi.pricing.Pricing;
 import be.technifutur.shared.Menu;
 
 import java.util.List;
 
-public class GatheringController implements KinomichiController {
+public class GatheringController extends BaseController implements KinomichiModelOwner {
     GatheringModel model = new GatheringModel();
     GatheringView view = new GatheringView(this);
 

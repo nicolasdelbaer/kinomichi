@@ -1,13 +1,11 @@
 package be.nidel.kinomichi.gathering;
 
-import be.nidel.kinomichi.KinomichiModel;
-import be.nidel.kinomichi.session.Session;
+import be.nidel.kinomichi.base.KinomichiModel;
 import be.nidel.utils.OutputUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class GatheringModel implements KinomichiModel {
     private Map<Integer, Gathering> gatheringList = new HashMap<>();

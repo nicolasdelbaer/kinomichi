@@ -1,12 +1,11 @@
 package be.nidel.kinomichi.gathering;
 
-import be.nidel.kinomichi.KinomichiView;
+import be.nidel.kinomichi.base.BaseView;
 import be.nidel.kinomichi.participant.ParticipantType;
 import be.nidel.kinomichi.pricing.PricingDTO;
 import be.nidel.kinomichi.session.Session;
 import be.nidel.kinomichi.session.SessionType;
 import be.nidel.utils.OutputUtils;
-import be.nidel.utils.menu.MenuController;
 import be.nidel.utils.menu.MenuFactory;
 import be.technifutur.shared.Menu;
 
@@ -14,14 +13,12 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class GatheringView implements KinomichiView {
+import static be.nidel.utils.InputUtils.*;
 
-    private final GatheringController controller;
-    private Menu context;
-    private MenuController current;
+public class GatheringView extends BaseView<GatheringController> {
 
     public GatheringView(GatheringController gatheringController) {
-        this.controller = gatheringController;
+        super(gatheringController);
     }
 
     public void displayUserChoices(Menu context){
@@ -84,10 +81,6 @@ public class GatheringView implements KinomichiView {
         }
     }
 
-    @Override
-    public void refresh() {
-        current.interact();
-    }
 
     public void showInvalidIdError(Integer id) {
         OutputUtils.sOutError("INVALID ID" + id);

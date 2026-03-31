@@ -1,7 +1,8 @@
 package be.nidel.kinomichi.registration;
 
-import be.nidel.kinomichi.KinomichiController;
-import be.nidel.kinomichi.KinomichiModel;
+import be.nidel.kinomichi.base.BaseController;
+import be.nidel.kinomichi.base.KinomichiModelOwner;
+import be.nidel.kinomichi.base.KinomichiModel;
 import be.nidel.kinomichi.participant.Participant;
 import be.nidel.kinomichi.participant.ParticipantModel;
 import be.nidel.kinomichi.session.Session;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class RegistrationController implements KinomichiController {
+public class RegistrationController extends BaseController implements KinomichiModelOwner {
     private final Logger logger = Logger.getLogger(getClass().getName());
 
     RegistrationModel model = new RegistrationModel();

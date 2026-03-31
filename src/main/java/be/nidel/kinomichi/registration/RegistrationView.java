@@ -1,6 +1,6 @@
 package be.nidel.kinomichi.registration;
 
-import be.nidel.kinomichi.KinomichiView;
+import be.nidel.kinomichi.base.BaseView;
 import be.nidel.kinomichi.participant.Participant;
 import be.nidel.kinomichi.session.Session;
 import be.nidel.utils.OutputUtils;
@@ -12,15 +12,14 @@ import java.util.Objects;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
-public class RegistrationView implements KinomichiView {
+import static be.nidel.utils.InputUtils.askInput;
+
+public class RegistrationView extends BaseView<RegistrationController> {
 
     protected final Logger logger = Logger.getLogger(getClass().getName());
-    private final RegistrationController controller;
-    private Menu context;
-    private MenuController current;
 
-    public RegistrationView(RegistrationController registrationController) {
-        this.controller = registrationController;
+    public RegistrationView(RegistrationController controller) {
+        super(controller);
     }
 
     public void displayUserChoices(Menu context){
@@ -87,7 +86,6 @@ public class RegistrationView implements KinomichiView {
 
         }while(!isValid);
 
-
         continueAddingSession();
     }
 
@@ -95,11 +93,6 @@ public class RegistrationView implements KinomichiView {
         MenuFactory.confirmTemplate(context, () -> displayUserChoices(context))
                 .setInteractionMessage("Continue ? (y/n)")
                 .interact();
-    }
-
-    @Override
-    public void refresh() {
-        current.interact();
     }
 
     public void displayParticipantError(int id) {
