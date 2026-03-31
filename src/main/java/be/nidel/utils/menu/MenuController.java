@@ -35,6 +35,31 @@ public class MenuController {
         return this;
     }
 
+    public MenuController addItem(String description, String[] inputs, Runnable action) {
+        currentMenu.addItem(description, inputs, action);
+        return this;
+    }
+
+    public MenuController addHiddenItem(String description, String[] inputs, Runnable action) {
+        currentMenu.addHiddenItem(description, inputs, action);
+        return this;
+    }
+
+    public MenuController addHiddenItem(String description, String input, Runnable action) {
+        currentMenu.addHiddenItem(description, input, action);
+        return this;
+    }
+
+    public MenuController setPreRender(String postRender) {
+        currentMenu.setPostRender(postRender);
+        return this;
+    }
+
+    public MenuController setPostRender(String postRender) {
+        currentMenu.setPostRender(postRender);
+        return this;
+    }
+
     public void interact() {
         //NOTE maybe separate interact & render from Menu.jar for more control on how it's rendered
         //allowing "hidden inputs" too
@@ -42,10 +67,6 @@ public class MenuController {
             OutputUtils.sOutWarning(interactionMessage);
         currentMenu.interact();
     }
-    //endregion
-
-
-    //region getter & setter
     public void setTitle(String title) {
         currentMenu.setTitle(title);
     }
@@ -53,6 +74,10 @@ public class MenuController {
     public String getTitle() {
         return currentMenu.getTitle();
     }
+    //endregion
+
+
+    //region getter & setter
 
     public String getInteractionMessage() {
         return interactionMessage;
