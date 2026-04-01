@@ -18,6 +18,7 @@ public class SessionController extends BaseController implements KinomichiModelO
         if(Objects.nonNull(gathering))
         {
             session = new Session(
+                    gathering.getId(),
                     sessionDTO.day(),
                     sessionDTO.start(),
                     sessionDTO.duration());
@@ -35,7 +36,7 @@ public class SessionController extends BaseController implements KinomichiModelO
     public void batchSessionCreation(SessionDTO sessionDTO, Gathering gathering, int numberOfSessions) {
         LocalTime startingTime = sessionDTO.start();
         for (int i = 0; i <numberOfSessions; i++) {
-            Session session = new Session(sessionDTO.day(), startingTime, sessionDTO.duration());
+            Session session = new Session(gathering.getId(), sessionDTO.day(), startingTime, sessionDTO.duration());
 
             model.addSession(session);
             gathering.addNewSession(session);

@@ -15,16 +15,18 @@ public class Session {
     private int duration;
 
     private int id = -1;
+    private int gatheringId = -1;
     private ParticipantGroup attendeeGroup = new ParticipantGroup();
     private Participant trainer;
     private LocalDate day;
     private LocalTime start;
     private LocalTime end;
 
-    public Session(LocalDate day, LocalTime startTime) {
-        this(day, startTime, 90);
+    public Session(int gatheringId, LocalDate day, LocalTime startTime) {
+        this(gatheringId, day, startTime, 90);
     }
-    public Session(LocalDate day, LocalTime startTime, int duration) {
+    public Session(int gatheringId, LocalDate day, LocalTime startTime, int duration) {
+        this.gatheringId = gatheringId;
         this.day = day;
         this.start = startTime;
         this.duration = duration;
@@ -81,6 +83,7 @@ public class Session {
     public LocalTime getTime() {
         return start;
     }
+
 
     public int getId() {
         return id;
