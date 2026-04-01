@@ -33,6 +33,7 @@ public class Session {
         this.start = startTime;
         this.duration = duration;
         this.end = start.plusMinutes(duration);
+        this.type = SessionType.Exhibition;
     }
 
     @Override
@@ -42,6 +43,7 @@ public class Session {
                 ", trainer=" + ((Objects.nonNull(organizer))? organizer.getFullName():"n/a") +
                 ", start=" + start +
                 ", end=" + end +
+                ", type=" + type.name() +
                 ",attendees=" + attendeeGroup +
                 '}';
     }
@@ -63,10 +65,6 @@ public class Session {
     }
 
     public void setOrganizer(Participant organizer) {
-        //TODO catcher l'exception
-        if(organizer.getParticipantType() != ParticipantType.Trainer)
-            throw new KinomichiTrainerException("Participant must be a trainer");
-
         this.organizer = organizer;
     }
 
