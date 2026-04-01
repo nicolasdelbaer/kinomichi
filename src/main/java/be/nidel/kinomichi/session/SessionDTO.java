@@ -6,5 +6,6 @@ import java.time.LocalTime;
 public record SessionDTO(
         int duration,
         LocalDate day,
-        LocalTime start
+        LocalTime start,
+        SessionType type
 ) { }

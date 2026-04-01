@@ -1,5 +1,8 @@
 package be.nidel.utils;
 
+import be.nidel.kinomichi.participant.ParticipantType;
+import be.nidel.kinomichi.session.SessionType;
+
 import java.math.BigDecimal;
 import java.time.DateTimeException;
 import java.time.LocalDate;

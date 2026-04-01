@@ -140,15 +140,25 @@ public class Kinomichi {
             sessionController.batchSessionCreation(
                     new SessionDTO(90,
                     DateUtils.StringDateToLocalDate("28/03/2026"),
-                    DateUtils.StringTimeToLocalTime("9:30")),
+                    DateUtils.StringTimeToLocalTime("9:30"),
+                            SessionType.Exhibition),
                     g,
                     5);
             sessionController.batchSessionCreation(
                     new SessionDTO(90,
                     DateUtils.StringDateToLocalDate("29/03/2026"),
-                    DateUtils.StringTimeToLocalTime("9:30")),
+                    DateUtils.StringTimeToLocalTime("9:30"),
+                            SessionType.Exhibition),
                     g,
                     3);
+            sessionController.createSession(new SessionDTO(360,
+                    DateUtils.StringDateToLocalDate("28/03/2026"),
+                    DateUtils.StringTimeToLocalTime("18:00"),
+                    SessionType.Dinner), g);
+            sessionController.createSession(new SessionDTO(720,
+                    DateUtils.StringDateToLocalDate("28/03/2026"),
+                    DateUtils.StringTimeToLocalTime("22:00"),
+                    SessionType.Accommodation),g);
         };
 
 

@@ -24,16 +24,16 @@ public class Session {
     private LocalTime end;
 
     public Session(int gatheringId, LocalDate day, LocalTime startTime) {
-        this(gatheringId, day, startTime, 90);
+        this(gatheringId, day, startTime, 90, SessionType.Exhibition);
     }
 
-    public Session(int gatheringId, LocalDate day, LocalTime startTime, int duration) {
+    public Session(int gatheringId, LocalDate day, LocalTime startTime, int duration, SessionType type) {
         this.gatheringId = gatheringId;
         this.day = day;
         this.start = startTime;
         this.duration = duration;
         this.end = start.plusMinutes(duration);
-        this.type = SessionType.Exhibition;
+        this.type = type;
     }
 
     @Override
@@ -98,6 +98,6 @@ public class Session {
     }
 
     public SessionType getSessionType() {
-        return null;
+        return type;
     }
 }
