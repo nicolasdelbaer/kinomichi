@@ -7,7 +7,7 @@ public enum RegistrationStatus {
     REGISTERED, //registered
     WITHDRAWN, //was registered but cancelled before the event
     UNPAID, //has participated and must pay
-    PAYED, //has participated and has paid
+    PAID, //has participated and has paid
     CANCELLED; //was registered and didn't participate
 
     public static Optional<RegistrationStatus> getByOrdinal(int ord){

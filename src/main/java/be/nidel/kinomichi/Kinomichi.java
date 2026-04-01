@@ -19,11 +19,13 @@ import be.technifutur.shared.Menu;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.logging.Handler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Kinomichi {
 
-    private final Logger logger = Logger.getLogger(getClass().getName());
+    private final Logger logger = Logger.getLogger("Kinomichi");
 
     GatheringController gatheringController;
     SessionController sessionController;
@@ -33,7 +35,6 @@ public class Kinomichi {
 
     public Kinomichi() {
         initControllers();
-
         defaultData();
     }
 
@@ -90,7 +91,8 @@ public class Kinomichi {
         menu.addItem("Reporting", String.valueOf(id++), () -> {
             reportingController.showMenu(menu);
         });
-        menu.addItem("Quit", "q", this::quitApplication);
+        menu.addHiddenItem("Quit", "q", this::quitApplication);
+        menu.setPostRender(OutputUtils.STYLISABLE_LINE.formatted(OutputUtils.ANSI_BLACK_BACKGROUND, "\"q\": Quit", OutputUtils.ANSI_RESET));
         menu.interact();
     }
 
@@ -100,8 +102,10 @@ public class Kinomichi {
 
 
     public void defaultData() {
-        logger.config("DEBUG populating data");
+        registrationController.silenceView(true);
+        logger.fine("DEBUG populating data");
 
+        //PARTICIPANTS CREATION
         participantController.createParticipant(new ParticipantDTO(
                 "Johnny", "Lawrence", "johnny@cobrai.com", "0477000001", "Cobra Kai", ParticipantType.Sensei
         ));
@@ -136,6 +140,7 @@ public class Kinomichi {
                 "Nicolas", "Cage", "nicolas@specialforces.gov", "0477000015", "Special Forces MK", ParticipantType.Trainer
         ));
 
+        //SESSIONS CREATION
         Consumer<Gathering> daysCreator = (Gathering g) ->{
             sessionController.batchSessionCreation(
                     new SessionDTO(90,
@@ -162,6 +167,7 @@ public class Kinomichi {
         };
 
 
+        //PRICING CREATION
         List<PricingDTO> pricingList = List.of(
                 new PricingDTO(ParticipantType.Attendee, SessionType.Exhibition, new BigDecimal("10.00")),
                 new PricingDTO(ParticipantType.Attendee, SessionType.Dinner, new BigDecimal("15.00")),
@@ -180,9 +186,11 @@ public class Kinomichi {
                 new PricingDTO(ParticipantType.Trainer, SessionType.Accommodation, new BigDecimal("60.00"))
         );
 
+        //GATHERINGS CREATION
         daysCreator.accept(gatheringController.createGathering(new GatheringDTO("Stage pour adolescents",pricingList)));
         daysCreator.accept(gatheringController.createGathering(new GatheringDTO("Stage pour adultes", pricingList)));
 
+        //REGISTRATION RANDOM CREATION
         List<Participant> participants = participantController.getAllParticipants();
         List<Session> sessions = sessionController.getAllSessions();
         for (int i = 0; i <40; i++) {
@@ -195,6 +203,7 @@ public class Kinomichi {
             registrationController.createRegistration(dto);
         }
 
+        //SETTING TRAINERS
         List<Participant> trainers = participants.stream()
                 .filter((Participant p) ->
                         p.getParticipantType() == ParticipantType.Trainer)
@@ -203,8 +212,9 @@ public class Kinomichi {
             Participant trainer = trainers.get(RandomUtils.getRandomInt(0, trainers.size()));
             session.setOrganizer(trainer);
         }
-        System.out.println(gatheringController.getAllGatherings().toString());
-        logger.config("DEBUG populating data -- COMPLETED");
+        //System.out.println(gatheringController.getAllGatherings().toString());
+        logger.fine("DEBUG populating data -- COMPLETED");
+        registrationController.silenceView(false);
     }
 
 }

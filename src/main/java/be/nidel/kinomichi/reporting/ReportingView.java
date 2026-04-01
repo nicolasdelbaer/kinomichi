@@ -6,6 +6,7 @@ import be.nidel.kinomichi.participant.Participant;
 import be.nidel.kinomichi.participant.ParticipantType;
 import be.nidel.kinomichi.pricing.Pricing;
 import be.nidel.kinomichi.registration.Registration;
+import be.nidel.kinomichi.registration.RegistrationStatus;
 import be.nidel.kinomichi.session.Session;
 import be.nidel.kinomichi.session.SessionType;
 import be.nidel.utils.FormatUtils;
@@ -47,17 +48,17 @@ public class ReportingView extends BaseView<ReportingController> {
     }
 
     private void showParticipantReporting() {
-
+        displayUserChoices(context);
     }
     private void showReceivableReporting() {
         List<Participant> participants = controller.getUnpaidParticipants();
         Map<Integer, Gathering> gatherings = controller.getGatheringMap();
         Map<Integer, Session> sessions = controller.getSessionMap();
 
-        OutputUtils.sOutTitle("%-30s %-14s %-14s".formatted("Attendees", "Sessions", "Reservations"));
+        OutputUtils.sOutTitle(OutputUtils.DEFAULT_LINE.formatted("THEY MUST PAY!"));
+        OutputUtils.sOutTitle("%-25s %-13s %-13s".formatted("Attendees", "Sessions", "Reservations"));
         for (Participant participant : participants) {
             List<Registration> unpaidRegistrations = controller.getUnpaidRegistrationByParticipant(participant);
-
 
             List<BigDecimal> unpaidTotal = unpaidRegistrations.stream()
                     .collect(
@@ -91,17 +92,17 @@ public class ReportingView extends BaseView<ReportingController> {
                     List::of)
                     );
 
-            OutputUtils.sOut("%s%-30s%s %s%-14s %-14s%s".formatted(
-                    OutputUtils.ANSI_WHITE,
-                    participant.getFullName(),
-                    OutputUtils.ANSI_RESET,
-                    OutputUtils.ANSI_RED,
-                    unpaidTotal.get(0),
-                    unpaidTotal.get(1),
-                    OutputUtils.ANSI_RESET
-                    ));
-
+            OutputUtils.sOut("%s%-25s%s %s%-13s %-13s%s".formatted(
+                OutputUtils.ANSI_WHITE,
+                FormatUtils.truncate(participant.getFullName(), 25),
+                OutputUtils.ANSI_RESET,
+                OutputUtils.ANSI_RED,
+                unpaidTotal.get(0),
+                unpaidTotal.get(1),
+                OutputUtils.ANSI_RESET
+                ));
         }
+        displayUserChoices(context);
     }
 
     private void showGatheringReporting() {
@@ -111,106 +112,98 @@ public class ReportingView extends BaseView<ReportingController> {
         displayUserChoices(context);
     }
 
-
-    public void renderGatheringDetails(Gathering gathering){
-
-    }
-
-
-    public void renderReceivableDetails(){
-
-    }
-
-
     public void renderReport(Gathering gathering) {
-        OutputUtils.sOutInfo(renderGatheringInfo(gathering));
+        renderGatheringInfo(gathering);
         for (Session session : gathering.getAllSessions())
-            OutputUtils.sOutInfo(renderSession(session));
-        OutputUtils.sOutInfo(renderPrices(gathering.getPriceList()));
+            renderSession(session);
+        renderPrices(gathering.getPriceList());
     }
 
-
-    private String renderGatheringInfo(Gathering gathering) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(OutputUtils.ANSI_YELLOW_BOLD)
-                .append(System.lineSeparator())
-                .append("- Title: ")
-                .append(gathering.getTitle())
-                .append(OutputUtils.ANSI_RESET)
-        ;
-        return sb.toString();
+    private void renderGatheringInfo(Gathering gathering) {
+        OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(
+                OutputUtils.ANSI_YELLOW_BACKGROUND + OutputUtils.ANSI_BLACK_BOLD,
+                "- Title: "+gathering.getTitle(),
+                OutputUtils.ANSI_RESET
+        ));
     }
 
-    private String renderSession(Session session) {
-        StringBuilder stringBuilder = new StringBuilder();
-        //Display main infos
-        stringBuilder.append(OutputUtils.ANSI_PURPLE)
-        .append("Trainer: ");
+    private void renderSession(Session session) {
+        String trainerName = session.getOrganizer().map(Participant::getFullName).orElse("No organizer");
+        OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(
+                OutputUtils.ANSI_PURPLE,
+                "Trainer: "+ trainerName + " - "+ session.getSessionType().name(),
+                OutputUtils.ANSI_RESET));
+        OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(
+                OutputUtils.ANSI_BLUE,
+                "Date: " +session.getDay()+ " | "+ session.getStart()+ " -> "+ session.getEnd(),
+                OutputUtils.ANSI_RESET));
 
-        session.getOrganizer().ifPresentOrElse(
-                participant -> stringBuilder.append(participant.getFullName()),
-                () -> stringBuilder.append("No trainer"));
-
-        stringBuilder.append(" - day: ")
-        .append(session.getDay())
-        .append(" | ")
-        .append(session.getStart())
-        .append(" -> ")
-        .append(session.getEnd())
-        .append(OutputUtils.ANSI_RESET)
-        .append(System.lineSeparator());
-
-
-        List<Participant> attendees = session.getAttendees();
-        Map<Integer, Registration> registrations = controller.getRegistrationBySession(session).stream()
+        List<Participant> sessionAttendees = session.getAttendees();
+        Map<Integer, Registration> registrationsByParticipant = controller.getRegistrationBySession(session).stream()
                 .filter(r -> r.getSessionId() == session.getId())
                 .collect(Collectors.toMap(
-                        Registration::getParticipantId, Function.identity()))
-                ;
+                        Registration::getParticipantId, Function.identity()));
 
-        attendees.forEach(attendee -> {
-                    stringBuilder
-                        .append(registrations.get(attendee.getId()).getStatus().name())
-                        .append(" - ")
-                        .append(attendee.getFullName())
-                        .append(System.lineSeparator());
+        //ORDER BY STATUS
+        Map<RegistrationStatus, List<Participant>> attendeesBySessionStatus = sessionAttendees.stream()
+                .collect(Collectors.groupingBy(
+                        p -> registrationsByParticipant.get(p.getId()).getStatus(),
+                        Collectors.toList()));
+
+        //DISPLAY ATTENDEE LIST
+        attendeesBySessionStatus.entrySet().forEach(entry -> {
+            entry.getValue().forEach(attendee ->{
+                String attendeeInfo = "\t%s%s%s".formatted(
+                        entry.getKey().name(),
+                        " - ",
+                        attendee.getFullName());
+
+                switch (entry.getKey()){
+                    case UNPAID -> OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(OutputUtils.ANSI_RED, attendeeInfo, OutputUtils.ANSI_RESET));
+                    case PAID -> OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(OutputUtils.ANSI_GREEN, attendeeInfo, OutputUtils.ANSI_RESET));
+                    case CANCELLED,WITHDRAWN -> OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(OutputUtils.ANSI_WHITE_ITALIC, attendeeInfo, OutputUtils.ANSI_RESET));
+                    default -> OutputUtils.sOut(OutputUtils.DEFAULT_LINE.formatted(attendeeInfo));
                 }
-        );
-        return stringBuilder.toString();
-    }
-
-    private String renderPrices(List<Pricing> priceList) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(System.lineSeparator())
-                .append(OutputUtils.ANSI_YELLOW_BOLD)
-                .append("- Prices:")
-                .append(System.lineSeparator())
-                .append(OutputUtils.ANSI_RESET);
-
-        Map<ParticipantType, List<Pricing>> list = priceList.stream()
-                .collect(Collectors.groupingBy(Pricing::getParticipantType));
-
-        String enumString = Arrays
-                .stream(SessionType.values())
-                .map(st -> st.name() + " \t\t")
-                .collect(Collectors.joining());
-        sb.append("Type \t\t")
-          .append(enumString)
-        ;
-
-        list.forEach((key, values) -> {
-            sb.append(System.lineSeparator());
-            sb.append(key.name());
-            sb.append("\t\t");
-            values.forEach(pricing -> {
-                sb
-                .append(OutputUtils.ANSI_CYAN_BOLD)
-                .append(FormatUtils.formatPrice(pricing.getPrice()))
-                .append(OutputUtils.ANSI_RESET)
-                .append("\t\t");
             });
         });
-        return sb.toString();
+        System.out.println("");
+    }
+
+    private void renderPrices(List<Pricing> priceList) {
+        OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(
+                OutputUtils.ANSI_YELLOW_BACKGROUND + OutputUtils.ANSI_BLACK_BOLD,
+                "- Prices Table",
+                OutputUtils.ANSI_RESET
+        ));
+
+        Map<ParticipantType, List<Pricing>> pricesByParticipantType = priceList.stream()
+                .collect(Collectors.groupingBy(Pricing::getParticipantType));
+
+        List<String> enumString = Arrays
+                .stream(SessionType.values())
+                .map(Enum::name).collect(Collectors.toList());
+        enumString.addFirst("$$$");
+
+        String format = "%-11s" + "%-14s".repeat(enumString.size()-1);
+
+        OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(
+                OutputUtils.ANSI_WHITE_BOLD,
+                format.formatted(enumString.toArray()),
+                OutputUtils.ANSI_RESET
+        ));
+
+        pricesByParticipantType.forEach((key, values) -> {
+            List<String> priceRow = new ArrayList<>();
+            priceRow.add(key.name());
+            values.forEach(pricing -> {
+                priceRow.add(FormatUtils.formatPrice(pricing.getPrice()));
+            });
+
+            OutputUtils.sOut(OutputUtils.DEFAULT_LINE.formatted(
+                    format.formatted(priceRow.toArray())
+            ));
+        });
+
     }
 
 

@@ -48,12 +48,14 @@ public class OutputUtils
     public static final String ANSI_PURPLE_BACKGROUND = "\u001B[45m";
     public static final String ANSI_CYAN_BACKGROUND = "\u001B[46m";
     public static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
+    public static final String DEFAULT_LINE = "%-53s";
+    public static final String STYLISABLE_LINE = "%s%-53s%s";
 
     public static void sOutTitle(String s) {
         System.out.printf("%s%s%s%s%n", OutputUtils.ANSI_WHITE_BACKGROUND, OutputUtils.ANSI_BLACK_BOLD, s, OutputUtils.ANSI_RESET);
     }
     public static void sOut(String s) {
-        System.out.printf("%s%s%s%n", OutputUtils.ANSI_YELLOW, s, OutputUtils.ANSI_RESET);
+        System.out.printf("%s%s%s%n", OutputUtils.ANSI_RESET, s, OutputUtils.ANSI_RESET);
     }
     public static void sOutWarning(String s) {
         System.out.printf("%s%s%s%n", OutputUtils.ANSI_YELLOW, s, OutputUtils.ANSI_RESET);

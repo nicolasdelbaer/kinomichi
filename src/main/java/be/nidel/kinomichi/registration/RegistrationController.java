@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class RegistrationController extends BaseController implements KinomichiModelOwner {
-    private final Logger logger = Logger.getLogger(getClass().getName());
+    private final Logger logger = Logger.getLogger("Kinomichi");
 
     RegistrationModel model = new RegistrationModel();
     RegistrationView view = new RegistrationView(this);
@@ -46,18 +46,16 @@ public class RegistrationController extends BaseController implements KinomichiM
                 Session session = sessionModel.get(registrationDTO.sessionId());
                 session.addAttendee(participant);
 
-                view.showRegistrationFeedback(participant, session, registration);
+                if(!silentView) view.showRegistrationFeedback(participant, session, registration);
             }else{
-                view.displayAlreadyExistingEntry(registrationDTO.participantId(), registrationDTO.sessionId());
+                if(!silentView) view.displayAlreadyExistingEntry(registrationDTO.participantId(), registrationDTO.sessionId());
             }
-
-
         }else{
             logger.warning("participantId|sessionId not found");
             if(!participantValid)
-                view.displayParticipantError(registrationDTO.participantId());
+                if(!silentView) view.displayParticipantError(registrationDTO.participantId());
             if(!sessionValid)
-                view.displaySessionError(registrationDTO.sessionId());
+                if(!silentView) view.displaySessionError(registrationDTO.sessionId());
         }
         return registration;
     }

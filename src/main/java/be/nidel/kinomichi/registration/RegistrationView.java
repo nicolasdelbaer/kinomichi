@@ -16,7 +16,7 @@ import static be.nidel.utils.InputUtils.askInput;
 
 public class RegistrationView extends BaseView<RegistrationController> {
 
-    protected final Logger logger = Logger.getLogger(getClass().getName());
+    protected final Logger logger = Logger.getLogger("Kinomichi");
 
     public RegistrationView(RegistrationController controller) {
         super(controller);
