@@ -51,6 +51,7 @@ public class Kinomichi {
         );
         reportingController.setGatheringModel(gatheringController.getModel());
         reportingController.setRegistrationModel(registrationController.getModel());
+        reportingController.setParticipantModel(participantController.getModel());
 
         //Mapping events for decoupling
         gatheringController.onSessionRequest.connect(this::handleSessionRequest);
@@ -173,10 +174,14 @@ public class Kinomichi {
 
         List<Participant> participants = participantController.getAllParticipants();
         List<Session> sessions = sessionController.getAllSessions();
-        for (int i = 0; i <20; i++) {
-            Participant participant = participants.get(RandomUtils.getRandomInt(0, participants.size()));
-            Session session = sessions.get(RandomUtils.getRandomInt(0, sessions.size()));
-            session.addAttendee(participant);
+        for (int i = 0; i <40; i++) {
+            RegistrationDTO dto = new RegistrationDTO(
+                    RegistrationStatus.getByOrdinal(RandomUtils.getRandomInt(0, RegistrationStatus.values().length)).get(),
+                    RandomUtils.getRandomInt(1, participants.size()+1),
+                    RandomUtils.getRandomInt(1, sessions.size()+1),
+                    RandomUtils.getRandomInt(1, pricingList.size()+1)
+            );
+            registrationController.createRegistration(dto);
         }
 
         List<Participant> trainers = participants.stream()
@@ -187,27 +192,6 @@ public class Kinomichi {
             Participant trainer = trainers.get(RandomUtils.getRandomInt(0, trainers.size()));
             session.setTrainer(trainer);
         }
-
-
-        registrationController.createRegistration(new RegistrationDTO(RegistrationStatus.REGISTERED,1,1,1));
-        registrationController.createRegistration(new RegistrationDTO(RegistrationStatus.PAYMENT_PENDING,1,1,1));
-        registrationController.createRegistration(new RegistrationDTO(RegistrationStatus.PAYED,4,3,1));
-        registrationController.createRegistration(new RegistrationDTO(RegistrationStatus.REGISTERED,4,3,1));
-        registrationController.createRegistration(new RegistrationDTO(RegistrationStatus.PAYED,2,2,1));
-        registrationController.createRegistration(new RegistrationDTO(RegistrationStatus.PAYED,5,2,1));
-        registrationController.createRegistration(new RegistrationDTO(RegistrationStatus.CANCELLED,7,2,1));
-        registrationController.createRegistration(new RegistrationDTO(RegistrationStatus.PAYMENT_PENDING,5,1,1));
-        registrationController.createRegistration(new RegistrationDTO(RegistrationStatus.CANCELLED,4,1,1));
-        registrationController.createRegistration(new RegistrationDTO(RegistrationStatus.REGISTERED,8,1,1));
-        registrationController.createRegistration(new RegistrationDTO(RegistrationStatus.PAYMENT_PENDING,2,1,1));
-        registrationController.createRegistration(new RegistrationDTO(RegistrationStatus.PAYED,4,9,1));
-        registrationController.createRegistration(new RegistrationDTO(RegistrationStatus.REGISTERED,10,3,1));
-        registrationController.createRegistration(new RegistrationDTO(RegistrationStatus.PAYED,4,2,1));
-        registrationController.createRegistration(new RegistrationDTO(RegistrationStatus.PAYED,5,2,1));
-        registrationController.createRegistration(new RegistrationDTO(RegistrationStatus.CANCELLED,6,2,1));
-        registrationController.createRegistration(new RegistrationDTO(RegistrationStatus.PAYMENT_PENDING,1,1,1));
-        registrationController.createRegistration(new RegistrationDTO(RegistrationStatus.CANCELLED,3,1,1));
-
         System.out.println(gatheringController.getAllGatherings().toString());
         logger.config("DEBUG populating data -- COMPLETED");
     }
