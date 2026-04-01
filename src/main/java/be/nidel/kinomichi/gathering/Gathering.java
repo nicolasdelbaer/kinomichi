@@ -79,4 +79,13 @@ public class Gathering {
     public void setId(int id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "Gathering{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", sessionCount=" + sessionList.size() +
+                '}';
+    }
 }
