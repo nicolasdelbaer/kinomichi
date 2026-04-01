@@ -115,4 +115,9 @@ public class RegistrationView extends BaseView<RegistrationController> {
                 session.getEnd()
                 ));
     }
+
+    public void displayAlreadyExistingEntry(int participantId, int sessionId) {
+        OutputUtils.sOutError("Already existing registering for session id: %s && participant id: %s ".formatted(participantId, sessionId));
+        OutputUtils.sOutError("Please consider editing the entry first");
+    }
 }

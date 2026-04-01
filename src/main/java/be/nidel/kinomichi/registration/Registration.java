@@ -46,4 +46,15 @@ public class Registration {
     public void setId(int id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "Registration{" +
+                "id=" + id +
+                ", status=" + status.name() +
+                ", participantId=" + participantId +
+                ", sessionId=" + sessionId +
+                ", priceId=" + priceId +
+                '}';
+    }
 }

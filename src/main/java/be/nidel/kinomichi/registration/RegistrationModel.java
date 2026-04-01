@@ -37,11 +37,31 @@ public class RegistrationModel implements KinomichiModel {
         return registrationList;
     }
 
+    public boolean hasEntry(int participantId, int sessionId) {
+        return registrationList.values().stream().anyMatch(r -> r.getSessionId() == sessionId && r.getParticipantId() == participantId);
+    }
+
+    public List<Registration> getAllByStatus(RegistrationStatus status){
+        return registrationList.values().stream().filter(r -> r.getStatus() == status).toList();
+    }
+
     public List<Registration> getAllRegistrationBySessionId(int sessionId) {
         return registrationList
                 .values()
                 .stream()
                 .filter(registration -> registration.getSessionId() == sessionId)
                 .toList();
+    }
+
+    public List<Registration> getAllRegistrationByParticipantId(int participantId) {
+        return registrationList
+                .values()
+                .stream()
+                .filter(registration -> registration.getParticipantId() == participantId)
+                .toList();
+    }
+
+    public List<Registration> getUnpaidRegistrationsByParticipantId(int participantId) {
+        return getAllRegistrationByParticipantId(participantId).stream().filter(r -> r.getStatus() == RegistrationStatus.UNPAID).toList();
     }
 }

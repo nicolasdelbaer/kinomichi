@@ -2,7 +2,6 @@ package be.nidel.kinomichi.registration;
 
 import be.nidel.kinomichi.base.BaseController;
 import be.nidel.kinomichi.base.KinomichiModelOwner;
-import be.nidel.kinomichi.base.KinomichiModel;
 import be.nidel.kinomichi.participant.Participant;
 import be.nidel.kinomichi.participant.ParticipantModel;
 import be.nidel.kinomichi.session.Session;
@@ -31,24 +30,30 @@ public class RegistrationController extends BaseController implements KinomichiM
         //sanity check
         boolean participantValid = participantModel.isIdValid(registrationDTO.participantId());
         boolean sessionValid = sessionModel.isIdValid(registrationDTO.sessionId());
-        logger.info("creating new registration");
+        logger.finest("creating new registration");
 
         if(participantValid && sessionValid){
-            registration = new Registration();
-            registration.setParticipantId(registrationDTO.participantId());
-            registration.setSessionId(registrationDTO.sessionId());
-            registration.setStatus(registrationDTO.status());
-            registration.setPriceId(registrationDTO.priceId());
-            model.addRegistration(registration);
 
-            Participant participant = participantModel.get(registrationDTO.participantId());
-            Session session = sessionModel.get(registrationDTO.sessionId());
-            view.showRegistrationFeedback(participant, session, registration);
+            if(!model.hasEntry(registrationDTO.participantId(), registrationDTO.sessionId())){
+                registration = new Registration();
+                registration.setParticipantId(registrationDTO.participantId());
+                registration.setSessionId(registrationDTO.sessionId());
+                registration.setStatus(registrationDTO.status());
+                registration.setPriceId(registrationDTO.priceId());
+                model.addRegistration(registration);
 
-            logger.log(Level.FINE, "Registrations: {0}", model.getAllRegistration().toString());
+                Participant participant = participantModel.get(registrationDTO.participantId());
+                Session session = sessionModel.get(registrationDTO.sessionId());
+                session.addAttendee(participant);
+
+                view.showRegistrationFeedback(participant, session, registration);
+            }else{
+                view.displayAlreadyExistingEntry(registrationDTO.participantId(), registrationDTO.sessionId());
+            }
+
 
         }else{
-            logger.info("participantId|sessionId not found");
+            logger.warning("participantId|sessionId not found");
             if(!participantValid)
                 view.displayParticipantError(registrationDTO.participantId());
             if(!sessionValid)
