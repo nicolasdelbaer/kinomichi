@@ -2,6 +2,7 @@ package be.nidel.kinomichi.reporting;
 
 import be.nidel.kinomichi.base.BaseView;
 import be.nidel.kinomichi.gathering.Gathering;
+import be.nidel.kinomichi.participant.Participant;
 import be.nidel.kinomichi.participant.ParticipantType;
 import be.nidel.kinomichi.pricing.Pricing;
 import be.nidel.kinomichi.registration.Registration;
@@ -12,10 +13,9 @@ import be.nidel.utils.OutputUtils;
 import be.nidel.utils.menu.MenuFactory;
 import be.technifutur.shared.Menu;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static be.nidel.utils.InputUtils.askInt;
@@ -29,25 +29,106 @@ public class ReportingView extends BaseView<ReportingController> {
     public void displayUserChoices(Menu context){
         this.context = context;
 
+        int inputId = 1;
         this.current = MenuFactory.backQuitTemplate(context)
-                .addItem("Participants by gathering report", "1", this::showGatheringReport)
+                .addItem("Gathering overview", String.valueOf(inputId++), this::showGatheringOverview)
+                .addItem("Participant reporting", String.valueOf(inputId++), this::showParticipantReporting)
+                .addItem("Gathering reporting", String.valueOf(inputId++), this::showGatheringReporting)
+                .addItem("Accounts reporting", String.valueOf(inputId++), this::showReceivableReporting)
         ;
         this.current.interact();
     }
 
-    private void showGatheringReport() {
+    private void showGatheringOverview() {
         Scanner scanner = new Scanner(System.in);
         int gatheringId = askInt(scanner, "Please insert gathering id.");
-        controller.gatheringReport(gatheringId);
+        controller.gatheringOverview(gatheringId);
         displayUserChoices(context);
     }
 
-    public void renderReport(Gathering gathering, Map<Integer, Registration> registrationMap) {
+    private void showParticipantReporting() {
+
+    }
+    private void showReceivableReporting() {
+        List<Participant> participants = controller.getUnpaidParticipants();
+        Map<Integer, Gathering> gatherings = controller.getGatheringMap();
+        Map<Integer, Session> sessions = controller.getSessionMap();
+
+        OutputUtils.sOutTitle("%-30s %-14s %-14s".formatted("Attendees", "Sessions", "Reservations"));
+        for (Participant participant : participants) {
+            List<Registration> unpaidRegistrations = controller.getUnpaidRegistrationByParticipant(participant);
+
+
+            List<BigDecimal> unpaidTotal = unpaidRegistrations.stream()
+                    .collect(
+                            Collectors.teeing(
+                                Collectors.mapping(registration -> {
+                                Session session = sessions.get(registration.getSessionId());
+                                Gathering gathering = gatherings.get(session.getGatheringId());
+
+                                BigDecimal price = BigDecimal.ZERO;
+                                if(session.getSessionType() == SessionType.Exhibition){
+                                    Pricing pricing = gathering.getPriceFor(
+                                            participant.getParticipantType(),
+                                            session.getSessionType());
+                                    price = pricing.getPrice();
+                                }
+                                return price;
+                            }, Collectors.reducing(BigDecimal.ZERO, BigDecimal::add)),
+                            Collectors.mapping(registration -> {
+                                Session session = sessions.get(registration.getSessionId());
+                                Gathering gathering = gatherings.get(session.getGatheringId());
+
+                                BigDecimal price = BigDecimal.ZERO;
+                                if(session.getSessionType() != SessionType.Exhibition){
+                                    Pricing pricing = gathering.getPriceFor(
+                                            participant.getParticipantType(),
+                                            session.getSessionType());
+                                    price = pricing.getPrice();
+                                }
+                                return price;
+                            }, Collectors.reducing(BigDecimal.ZERO, BigDecimal::add)),
+                    List::of)
+                    );
+
+            OutputUtils.sOut("%s%-30s%s %s%-14s %-14s%s".formatted(
+                    OutputUtils.ANSI_WHITE,
+                    participant.getFullName(),
+                    OutputUtils.ANSI_RESET,
+                    OutputUtils.ANSI_RED,
+                    unpaidTotal.get(0),
+                    unpaidTotal.get(1),
+                    OutputUtils.ANSI_RESET
+                    ));
+
+        }
+    }
+
+    private void showGatheringReporting() {
+        Scanner scanner = new Scanner(System.in);
+        int gatheringId = askInt(scanner, "Please insert gathering id.");
+        controller.gatheringReporting(gatheringId);
+        displayUserChoices(context);
+    }
+
+
+    public void renderGatheringDetails(Gathering gathering){
+
+    }
+
+
+    public void renderReceivableDetails(){
+
+    }
+
+
+    public void renderReport(Gathering gathering) {
         OutputUtils.sOutInfo(renderGatheringInfo(gathering));
         for (Session session : gathering.getAllSessions())
-            OutputUtils.sOutInfo(renderSession(session, registrationMap));
-        OutputUtils.sOutInfo(renderPrices(gathering.getPriceList(), registrationMap));
+            OutputUtils.sOutInfo(renderSession(session));
+        OutputUtils.sOutInfo(renderPrices(gathering.getPriceList()));
     }
+
 
     private String renderGatheringInfo(Gathering gathering) {
         StringBuilder sb = new StringBuilder();
@@ -60,18 +141,17 @@ public class ReportingView extends BaseView<ReportingController> {
         return sb.toString();
     }
 
-    private String renderSession(Session session, Map<Integer, Registration> registrationMap) {
-        StringBuilder sb = new StringBuilder();
+    private String renderSession(Session session) {
+        StringBuilder stringBuilder = new StringBuilder();
         //Display main infos
-        sb.append(OutputUtils.ANSI_PURPLE)
+        stringBuilder.append(OutputUtils.ANSI_PURPLE)
         .append("Trainer: ");
 
-        session.getTrainer().ifPresentOrElse(
-                participant -> sb.append(participant.getFullName()),
-                () -> sb.append("No trainer"));
+        session.getOrganizer().ifPresentOrElse(
+                participant -> stringBuilder.append(participant.getFullName()),
+                () -> stringBuilder.append("No trainer"));
 
-        sb.append(" - ")
-        .append("day: ")
+        stringBuilder.append(" - day: ")
         .append(session.getDay())
         .append(" | ")
         .append(session.getStart())
@@ -80,17 +160,26 @@ public class ReportingView extends BaseView<ReportingController> {
         .append(OutputUtils.ANSI_RESET)
         .append(System.lineSeparator());
 
-        session.getAttendees().forEach(attendee -> sb
-                .append(registrationMap.get(session.getId()).getStatus().name())
-                .append(" - ")
-                .append(attendee.getFullName())
-                .append(System.lineSeparator())
-        );
 
-        return sb.toString();
+        List<Participant> attendees = session.getAttendees();
+        Map<Integer, Registration> registrations = controller.getRegistrationBySession(session).stream()
+                .filter(r -> r.getSessionId() == session.getId())
+                .collect(Collectors.toMap(
+                        Registration::getParticipantId, Function.identity()))
+                ;
+
+        attendees.forEach(attendee -> {
+                    stringBuilder
+                        .append(registrations.get(attendee.getId()).getStatus().name())
+                        .append(" - ")
+                        .append(attendee.getFullName())
+                        .append(System.lineSeparator());
+                }
+        );
+        return stringBuilder.toString();
     }
 
-    private String renderPrices(List<Pricing> priceList, Map<Integer, Registration> registrationMap) {
+    private String renderPrices(List<Pricing> priceList) {
         StringBuilder sb = new StringBuilder();
         sb.append(System.lineSeparator())
                 .append(OutputUtils.ANSI_YELLOW_BOLD)
@@ -124,7 +213,12 @@ public class ReportingView extends BaseView<ReportingController> {
         return sb.toString();
     }
 
+
+
+    //region Error handling
     public void showInvalidIdError(int gatheringId) {
-        OutputUtils.sOutError("Gathering id: %s doesn't exist.");
+        OutputUtils.sOutError("Gathering id: %s doesn't exist.".formatted(gatheringId));
     }
+
+    //endregion
 }
