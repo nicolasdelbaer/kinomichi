@@ -44,14 +44,14 @@ public class SessionView extends BaseView<SessionController> {
         continueAddingSession();
     }
     private SessionType requestSessionType(Scanner scanner) {
-        OutputUtils.sOutInfo(SessionType.values().toString());
+        OutputUtils.sOutInfo("What is the type of the session?");
         Optional<SessionType> type = null;
 
         do{
             int id = 0;
             String enumString = Arrays
                     .stream(SessionType.values())
-                    .map(st -> "%s. %s\t\t".formatted(st.ordinal(), st.name()))
+                    .map(st -> "%s. %s\t\t".formatted(st.ordinal(), st.name() + st.emoji()))
                     .collect(Collectors.joining());
             id = askInt(scanner, enumString);
             type = SessionType.getByValue(id);

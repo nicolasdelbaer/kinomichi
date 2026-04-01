@@ -19,8 +19,6 @@ import be.technifutur.shared.Menu;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.logging.Handler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Kinomichi {
@@ -79,13 +77,13 @@ public class Kinomichi {
     private void displayMenu() {
         int id = 1;
         Menu menu = new Menu();
-        menu.addItem("Create a new gathering", String.valueOf(id++), () -> {
+        menu.addItem("Manage Gatherings", String.valueOf(id++), () -> {
             gatheringController.showMenu(menu);
         });
-        menu.addItem("Create a new participant", String.valueOf(id++), () -> {
+        menu.addItem("Manage Participant", String.valueOf(id++), () -> {
             participantController.showMenu(menu);
         });
-        menu.addItem("Handle subscriptions", String.valueOf(id++), () -> {
+        menu.addItem("Handle Registrations", String.valueOf(id++), () -> {
             registrationController.showMenu(menu);
         });
         menu.addItem("Reporting", String.valueOf(id++), () -> {

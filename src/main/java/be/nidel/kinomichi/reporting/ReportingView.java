@@ -128,10 +128,10 @@ public class ReportingView extends BaseView<ReportingController> {
     }
 
     private void renderSession(Session session) {
-        String trainerName = session.getOrganizer().map(Participant::getFullName).orElse("No organizer");
+        String orgaName = session.getOrganizer().map(Participant::getFullName).orElse(OutputUtils.ANSI_YELLOW+ "n/a"+OutputUtils.ANSI_PURPLE);
         OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(
                 OutputUtils.ANSI_PURPLE,
-                session.getSessionType().emoji() + "Trainer: "+ trainerName + " - "+ session.getSessionType().name(),
+                session.getSessionType().emoji() + " Organizer: "+ orgaName + " - "+ session.getSessionType().name(),
                 OutputUtils.ANSI_RESET));
         OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(
                 OutputUtils.ANSI_BLUE,
@@ -155,7 +155,8 @@ public class ReportingView extends BaseView<ReportingController> {
             String attendeeInfo = "\t%s%s%s".formatted(
                     key.name(),
                     " - ",
-                    attendee.getFullName());
+                    "%s (id: %s)".formatted(attendee.getFullName(), attendee.getId())
+            );
 
             switch (key) {
                 case UNPAID ->

@@ -26,7 +26,7 @@ public class GatheringView extends BaseView<GatheringController> {
         this.current = MenuFactory.backQuitTemplate(context)
                 .addItem("create new gathering", "c", this::gatherGatheringData)
                 //.addItem("update gathering id (cmd;id)", "u", this::updateGatheringData)
-                .addItem("manage sessions id", "u", this::manageSessionData);
+                .addItem("manage sessions", "u", this::manageSessionData);
         this.current.interact();
     }
 
