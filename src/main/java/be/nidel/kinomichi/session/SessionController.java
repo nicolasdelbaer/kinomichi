@@ -44,15 +44,15 @@ public class SessionController extends BaseController implements KinomichiModelO
             startingTime = startingTime.plusMinutes(sessionDTO.duration());
         }
     }
-
-    public void showMenu(Menu context){
-        view.displayUserChoices(context);
-    }
+//
+//    public void showMenu(Menu context){
+//        view.displayUserChoices(context);
+//    }
 
     public void showManageMenu(Menu context, Gathering gathering) {
         //NOTE temporary usage of "display user choices" before proper menu
-        view.displayUserChoices(context);
         view.setGatheringData(gathering);
+        view.displayUserChoices(context);
 
     }
 
