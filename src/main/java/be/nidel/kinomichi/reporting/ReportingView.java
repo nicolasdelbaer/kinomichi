@@ -131,7 +131,7 @@ public class ReportingView extends BaseView<ReportingController> {
         String trainerName = session.getOrganizer().map(Participant::getFullName).orElse("No organizer");
         OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(
                 OutputUtils.ANSI_PURPLE,
-                "Trainer: "+ trainerName + " - "+ session.getSessionType().name(),
+                session.getSessionType().emoji() + "Trainer: "+ trainerName + " - "+ session.getSessionType().name(),
                 OutputUtils.ANSI_RESET));
         OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(
                 OutputUtils.ANSI_BLUE,
@@ -151,21 +151,22 @@ public class ReportingView extends BaseView<ReportingController> {
                         Collectors.toList()));
 
         //DISPLAY ATTENDEE LIST
-        attendeesBySessionStatus.entrySet().forEach(entry -> {
-            entry.getValue().forEach(attendee ->{
-                String attendeeInfo = "\t%s%s%s".formatted(
-                        entry.getKey().name(),
-                        " - ",
-                        attendee.getFullName());
+        attendeesBySessionStatus.forEach((key, value) -> value.forEach(attendee -> {
+            String attendeeInfo = "\t%s%s%s".formatted(
+                    key.name(),
+                    " - ",
+                    attendee.getFullName());
 
-                switch (entry.getKey()){
-                    case UNPAID -> OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(OutputUtils.ANSI_RED, attendeeInfo, OutputUtils.ANSI_RESET));
-                    case PAID -> OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(OutputUtils.ANSI_GREEN, attendeeInfo, OutputUtils.ANSI_RESET));
-                    case CANCELLED,WITHDRAWN -> OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(OutputUtils.ANSI_WHITE_ITALIC, attendeeInfo, OutputUtils.ANSI_RESET));
-                    default -> OutputUtils.sOut(OutputUtils.DEFAULT_LINE.formatted(attendeeInfo));
-                }
-            });
-        });
+            switch (key) {
+                case UNPAID ->
+                        OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(OutputUtils.ANSI_RED, attendeeInfo, OutputUtils.ANSI_RESET));
+                case PAID ->
+                        OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(OutputUtils.ANSI_GREEN, attendeeInfo, OutputUtils.ANSI_RESET));
+                case CANCELLED, WITHDRAWN ->
+                        OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(OutputUtils.ANSI_WHITE_ITALIC, attendeeInfo, OutputUtils.ANSI_RESET));
+                default -> OutputUtils.sOut(OutputUtils.DEFAULT_LINE.formatted(attendeeInfo));
+            }
+        }));
         System.out.println("");
     }
 
@@ -181,7 +182,7 @@ public class ReportingView extends BaseView<ReportingController> {
 
         List<String> enumString = Arrays
                 .stream(SessionType.values())
-                .map(Enum::name).collect(Collectors.toList());
+                .map(e -> e.name()).collect(Collectors.toList());
         enumString.addFirst("$$$");
 
         String format = "%-11s" + "%-14s".repeat(enumString.size()-1);

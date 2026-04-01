@@ -50,7 +50,7 @@ public class ParticipantView extends BaseView<ParticipantController> {
             int id = 0;
             String enumString = Arrays
                     .stream(ParticipantType.values())
-                    .map(st -> "%s. %s\t\t".formatted(st.ordinal(), st.name()))
+                    .map(st -> "%s. %s\t\t".formatted(st.ordinal(), st.name()+st.emoji()))
                     .collect(Collectors.joining());
             id = askInt(scanner, enumString);
             type = ParticipantType.getByValue(id);

@@ -43,8 +43,8 @@ public class GatheringView extends BaseView<GatheringController> {
                                 sessionType,
                                 askBigDecimal(scanner,
                                         "Please enter the price for %s -> %s:".formatted(
-                                                sessionType.name(),
-                                                participantType.name()
+                                                sessionType.name() + sessionType.emoji(),
+                                                participantType.name() + participantType.emoji()
                                 ))
                         )
                 );

@@ -43,7 +43,7 @@ public class Session {
                 ", trainer=" + ((Objects.nonNull(organizer))? organizer.getFullName():"n/a") +
                 ", start=" + start +
                 ", end=" + end +
-                ", type=" + type.name() +
+                ", type=" + type.name() +type.emoji() +
                 ",attendees=" + attendeeGroup +
                 '}';
     }
