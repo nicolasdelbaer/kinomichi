@@ -4,6 +4,7 @@ import be.nidel.kinomichi.participant.ParticipantType;
 import be.nidel.kinomichi.pricing.Pricing;
 import be.nidel.kinomichi.session.Session;
 import be.nidel.kinomichi.participant.Participant;
+import be.nidel.kinomichi.session.SessionType;
 import be.nidel.utils.FormatUtils;
 import be.nidel.utils.OutputUtils;
 
@@ -87,5 +88,16 @@ public class Gathering {
                 ", title='" + title + '\'' +
                 ", sessionCount=" + sessionList.size() +
                 '}';
+    }
+
+    public Pricing getPriceFor(ParticipantType participantType, SessionType sessionType) {
+        Optional<Pricing> result =  priceList.stream()
+                .filter(p -> p.getParticipantType() == participantType && p.getSessionType() == sessionType).findFirst();
+
+        if(result.isPresent()){
+            return result.get();
+        }else{
+            throw new IllegalArgumentException("Cannot find a price for participant type: %s && session type: %s".formatted(participantType.name(), sessionType.name()));
+        }
     }
 }
