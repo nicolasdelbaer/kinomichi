@@ -33,8 +33,8 @@ public class ReportingView extends BaseView<ReportingController> {
         int inputId = 1;
         this.current = MenuFactory.backQuitTemplate(context)
                 .addItem("Gathering overview", String.valueOf(inputId++), this::showGatheringOverview)
-                .addItem("Participant reporting", String.valueOf(inputId++), this::showParticipantReporting)
-                .addItem("Gathering reporting", String.valueOf(inputId++), this::showGatheringReporting)
+                .addItem("Participant reporting", String.valueOf(inputId++), this::showParticipantStatus)
+                .addItem("Gathering status", String.valueOf(inputId++), this::showGatheringStatus)
                 .addItem("Accounts reporting", String.valueOf(inputId++), this::showReceivableReporting)
         ;
         this.current.interact();
@@ -47,7 +47,10 @@ public class ReportingView extends BaseView<ReportingController> {
         displayUserChoices(context);
     }
 
-    private void showParticipantReporting() {
+    //TODO liste sessions et statut
+    //TODO payé / à payer / Projection total
+    //TODO ristourne (opt.)
+    private void showParticipantStatus() {
         displayUserChoices(context);
     }
     private void showReceivableReporting() {
@@ -105,7 +108,10 @@ public class ReportingView extends BaseView<ReportingController> {
         displayUserChoices(context);
     }
 
-    private void showGatheringReporting() {
+    //TODO (total inscriptions, annulations, ...)
+    //TODO projections paiements
+    //TODO nb de logements validés / payés
+    private void showGatheringStatus() {
         Scanner scanner = new Scanner(System.in);
         int gatheringId = askInt(scanner, "Please insert gathering id.");
         controller.gatheringReporting(gatheringId);
