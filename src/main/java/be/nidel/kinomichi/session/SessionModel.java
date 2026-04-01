@@ -13,8 +13,8 @@ public class SessionModel implements KinomichiModel {
     public boolean isIdValid(Integer instanceId) {
         return sessionList.containsKey(instanceId);
     }
-    public List<Session> getAllSession() {
-        return sessionList.values().stream().toList();
+    public Map<Integer, Session> getAllSession() {
+        return sessionList;
     }
 
     public void addSession(Session session) {

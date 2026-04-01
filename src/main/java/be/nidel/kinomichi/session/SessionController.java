@@ -56,7 +56,7 @@ public class SessionController extends BaseController implements KinomichiModelO
     }
 
     public List<Session> getAllSessions() {
-        return model.getAllSession();
+        return model.getAllSession().values();
     }
 
     public SessionModel getModel() {
