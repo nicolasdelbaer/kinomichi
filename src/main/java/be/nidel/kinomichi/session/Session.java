@@ -17,7 +17,8 @@ public class Session {
     private int id = -1;
     private int gatheringId = -1;
     private ParticipantGroup attendeeGroup = new ParticipantGroup();
-    private Participant trainer;
+    private Participant organizer;
+    private SessionType type;
     private LocalDate day;
     private LocalTime start;
     private LocalTime end;
@@ -25,6 +26,7 @@ public class Session {
     public Session(int gatheringId, LocalDate day, LocalTime startTime) {
         this(gatheringId, day, startTime, 90);
     }
+
     public Session(int gatheringId, LocalDate day, LocalTime startTime, int duration) {
         this.gatheringId = gatheringId;
         this.day = day;
@@ -37,7 +39,7 @@ public class Session {
     public String toString() {
         return "Session{" +
                 ", day=" + day +
-                ", trainer=" + ((Objects.nonNull(trainer))?trainer.getFullName():"n/a") +
+                ", trainer=" + ((Objects.nonNull(organizer))? organizer.getFullName():"n/a") +
                 ", start=" + start +
                 ", end=" + end +
                 ",attendees=" + attendeeGroup +
@@ -56,16 +58,16 @@ public class Session {
         return day;
     }
 
-    public Optional<Participant> getTrainer() {
-        return Optional.ofNullable(trainer);
+    public Optional<Participant> getOrganizer() {
+        return Optional.ofNullable(organizer);
     }
 
-    public void setTrainer(Participant trainer) {
+    public void setOrganizer(Participant organizer) {
         //TODO catcher l'exception
-        if(trainer.getParticipantType() != ParticipantType.Trainer)
+        if(organizer.getParticipantType() != ParticipantType.Trainer)
             throw new KinomichiTrainerException("Participant must be a trainer");
 
-        this.trainer = trainer;
+        this.organizer = organizer;
     }
 
     public void addAttendee(Participant attendee) {
@@ -91,5 +93,13 @@ public class Session {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getGatheringId() {
+        return gatheringId;
+    }
+
+    public SessionType getSessionType() {
+        return null;
     }
 }

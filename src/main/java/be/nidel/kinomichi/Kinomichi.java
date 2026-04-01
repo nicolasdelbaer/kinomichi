@@ -52,6 +52,7 @@ public class Kinomichi {
         reportingController.setGatheringModel(gatheringController.getModel());
         reportingController.setRegistrationModel(registrationController.getModel());
         reportingController.setParticipantModel(participantController.getModel());
+        reportingController.setSessionModel(sessionController.getModel());
 
         //Mapping events for decoupling
         gatheringController.onSessionRequest.connect(this::handleSessionRequest);
@@ -190,7 +191,7 @@ public class Kinomichi {
                 .toList();
         for (Session session : sessions) {
             Participant trainer = trainers.get(RandomUtils.getRandomInt(0, trainers.size()));
-            session.setTrainer(trainer);
+            session.setOrganizer(trainer);
         }
         System.out.println(gatheringController.getAllGatherings().toString());
         logger.config("DEBUG populating data -- COMPLETED");

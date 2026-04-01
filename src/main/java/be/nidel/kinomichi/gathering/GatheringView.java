@@ -76,7 +76,7 @@ public class GatheringView extends BaseView<GatheringController> {
         for (Map.Entry<LocalDate,List<Session>> entry : sessionsByDay.entrySet()) {
             OutputUtils.sOutInfo(entry.getKey().toString());
             for (Session session : sessionsByDay.get(entry.getKey())) {
-                OutputUtils.sOut(session.getTrainer() + ": " + session.getStart() + " to " + session.getEnd());
+                OutputUtils.sOut(session.getOrganizer() + ": " + session.getStart() + " to " + session.getEnd());
             }
         }
     }
