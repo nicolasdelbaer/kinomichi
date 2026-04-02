@@ -24,4 +24,14 @@ public class MenuFactory {
         menuController.setInteractionMessage("Do you confirm?");
         return menuController;
     }
+
+    public static MenuController editTemplate(Menu context, Runnable editAction, String value) {
+        Menu menu = new Menu();
+        MenuController menuController = new MenuController(menu, context);
+        menu.addHiddenItem("edit", "e", editAction);
+        menu.addHiddenItem("empty", "", () ->{});
+        menu.setPostRender(OutputUtils.STYLISABLE_LINE.formatted(OutputUtils.ANSI_BLACK_BACKGROUND, "\"e\": edit - \"enter\": pass", OutputUtils.ANSI_RESET));
+        menuController.setInteractionMessage("Edit value: %s ?".formatted(value));
+        return menuController;
+    }
 }
