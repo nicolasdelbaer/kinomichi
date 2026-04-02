@@ -9,6 +9,7 @@ import be.nidel.kinomichi.registration.Registration;
 import be.nidel.kinomichi.registration.RegistrationStatus;
 import be.nidel.kinomichi.session.Session;
 import be.nidel.kinomichi.session.SessionType;
+import be.nidel.utils.BigDecimalFormatter;
 import be.nidel.utils.FormatUtils;
 import be.nidel.utils.OutputUtils;
 import be.nidel.utils.menu.MenuFactory;
@@ -140,21 +141,27 @@ public class ReportingView extends BaseView<ReportingController> {
 
         System.out.println();
         OutputUtils.sOut(OutputUtils.DEFAULT_LINE.formatted("Payments"));
-        OutputUtils.sOut("%-5s %-24s %-22s".formatted("", "Total paid", FormatUtils.formatPrice(paymentForecast.totPaid())));
-        OutputUtils.sOut("%-5s %-24s %-22s".formatted("", "Total discount", FormatUtils.formatPrice(paymentForecast.totDiscount())));
+        OutputUtils.sOut("%-5s %-24s %-22s".formatted("", "Total paid", getFormatted(paymentForecast.totPaid())));
+        OutputUtils.sOut("%-5s %-24s %-22s".formatted("", "Total discount", getFormatted(paymentForecast.totDiscount())));
         OutputUtils.sOut("%-5s %-24s %-22s".formatted("", "Total left",
                 (paymentForecast.totUnpaid().compareTo(BigDecimal.ZERO) == 1? OutputUtils.ANSI_RED:"")+
-                FormatUtils.formatPrice(paymentForecast.totUnpaid()))
+                        getFormatted(paymentForecast.totUnpaid()))
         );
         OutputUtils.sOut("%-5s %-24s %-22s".formatted("", "Forecast",
                 (paymentForecast.forecast().compareTo(BigDecimal.ZERO) == 1? OutputUtils.ANSI_GREEN:"")+
-                FormatUtils.formatPrice(paymentForecast.forecast())));
+                        getFormatted(paymentForecast.forecast())));
 
         System.out.println();
         OutputUtils.sOut(OutputUtils.DEFAULT_LINE.formatted("%-29s %-22s".formatted("Reservations", "nb (nb paid)")));
         OutputUtils.sOut("%-5s %-24s %-15s %-9s".formatted("", "Dinners", "%s (%s)".formatted(reservations.nbDinners(), reservations.nbPaidDinners()), SessionType.Dinner.emoji()));
         OutputUtils.sOut("%-5s %-24s %-15s %-9s".formatted("", "Accomodations", "%s (%s)".formatted(reservations.nbAccommodations(), reservations.nbPaidAccommodations()), SessionType.Accommodation.emoji()));
 
+    }
+
+    private String getFormatted(BigDecimal bigDecimal) {
+        BigDecimalFormatter priceFormatter = new BigDecimalFormatter(bigDecimal);
+        priceFormatter.formatEuro();
+        return priceFormatter.toString();
     }
 
     private void renderGatheringInfo(Gathering gathering) {
@@ -237,7 +244,8 @@ public class ReportingView extends BaseView<ReportingController> {
             List<String> priceRow = new ArrayList<>();
             priceRow.add(key.name());
             values.forEach(pricing -> {
-                priceRow.add(FormatUtils.formatPrice(pricing.getPrice()));
+                BigDecimalFormatter priceFormatter = new BigDecimalFormatter(pricing.getPrice()).formatEuro().zeroToFree();
+                priceRow.add(priceFormatter.toString());
             });
 
             OutputUtils.sOut(OutputUtils.DEFAULT_LINE.formatted(
