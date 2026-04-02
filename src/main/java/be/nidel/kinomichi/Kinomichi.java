@@ -91,7 +91,7 @@ public class Kinomichi {
         });
         menu.addHiddenItem("Quit", "q", this::quitApplication);
         menu.setPostRender(OutputUtils.STYLISABLE_LINE.formatted(OutputUtils.ANSI_BLACK_BACKGROUND, "\"q\": Quit", OutputUtils.ANSI_RESET));
-        menu.interact();
+        menu.renderAndInteract();
     }
 
     private void quitApplication() {

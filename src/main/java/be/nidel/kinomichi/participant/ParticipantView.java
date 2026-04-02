@@ -24,7 +24,7 @@ public class ParticipantView extends BaseView<ParticipantController> {
         this.context = context;
         MenuFactory.backQuitTemplate(context)
         .addItem("create new participant", "c", this::gatherParticipantData)
-        .interact();
+        .renderAndInteract();
     }
 
     private void gatherParticipantData() {

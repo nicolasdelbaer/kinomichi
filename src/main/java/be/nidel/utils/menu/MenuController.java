@@ -21,7 +21,7 @@ public class MenuController {
     }
 
     public void handleBack(){
-        backMenu.interact();
+        backMenu.renderAndInteract();
     }
     public void handleQuit(){
         OutputUtils.sOutBye();
@@ -33,6 +33,10 @@ public class MenuController {
     public MenuController addItem(String description, String input, Runnable action) {
         currentMenu.addItem(description, input, action);
         return this;
+    }
+
+    public Menu addRegexItem(String description, String input, Runnable action) {
+        return currentMenu.addRegexItem(description, input, action);
     }
 
     public MenuController addItem(String description, String[] inputs, Runnable action) {
@@ -61,11 +65,15 @@ public class MenuController {
     }
 
     public void interact() {
-        //NOTE maybe separate interact & render from Menu.jar for more control on how it's rendered
-        //allowing "hidden inputs" too
         if(Objects.nonNull(interactionMessage) && !interactionMessage.isEmpty())
             OutputUtils.sOutWarning(interactionMessage);
         currentMenu.interact();
+    }
+
+    public void renderAndInteract() {
+        if(Objects.nonNull(interactionMessage) && !interactionMessage.isEmpty())
+            OutputUtils.sOutWarning(interactionMessage);
+        currentMenu.renderAndInteract();
     }
     public void setTitle(String title) {
         currentMenu.setTitle(title);

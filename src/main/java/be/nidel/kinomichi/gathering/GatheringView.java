@@ -27,7 +27,7 @@ public class GatheringView extends BaseView<GatheringController> {
                 .addItem("create new gathering", "c", this::gatherGatheringData)
                 //.addItem("update gathering id (cmd;id)", "u", this::updateGatheringData)
                 .addItem("manage sessions", "u", this::manageSessionData);
-        this.current.interact();
+        this.current.renderAndInteract();
     }
 
     private void gatherGatheringData() {

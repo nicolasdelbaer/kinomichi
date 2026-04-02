@@ -15,6 +15,6 @@ public abstract class BaseView<C extends BaseController> {
 
     //Use to retrigger the last current menu -> ie: error in controller after handling input
     public void refresh(){
-        current.interact();
+        current.renderAndInteract();
     }
 }

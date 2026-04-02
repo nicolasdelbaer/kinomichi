@@ -37,7 +37,7 @@ public class ReportingView extends BaseView<ReportingController> {
                 .addItem("Gathering status", String.valueOf(inputId++), this::showGatheringStatus)
                 .addItem("Payments status", String.valueOf(inputId++), this::showReceivableReporting)
         ;
-        this.current.interact();
+        this.current.renderAndInteract();
     }
 
     //region Menu Handlers

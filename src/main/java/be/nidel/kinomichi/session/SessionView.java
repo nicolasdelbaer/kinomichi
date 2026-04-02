@@ -28,7 +28,7 @@ public class SessionView extends BaseView<SessionController> {
         this.context = context;
         current = MenuFactory.backQuitTemplate(context)
         .addItem("create new session", "c", this::gatherNewSessionData);
-        current.interact();
+        current.renderAndInteract();
     }
 
     private void gatherNewSessionData() {
@@ -63,7 +63,7 @@ public class SessionView extends BaseView<SessionController> {
     public void continueAddingSession(){
         MenuFactory.confirmTemplate(context, this::gatherNewSessionData)
                 .setInteractionMessage("Continue adding sessions ? (y/n)")
-                .interact();
+                .renderAndInteract();
     }
 
     public void setGatheringData(Gathering gathering) {
