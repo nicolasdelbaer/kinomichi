@@ -15,17 +15,28 @@ public class ParticipantController extends BaseController implements KinomichiMo
         return model.getAllParticipant().values().stream().toList();
     }
 
-    public Participant createParticipant(ParticipantDTO input){
+    public Participant createParticipant(ParticipantDTO participantDTO){
         Participant participant = new Participant.Builder()
-                .setFirstName(input.firstName())
-                .setLastName(input.lastName())
-                .setPhone(input.phone())
-                .setEmail(input.email())
-                .setClubName(input.clubName())
-                .setType(input.type())
+                .setFirstName(participantDTO.firstName())
+                .setLastName(participantDTO.lastName())
+                .setPhone(participantDTO.phone())
+                .setEmail(participantDTO.email())
+                .setClubName(participantDTO.clubName())
+                .setParticipantType(participantDTO.type())
                 .build();
 
         model.addParticipant(participant);
+        return participant;
+    }
+
+    public Participant updateParticipant(int participantId, ParticipantDTO participantDTO) {
+        Participant participant = model.get(participantId);
+        participant.setFirstName(participantDTO.firstName());
+        participant.setLastName(participantDTO.lastName());
+        participant.setPhone(participantDTO.phone());
+        participant.setEmail(participantDTO.email());
+        participant.setClubName(participantDTO.clubName());
+        participant.setParticipantType(participantDTO.type());
         return participant;
     }
 
@@ -35,5 +46,9 @@ public class ParticipantController extends BaseController implements KinomichiMo
 
     public ParticipantModel getModel() {
         return model;
+    }
+
+    public Participant getParticipantById(Integer participantId) {
+        return model.get(participantId);
     }
 }

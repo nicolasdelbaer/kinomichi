@@ -119,7 +119,7 @@ public class Participant {
             return this;
         }
 
-        public Builder setType(ParticipantType type) {
+        public Builder setParticipantType(ParticipantType type) {
             this.type = type;
             return this;
         }
