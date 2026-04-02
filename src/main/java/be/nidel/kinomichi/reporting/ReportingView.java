@@ -33,13 +33,14 @@ public class ReportingView extends BaseView<ReportingController> {
         int inputId = 1;
         this.current = MenuFactory.backQuitTemplate(context)
                 .addItem("Gathering overview", String.valueOf(inputId++), this::showGatheringOverview)
-                .addItem("Participant reporting", String.valueOf(inputId++), this::showParticipantStatus)
+                //.addItem("Participant reporting", String.valueOf(inputId++), this::showParticipantStatus) //TODO attendee detail
                 .addItem("Gathering status", String.valueOf(inputId++), this::showGatheringStatus)
-                .addItem("Accounts reporting", String.valueOf(inputId++), this::showReceivableReporting)
+                .addItem("Payments status", String.valueOf(inputId++), this::showReceivableReporting)
         ;
         this.current.interact();
     }
 
+    //region Menu Handlers
     private void showGatheringOverview() {
         Scanner scanner = new Scanner(System.in);
         int gatheringId = askInt(scanner, "Please insert gathering id.");
@@ -53,12 +54,18 @@ public class ReportingView extends BaseView<ReportingController> {
     private void showParticipantStatus() {
         displayUserChoices(context);
     }
+    private void showGatheringStatus() {
+        Scanner scanner = new Scanner(System.in);
+        int gatheringId = askInt(scanner, "Please insert gathering id.");
+        controller.gatheringReporting(gatheringId);
+        displayUserChoices(context);
+    }
     private void showReceivableReporting() {
         List<Participant> participants = controller.getUnpaidParticipants();
         Map<Integer, Gathering> gatherings = controller.getGatheringMap();
         Map<Integer, Session> sessions = controller.getSessionMap();
 
-        OutputUtils.sOutTitle(OutputUtils.DEFAULT_LINE.formatted("THEY MUST PAY!"));
+        OutputUtils.sOutTitle(OutputUtils.DEFAULT_LINE.formatted("%-23s%30s".formatted("THEY MUST PAY!", "(All gatherings)")));
         OutputUtils.sOutTitle("%-25s %-13s %-13s".formatted("Attendees", "Sessions", "Reservations"));
         for (Participant participant : participants) {
             List<Registration> unpaidRegistrations = controller.getUnpaidRegistrationByParticipant(participant);
@@ -108,21 +115,46 @@ public class ReportingView extends BaseView<ReportingController> {
         displayUserChoices(context);
     }
 
-    //TODO (total inscriptions, annulations, ...)
-    //TODO projections paiements
-    //TODO nb de logements validés / payés
-    private void showGatheringStatus() {
-        Scanner scanner = new Scanner(System.in);
-        int gatheringId = askInt(scanner, "Please insert gathering id.");
-        controller.gatheringReporting(gatheringId);
-        displayUserChoices(context);
-    }
+    //endregion
 
-    public void renderReport(Gathering gathering) {
+    //region Renderings
+    public void renderOverviewReport(Gathering gathering) {
         renderGatheringInfo(gathering);
         for (Session session : gathering.getAllSessions())
             renderSession(session);
         renderPrices(gathering.getPriceList());
+    }
+
+    public void renderGatheringStatus(Gathering gathering) {
+        ReportingController.Stats stats = controller.getGatheringStats(gathering);
+        ReportingController.PaymentForecast paymentForecast = controller.getPaymentForecast(gathering);
+        ReportingController.Reservations reservations = controller.getReservations(gathering);
+
+        OutputUtils.sOutTitle(OutputUtils.DEFAULT_LINE.formatted("DETAIL GATHERING"));
+
+        OutputUtils.sOut(OutputUtils.DEFAULT_LINE.formatted("Stats"));
+        OutputUtils.sOut("%-5s %-24s %-22s".formatted("", "Nb inscriptions", stats.nbInscriptions()));
+        OutputUtils.sOut("%-5s %-24s %-22s".formatted("", "Nb participations", stats.nbParticipations()));
+        OutputUtils.sOut("%-5s %-24s %-22s".formatted("", "Nb annulations", stats.nbAnnulations()));
+        OutputUtils.sOut("%-5s %-24s %-22s".formatted("", "Nb absences", stats.nbAbsences()));
+
+        System.out.println();
+        OutputUtils.sOut(OutputUtils.DEFAULT_LINE.formatted("Payments"));
+        OutputUtils.sOut("%-5s %-24s %-22s".formatted("", "Total paid", FormatUtils.formatPrice(paymentForecast.totPaid())));
+        OutputUtils.sOut("%-5s %-24s %-22s".formatted("", "Total discount", FormatUtils.formatPrice(paymentForecast.totDiscount())));
+        OutputUtils.sOut("%-5s %-24s %-22s".formatted("", "Total left",
+                (paymentForecast.totUnpaid().compareTo(BigDecimal.ZERO) == 1? OutputUtils.ANSI_RED:"")+
+                FormatUtils.formatPrice(paymentForecast.totUnpaid()))
+        );
+        OutputUtils.sOut("%-5s %-24s %-22s".formatted("", "Forecast",
+                (paymentForecast.forecast().compareTo(BigDecimal.ZERO) == 1? OutputUtils.ANSI_GREEN:"")+
+                FormatUtils.formatPrice(paymentForecast.forecast())));
+
+        System.out.println();
+        OutputUtils.sOut(OutputUtils.DEFAULT_LINE.formatted("%-29s %-22s".formatted("Reservations", "nb (nb paid)")));
+        OutputUtils.sOut("%-5s %-24s %-15s %-9s".formatted("", "Dinners", "%s (%s)".formatted(reservations.nbDinners(), reservations.nbPaidDinners()), SessionType.Dinner.emoji()));
+        OutputUtils.sOut("%-5s %-24s %-15s %-9s".formatted("", "Accomodations", "%s (%s)".formatted(reservations.nbAccommodations(), reservations.nbPaidAccommodations()), SessionType.Accommodation.emoji()));
+
     }
 
     private void renderGatheringInfo(Gathering gathering) {
@@ -144,13 +176,14 @@ public class ReportingView extends BaseView<ReportingController> {
                 "Date: " +session.getDay()+ " | "+ session.getStart()+ " -> "+ session.getEnd(),
                 OutputUtils.ANSI_RESET));
 
+        //GET PARTICIPANTS & THEIR REGISTRATIONS
         List<Participant> sessionAttendees = session.getAttendees();
         Map<Integer, Registration> registrationsByParticipant = controller.getRegistrationBySession(session).stream()
                 .filter(r -> r.getSessionId() == session.getId())
                 .collect(Collectors.toMap(
                         Registration::getParticipantId, Function.identity()));
 
-        //ORDER BY STATUS
+        //ORDER PARTICIPANTS BY STATUS
         Map<RegistrationStatus, List<Participant>> attendeesBySessionStatus = sessionAttendees.stream()
                 .collect(Collectors.groupingBy(
                         p -> registrationsByParticipant.get(p.getId()).getStatus(),
@@ -161,7 +194,7 @@ public class ReportingView extends BaseView<ReportingController> {
             String attendeeInfo = "\t%s%s%s".formatted(
                     key.name(),
                     " - ",
-                    "%s (id: %s)".formatted(attendee.getFullName(), attendee.getId())
+                    "%s (%s | id: %s)".formatted(attendee.getFullName(), attendee.getParticipantType().name(), attendee.getId())
             );
 
             switch (key) {
@@ -174,7 +207,7 @@ public class ReportingView extends BaseView<ReportingController> {
                 default -> OutputUtils.sOut(OutputUtils.DEFAULT_LINE.formatted(attendeeInfo));
             }
         }));
-        System.out.println("");
+        System.out.println();
     }
 
     private void renderPrices(List<Pricing> priceList) {
@@ -214,10 +247,10 @@ public class ReportingView extends BaseView<ReportingController> {
 
     }
 
-
+    //endregion
 
     //region Error handling
-    public void showInvalidIdError(int gatheringId) {
+    public void showInvalidGatheringIdError(int gatheringId) {
         OutputUtils.sOutError("Gathering id: %s doesn't exist.".formatted(gatheringId));
     }
 

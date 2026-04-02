@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public enum SessionType {
     Exhibition(100, "🥋"),
-    Dinner(200, "🥘🧑‍🍳"),
+    Dinner(200, "🧑‍🍳"),
     Accommodation(300, "🏨")
     ;
 
