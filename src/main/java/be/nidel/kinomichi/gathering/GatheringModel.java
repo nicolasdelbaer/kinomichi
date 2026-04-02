@@ -6,6 +6,7 @@ import be.nidel.utils.OutputUtils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 public class GatheringModel implements KinomichiModel {
     private Map<Integer, Gathering> gatheringList = new HashMap<>();
@@ -33,6 +34,8 @@ public class GatheringModel implements KinomichiModel {
         return gatheringList.get(gatheringId);
     }
     public Map<Integer, Gathering> getAllGathering() {
-        return gatheringList;
+        return gatheringList.entrySet().stream()
+                .filter(e -> !e.getValue().isArchived())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }

@@ -1,5 +1,7 @@
 package be.nidel.kinomichi.gathering;
 
+import be.nidel.kinomichi.base.Archivable;
+import be.nidel.kinomichi.base.BaseEntity;
 import be.nidel.kinomichi.participant.ParticipantType;
 import be.nidel.kinomichi.pricing.Pricing;
 import be.nidel.kinomichi.session.Session;
@@ -13,11 +15,11 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Gathering {
-    private int id = -1;
+public class Gathering extends BaseEntity implements Archivable {
     private String title;
     private List<Pricing> priceList = new ArrayList<>();
     private List<Session> sessionList = new ArrayList<>();
+    private boolean archived = false;
 
     public Gathering() {
         this.title = title;
@@ -73,12 +75,15 @@ public class Gathering {
         return priceList;
     }
 
-    public int getId() {
-        return id;
-    }
+    public Pricing getPriceFor(ParticipantType participantType, SessionType sessionType) {
+        Optional<Pricing> result =  priceList.stream()
+                .filter(p -> p.getParticipantType() == participantType && p.getSessionType() == sessionType).findFirst();
 
-    public void setId(int id) {
-        this.id = id;
+        if(result.isPresent()){
+            return result.get();
+        }else{
+            throw new IllegalArgumentException("Cannot find a price for participant type: %s && session type: %s".formatted(participantType.name(), sessionType.name()));
+        }
     }
 
     @Override
@@ -90,14 +95,9 @@ public class Gathering {
                 '}';
     }
 
-    public Pricing getPriceFor(ParticipantType participantType, SessionType sessionType) {
-        Optional<Pricing> result =  priceList.stream()
-                .filter(p -> p.getParticipantType() == participantType && p.getSessionType() == sessionType).findFirst();
 
-        if(result.isPresent()){
-            return result.get();
-        }else{
-            throw new IllegalArgumentException("Cannot find a price for participant type: %s && session type: %s".formatted(participantType.name(), sessionType.name()));
-        }
-    }
+    @Override public boolean isArchived() {return archived;}
+    @Override public void setArchived() {archived = true;}
+    @Override public void recoverArchive() {archived = false;}
+
 }

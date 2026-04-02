@@ -6,6 +6,7 @@ import be.nidel.utils.OutputUtils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 public class ParticipantModel implements KinomichiModel {
 
@@ -29,10 +30,15 @@ public class ParticipantModel implements KinomichiModel {
     public Participant get(Integer participantId) {
         if(!participantList.containsKey(participantId))
             throw new NoSuchElementException("Participant Id doesn't exist");
+        //Accept archived here
+//        if(participantList.get(participantId).isArchived())
+//            throw new NoSuchElementException("Participant is archived");
         return participantList.get(participantId);
     }
     public Map<Integer,Participant> getAllParticipant() {
-        return participantList;
+        return participantList.entrySet().stream()
+                .filter(e -> !e.getValue().isArchived())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
 }

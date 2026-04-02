@@ -1,5 +1,7 @@
 package be.nidel.kinomichi.session;
 
+import be.nidel.kinomichi.base.Archivable;
+import be.nidel.kinomichi.base.BaseEntity;
 import be.nidel.kinomichi.base.KinomichiTrainerException;
 import be.nidel.kinomichi.participant.ParticipantGroup;
 import be.nidel.kinomichi.participant.Participant;
@@ -11,10 +13,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class Session {
+public class Session extends BaseEntity implements Archivable {
     private int duration;
 
-    private int id = -1;
     private int gatheringId = -1;
     private ParticipantGroup attendeeGroup = new ParticipantGroup();
     private Participant organizer;
@@ -22,6 +23,7 @@ public class Session {
     private LocalDate day;
     private LocalTime start;
     private LocalTime end;
+    private boolean archived = false;
 
     public Session(int gatheringId, LocalDate day, LocalTime startTime) {
         this(gatheringId, day, startTime, 90, SessionType.Exhibition);
@@ -85,14 +87,6 @@ public class Session {
     }
 
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public int getGatheringId() {
         return gatheringId;
     }
@@ -100,4 +94,10 @@ public class Session {
     public SessionType getSessionType() {
         return type;
     }
+
+
+    @Override public boolean isArchived() {return archived;}
+    @Override public void setArchived() {archived = true;}
+    @Override public void recoverArchive() {archived = false;}
+
 }

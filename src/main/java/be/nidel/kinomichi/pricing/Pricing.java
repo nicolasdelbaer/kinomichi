@@ -1,13 +1,13 @@
 package be.nidel.kinomichi.pricing;
 
+import be.nidel.kinomichi.base.BaseEntity;
 import be.nidel.kinomichi.participant.Participant;
 import be.nidel.kinomichi.participant.ParticipantType;
 import be.nidel.kinomichi.session.SessionType;
 
 import java.math.BigDecimal;
 
-public class Pricing {
-    private int id = -1;
+public class Pricing extends BaseEntity {
     SessionType sessionType;
     ParticipantType participantType;
     BigDecimal price = new BigDecimal("15");
@@ -40,13 +40,5 @@ public class Pricing {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 }

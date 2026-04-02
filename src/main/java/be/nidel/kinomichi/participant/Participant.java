@@ -1,13 +1,16 @@
 package be.nidel.kinomichi.participant;
 
-public class Participant {
-    private int id = -1;
+import be.nidel.kinomichi.base.Archivable;
+import be.nidel.kinomichi.base.BaseEntity;
+
+public class Participant extends BaseEntity implements Archivable {
     private String firstName;
     private String lastName;
     private String phone = "n/a";
     private String email = "n/a";
     private String clubName = "n/a";
     private ParticipantType type = ParticipantType.Attendee;
+    private boolean archived = false;
 
     private Participant() {
 
@@ -77,13 +80,11 @@ public class Participant {
         return firstName + " " + lastName;
     }
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    @Override public boolean isArchived() {return archived;}
+    @Override public void setArchived() {archived = true;}
+    @Override public void recoverArchive() {archived = false;}
+
 
     //Builder pattern - Usage of internal class
     public static class Builder{
