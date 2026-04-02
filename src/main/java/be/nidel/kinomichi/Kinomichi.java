@@ -105,37 +105,37 @@ public class Kinomichi {
 
         //PARTICIPANTS CREATION
         participantController.createParticipant(new ParticipantDTO(
-                "Johnny", "Lawrence", "johnny@cobrai.com", "0477000001", "Cobra Kai", ParticipantType.Sensei
+                "Johnny", "Lawrence", "0477000001", "johnny@cobrai.com", "Cobra Kai", ParticipantType.Sensei
         ));
         participantController.createParticipant(new ParticipantDTO(
-                "Daniel", "LaRusso", "daniel@miyagido.com", "0477000002", "Miyagi-Do", ParticipantType.Sensei
+                "Daniel", "LaRusso", "0477000002", "daniel@miyagido.com", "Miyagi-Do", ParticipantType.Sensei
         ));
         participantController.createParticipant(new ParticipantDTO(
-                "Miguel", "Diaz", "miguel@cobrai.com", "0477000003", "Cobra Kai", ParticipantType.Attendee
+                "Miguel", "Diaz", "0477000003", "miguel@cobrai.com", "Cobra Kai", ParticipantType.Attendee
         ));
         participantController.createParticipant(new ParticipantDTO(
-                "Samantha", "LaRusso", "sam@miyagido.com", "0477000004", "Miyagi-Do", ParticipantType.Attendee
+                "Samantha", "LaRusso", "0477000004", "sam@miyagido.com", "Miyagi-Do", ParticipantType.Attendee
         ));
         participantController.createParticipant(new ParticipantDTO(
-                "Robby", "Keene", "robby@miyagido.com", "0477000005", "Miyagi-Do", ParticipantType.Attendee
+                "Robby", "Keene", "0477000005", "robby@miyagido.com", "Miyagi-Do", ParticipantType.Attendee
         ));
         participantController.createParticipant(new ParticipantDTO(
-                "Chuck", "Norris", "chuck@roundhouse.com", "0477000010", "Roundhouse Dojo", ParticipantType.Sensei
+                "Chuck", "Norris", "0477000010", "chuck@roundhouse.com", "Roundhouse Dojo", ParticipantType.Sensei
         ));
         participantController.createParticipant(new ParticipantDTO(
-                "Bruce", "Lee", "bruce@jeetkunedo.com", "0477000011", "Jeet Kune Do", ParticipantType.Sensei
+                "Bruce", "Lee", "0477000011", "bruce@jeetkunedo.com", "Jeet Kune Do", ParticipantType.Sensei
         ));
         participantController.createParticipant(new ParticipantDTO(
-                "Jean-Claude", "VanDamme", "jcvd@splitacademy.be", "0477000012", "Split Academy", ParticipantType.VIP
+                "Jean-Claude", "VanDamme", "0477000012", "jcvd@splitacademy.be", "Split Academy", ParticipantType.VIP
         ));
         participantController.createParticipant(new ParticipantDTO(
-                "Steven", "Seagal", "steven@aikidovibes.com", "0477000013", "Aikido Vibes", ParticipantType.Trainer
+                "Steven", "Seagal", "0477000013", "steven@aikidovibes.com", "Aikido Vibes", ParticipantType.Trainer
         ));
         participantController.createParticipant(new ParticipantDTO(
-                "Ip", "Man", "ip@wingchun.hk", "0477000014", "Wing Chun Institute", ParticipantType.Sensei
+                "Ip", "Man", "0477000014", "ip@wingchun.hk", "Wing Chun Institute", ParticipantType.Sensei
         ));
         participantController.createParticipant(new ParticipantDTO(
-                "Nicolas", "Cage", "nicolas@specialforces.gov", "0477000015", "Special Forces MK", ParticipantType.Trainer
+                "Nicolas", "Cage", "0477000015", "nicolas@specialforces.gov", "Special Forces MK", ParticipantType.Trainer
         ));
 
         //SESSIONS CREATION
