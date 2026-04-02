@@ -4,6 +4,8 @@ import be.nidel.kinomichi.base.BaseView;
 import be.nidel.kinomichi.gathering.Gathering;
 import be.nidel.kinomichi.participant.ParticipantType;
 import be.nidel.utils.OutputUtils;
+import be.nidel.utils.inputprovider.InputProvider;
+import be.nidel.utils.inputprovider.ScannerInput;
 import be.nidel.utils.menu.MenuController;
 import be.nidel.utils.menu.MenuFactory;
 import be.technifutur.shared.Menu;
@@ -33,7 +35,7 @@ public class SessionView extends BaseView<SessionController> {
 
     private void gatherNewSessionData() {
         OutputUtils.sOutInfo("Create a new session:");
-        Scanner scanner = new Scanner(System.in);
+        InputProvider scanner = new ScannerInput(new Scanner(System.in));
 
         OutputUtils.sOutInfo("A session needs the date & time");
         LocalDate date = askDate(scanner, "Day (dd/mm/yyyy)");
@@ -43,7 +45,7 @@ public class SessionView extends BaseView<SessionController> {
         controller.createSession(new SessionDTO(90, date,time, type), gathering);
         continueAddingSession();
     }
-    private SessionType requestSessionType(Scanner scanner) {
+    private SessionType requestSessionType(InputProvider inputProvider) {
         OutputUtils.sOutInfo("What is the type of the session?");
         Optional<SessionType> type = null;
 
@@ -53,7 +55,7 @@ public class SessionView extends BaseView<SessionController> {
                     .stream(SessionType.values())
                     .map(st -> "%s. %s\t\t".formatted(st.ordinal(), st.name() + st.emoji()))
                     .collect(Collectors.joining());
-            id = askInt(scanner, enumString);
+            id = askInt(inputProvider, enumString);
             type = SessionType.getByValue(id);
         }while(!type.isPresent());
 

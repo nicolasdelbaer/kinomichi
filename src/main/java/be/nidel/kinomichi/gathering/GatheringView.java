@@ -6,6 +6,8 @@ import be.nidel.kinomichi.pricing.PricingDTO;
 import be.nidel.kinomichi.session.Session;
 import be.nidel.kinomichi.session.SessionType;
 import be.nidel.utils.OutputUtils;
+import be.nidel.utils.inputprovider.InputProvider;
+import be.nidel.utils.inputprovider.ScannerInput;
 import be.nidel.utils.menu.MenuFactory;
 import be.technifutur.shared.Menu;
 
@@ -32,7 +34,7 @@ public class GatheringView extends BaseView<GatheringController> {
 
     private void gatherGatheringData() {
         OutputUtils.sOutInfo("Creating a new gathering...");
-        Scanner scanner = new Scanner(System.in);
+        InputProvider scanner = new ScannerInput(new Scanner(System.in));
 
         String title = askInput(scanner,"Title of the gathering?");
         List<PricingDTO> priceList = new ArrayList<>();
@@ -62,7 +64,7 @@ public class GatheringView extends BaseView<GatheringController> {
 
     private void manageSessionData() {
         OutputUtils.sOutInfo("Managing sessions for gathering id ... ?");
-        Integer gatheringId = askInt(new Scanner(System.in),"Enter the gathering id");
+        Integer gatheringId = askInt(new ScannerInput(new Scanner(System.in)),"Enter the gathering id");
         controller.sessionMenuRequest(current.getCurrentMenu(), gatheringId);
     }
 

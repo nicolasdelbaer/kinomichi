@@ -3,6 +3,8 @@ package be.nidel.utils.menu;
 import be.nidel.utils.OutputUtils;
 import be.technifutur.shared.Menu;
 
+import java.util.function.Consumer;
+
 //Objectif enlever de la complexité dans la création et gestion des menus
 public class MenuFactory {
 
@@ -25,13 +27,13 @@ public class MenuFactory {
         return menuController;
     }
 
-    public static MenuController editTemplate(Menu context, Runnable editAction, String value) {
+    public static MenuController editTemplate(Menu context, Consumer<String> editAction, String field, String content) {
         Menu menu = new Menu();
         MenuController menuController = new MenuController(menu, context);
-        menu.addHiddenItem("edit", "e", editAction);
+        menu.addRegexItem("free input", ".*", () -> editAction.accept(menuController.getLastEntry()));
         menu.addHiddenItem("empty", "", () ->{});
-        menu.setPostRender(OutputUtils.STYLISABLE_LINE.formatted(OutputUtils.ANSI_BLACK_BACKGROUND, "\"e\": edit - \"enter\": pass", OutputUtils.ANSI_RESET));
-        menuController.setInteractionMessage("Edit value: %s ?".formatted(value));
+        menu.setPreRender(OutputUtils.STYLISABLE_LINE.formatted(OutputUtils.ANSI_BLACK_BACKGROUND, "Edit Mode - \"enter\": pass", OutputUtils.ANSI_RESET));
+        menuController.setPostRender("%sUpdate %s: %s ?%s".formatted(OutputUtils.ANSI_YELLOW, field, content, OutputUtils.ANSI_RESET));
         return menuController;
     }
 }

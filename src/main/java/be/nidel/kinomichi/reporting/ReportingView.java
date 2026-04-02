@@ -12,6 +12,8 @@ import be.nidel.kinomichi.session.SessionType;
 import be.nidel.utils.BigDecimalFormatter;
 import be.nidel.utils.FormatUtils;
 import be.nidel.utils.OutputUtils;
+import be.nidel.utils.inputprovider.InputProvider;
+import be.nidel.utils.inputprovider.ScannerInput;
 import be.nidel.utils.menu.MenuFactory;
 import be.technifutur.shared.Menu;
 
@@ -43,7 +45,7 @@ public class ReportingView extends BaseView<ReportingController> {
 
     //region Menu Handlers
     private void showGatheringOverview() {
-        Scanner scanner = new Scanner(System.in);
+        InputProvider scanner = new ScannerInput(new Scanner(System.in));
         int gatheringId = askInt(scanner, "Please insert gathering id.");
         controller.gatheringOverview(gatheringId);
         displayUserChoices(context);
@@ -56,7 +58,7 @@ public class ReportingView extends BaseView<ReportingController> {
         displayUserChoices(context);
     }
     private void showGatheringStatus() {
-        Scanner scanner = new Scanner(System.in);
+        InputProvider scanner = new ScannerInput(new Scanner(System.in));
         int gatheringId = askInt(scanner, "Please insert gathering id.");
         controller.gatheringReporting(gatheringId);
         displayUserChoices(context);
