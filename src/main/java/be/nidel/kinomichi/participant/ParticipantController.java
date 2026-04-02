@@ -5,6 +5,8 @@ import be.nidel.kinomichi.base.KinomichiModelOwner;
 import be.technifutur.shared.Menu;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ParticipantController extends BaseController implements KinomichiModelOwner {
 
@@ -50,5 +52,15 @@ public class ParticipantController extends BaseController implements KinomichiMo
 
     public Participant getParticipantById(Integer participantId) {
         return model.get(participantId);
+    }
+
+    public void archiveParticipant(Integer participantId) {
+        try {
+            Participant participant = model.get(participantId);
+            participant.setArchived();
+            view.showArchivedFeedback(participant);
+        } catch (NoSuchElementException ignored) {
+            view.showArchivedErrorFeedback();
+        }
     }
 }

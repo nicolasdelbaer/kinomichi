@@ -70,9 +70,8 @@ public class ParticipantView extends BaseView<ParticipantController> {
                 new ScannerInput(new Scanner(System.in)),
                 "Enter the participant id"
         );
-        ParticipantDTO dto = updateParticipantData(controller.getParticipantById(participantId));
-        Participant participant = controller.updateParticipant(participantId, dto);
-        participant.setAsArchived();
+        controller.archiveParticipant(participantId);
+        displayUserChoices(context);
     }
 
     private void createParticipantRequest() {
@@ -149,4 +148,15 @@ public class ParticipantView extends BaseView<ParticipantController> {
         return type.get();
     }
 
+    public void showArchivedFeedback(Participant participant){
+        OutputUtils.sOutWarning("%s. %s %s".formatted(
+                participant.getId(),
+                participant.getFullName(),
+                "has been deleted"
+        ));
+    }
+
+    public void showArchivedErrorFeedback() {
+        OutputUtils.sOutWarning("Cannot execute deletion, bad participant id?");
+    }
 }
