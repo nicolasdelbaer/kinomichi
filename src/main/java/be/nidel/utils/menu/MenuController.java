@@ -35,8 +35,9 @@ public class MenuController {
         return this;
     }
 
-    public Menu addRegexItem(String description, String input, Runnable action) {
-        return currentMenu.addRegexItem(description, input, action);
+    public MenuController addRegexItem(String description, String input, Runnable action) {
+        currentMenu.addRegexItem(description, input, action);
+        return this;
     }
 
     public MenuController addItem(String description, String[] inputs, Runnable action) {
@@ -86,6 +87,11 @@ public class MenuController {
 
 
     //region getter & setter
+
+
+    public String getLastEntry() {
+        return currentMenu.getLastEntry();
+    }
 
     public String getInteractionMessage() {
         return interactionMessage;

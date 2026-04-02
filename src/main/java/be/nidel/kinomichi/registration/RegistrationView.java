@@ -9,7 +9,6 @@ import be.nidel.utils.menu.MenuFactory;
 import be.technifutur.shared.Menu;
 
 import java.util.Objects;
-import java.util.Scanner;
 import java.util.logging.Logger;
 
 import static be.nidel.utils.InputUtils.askInput;
@@ -17,6 +16,8 @@ import static be.nidel.utils.InputUtils.askInput;
 public class RegistrationView extends BaseView<RegistrationController> {
 
     protected final Logger logger = Logger.getLogger("Kinomichi");
+
+    MenuController menu;
 
     public RegistrationView(RegistrationController controller) {
         super(controller);
@@ -26,19 +27,27 @@ public class RegistrationView extends BaseView<RegistrationController> {
     public void displayUserChoices(Menu context){
         this.context = context;
 
-        OutputUtils.sOutTitle("—————————————————————————————————————————————————————");
-        OutputUtils.sOutTitle(" Code Status:                                        ");
-        OutputUtils.sOutTitle("    1 -> Registered                                  ");
-        OutputUtils.sOutTitle("    2 -> Withdrawn - cancelled before the event      ");
-        OutputUtils.sOutTitle("    3 -> Participation confirmed - need to pay       ");
-        OutputUtils.sOutTitle("    4 -> Payment done!                               ");
-        OutputUtils.sOutTitle("    5 -> Cancelled - didn't participate              ");
-        //OutputUtils.sOutTitle("—————————————————————————————————————————————————————");
-        //OutputUtils.sOutTitle(" [b -> back]  [q -> quit]                            ");
-        OutputUtils.sOutTitle("—————————————————————————————————————————————————————");
-        OutputUtils.sOutInfo( "      Enter: participant, session and status         ");
+        OutputUtils.sOutInfo(
+                """
+                     —————————————————————————————————————————————————————
+                     Code Status:                                        
+                        1 -> Registered                                  
+                        2 -> Withdrawn - cancelled before the event      
+                        3 -> Participation confirmed - need to pay       
+                        4 -> Payment done!                               
+                        5 -> Cancelled - didn't participate              
+                    —————————————————————————————————————————————————————
+                    """);
+        OutputUtils.sOutTitle( "      Enter: participant, session and status         ");
 
-        Scanner scanner = new Scanner(System.in);
+        MenuController menu = MenuFactory.backQuitTemplate(context);
+        menu.addRegexItem("Test regex", "[0-9];[0-9];[0-9]", () -> this.treatRegistrationInput(menu))
+            .setInteractionMessage("                  Format: 1;4;1                      ");
+        menu.renderAndInteract();
+    }
+
+    private void treatRegistrationInput(MenuController menu) {
+        String entry = menu.getLastEntry();
 
         Integer idParticipant = null;
         Integer idSession = null;
@@ -48,52 +57,49 @@ public class RegistrationView extends BaseView<RegistrationController> {
 
         boolean isValid = false;
         boolean inputValid = false;
-        do{
-            String input = askInput(scanner,
-                    "                  Format: 1;4;1                      ");
 
-            String[] force = input.split("-");
-            String[] split = force[0].split(";");
+        String[] split = entry.split(";");
 
-            if(split.length >= 3){
-                try{
-                    idParticipant = Integer.parseInt(split[0].trim());
-                    idSession = Integer.parseInt(split[1].trim());
-                    idStatus = Integer.parseInt(split[2].trim());
-                    status = RegistrationStatus.getByOrdinal(idStatus).get();
-                    inputValid = true;
-                }catch (RuntimeException e){
-                    OutputUtils.sOutWarning("Bad arguments, please try again");
-                    OutputUtils.sOutWarning("Participant ID; Session ID; statusCode");
-                }
-
-                if(inputValid) {
-                    //Sanity check for ids
-                    Registration result = controller.createRegistration(new RegistrationDTO(
-                            status,
-                            idParticipant,
-                            idSession,
-                            idPrice
-                    ));
-
-                    if (Objects.nonNull(result)){
-                        isValid = true;
-                    }
-                }
-            }else{
-                OutputUtils.sOutWarning("Please enter data with this format:");
+        if(split.length >= 3){
+            try{
+                idParticipant = Integer.parseInt(split[0].trim());
+                idSession = Integer.parseInt(split[1].trim());
+                idStatus = Integer.parseInt(split[2].trim());
+                status = RegistrationStatus.getByOrdinal(idStatus).get();
+                inputValid = true;
+            }catch (RuntimeException e){
+                OutputUtils.sOutWarning("Bad arguments, please try again");
                 OutputUtils.sOutWarning("Participant ID; Session ID; statusCode");
             }
 
-        }while(!isValid);
+            if(inputValid) {
+                //Sanity check for ids
+                Registration result = controller.createRegistration(new RegistrationDTO(
+                        status,
+                        idParticipant,
+                        idSession,
+                        idPrice
+                ));
 
-        continueAddingSession();
+                if (Objects.nonNull(result))
+                    isValid = true;
+            }
+        }else{
+            OutputUtils.sOutWarning("Please enter data with this format:");
+            OutputUtils.sOutWarning("Participant ID; Session ID; statusCode");
+        }
+
+        if(!isValid)
+            menu.interact();
+        else
+            continueAddingSession();
+
     }
 
     public void continueAddingSession(){
         MenuFactory.confirmTemplate(context, () -> displayUserChoices(context))
                 .setInteractionMessage("Continue ? (y/n)")
-                .interact();
+                .renderAndInteract();
     }
 
     public void displayParticipantError(int id) {
