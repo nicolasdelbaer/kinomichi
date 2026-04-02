@@ -7,6 +7,7 @@ import be.technifutur.shared.Menu;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Optional;
 
 public class ParticipantController extends BaseController implements KinomichiModelOwner {
 
@@ -32,13 +33,17 @@ public class ParticipantController extends BaseController implements KinomichiMo
     }
 
     public Participant updateParticipant(int participantId, ParticipantDTO participantDTO) {
-        Participant participant = model.get(participantId);
-        participant.setFirstName(participantDTO.firstName());
-        participant.setLastName(participantDTO.lastName());
-        participant.setPhone(participantDTO.phone());
-        participant.setEmail(participantDTO.email());
-        participant.setClubName(participantDTO.clubName());
-        participant.setParticipantType(participantDTO.type());
+        Participant participant = null;
+        try {
+            participant = model.get(participantId);
+            participant.setFirstName(participantDTO.firstName());
+            participant.setLastName(participantDTO.lastName());
+            participant.setPhone(participantDTO.phone());
+            participant.setEmail(participantDTO.email());
+            participant.setClubName(participantDTO.clubName());
+            participant.setParticipantType(participantDTO.type());
+        } catch (NoSuchElementException ignored) {
+            view.showUpdateErrorFeedback();}
         return participant;
     }
 
@@ -50,8 +55,13 @@ public class ParticipantController extends BaseController implements KinomichiMo
         return model;
     }
 
-    public Participant getParticipantById(Integer participantId) {
-        return model.get(participantId);
+    public Optional<Participant> getParticipantById(Integer participantId) {
+        Optional<Participant> participant = Optional.empty();
+        try {
+            participant = Optional.ofNullable(model.get(participantId));
+        } catch (Exception ignored) {
+        }
+        return participant;
     }
 
     public void archiveParticipant(Integer participantId) {

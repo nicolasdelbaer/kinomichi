@@ -49,18 +49,22 @@ public class ParticipantView extends BaseView<ParticipantController> {
                 new ScannerInput(new Scanner(System.in)),
                 "Enter the participant id"
         );
-        ParticipantDTO dto = updateParticipantData(controller.getParticipantById(participantId));
-        Participant participant = controller.updateParticipant(participantId, dto);
-
-        OutputUtils.sOutInfo(("%s. %s - %s; %s - %s, %s").formatted(
-            participant.getId(),
-            participant.getFullName(),
-            participant.getPhone(),
-            participant.getEmail(),
-            participant.getClubName(),
-            participant.getParticipantType().name()
-        ));
-        System.out.println();
+        Optional<Participant> tmpParticipant = controller.getParticipantById(participantId);
+        if(tmpParticipant.isPresent()){
+            ParticipantDTO dto = gatherUpdateParticipantData(tmpParticipant.get());
+            Participant participant = controller.updateParticipant(participantId, dto);
+            OutputUtils.sOutInfo(("%s. %s - %s; %s - %s, %s").formatted(
+                participant.getId(),
+                participant.getFullName(),
+                participant.getPhone(),
+                participant.getEmail(),
+                participant.getClubName(),
+                participant.getParticipantType().name()
+            ));
+            System.out.println();
+        }else{
+            showUpdateErrorFeedback();
+        }
         displayUserChoices(context);
     }
 
@@ -93,7 +97,7 @@ public class ParticipantView extends BaseView<ParticipantController> {
         return new ParticipantDTO(firstName,lastName,phone,email,clubName,type);
     }
 
-    private ParticipantDTO updateParticipantData(Participant source) {
+    private ParticipantDTO gatherUpdateParticipantData(Participant source) {
         //Context is used for lambdas that need a final property
         class Context {
             String firstName = source.getFirstName();
@@ -158,5 +162,8 @@ public class ParticipantView extends BaseView<ParticipantController> {
 
     public void showArchivedErrorFeedback() {
         OutputUtils.sOutWarning("Cannot execute deletion, bad participant id?");
+    }
+    public void showUpdateErrorFeedback() {
+        OutputUtils.sOutWarning("Cannot execute update, bad participant id?");
     }
 }
