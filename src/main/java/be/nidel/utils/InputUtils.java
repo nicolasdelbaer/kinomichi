@@ -42,9 +42,8 @@ public class InputUtils {
         Integer result = null;
         do{
             try{
-                OutputUtils.sOutInfo(inputRequest);
-                result = inputProvider.nextInt();
-            } catch (NoSuchElementException | IllegalStateException ignored) {}
+                result = Integer.parseInt(askInput(inputProvider, inputRequest));
+            } catch (IllegalArgumentException | NullPointerException ignored) {}
         }while(Objects.isNull(result));
 
         return result;
@@ -54,9 +53,8 @@ public class InputUtils {
         BigDecimal result = null;
         do{
             try{
-                OutputUtils.sOutInfo(inputRequest);
-                result = inputProvider.nextBigDecimal();
-            } catch (NoSuchElementException | IllegalStateException ignored) {}
+                result = new BigDecimal(askInput(inputProvider, inputRequest));
+            } catch (IllegalArgumentException|NullPointerException ignored) {}
         }while(Objects.isNull(result));
 
         return result;
