@@ -20,7 +20,6 @@ public class GatheringController extends BaseController implements KinomichiMode
 
     public void sessionMenuRequest(Menu menu, Integer gatheringId) {
         if(model.isIdValid(gatheringId)) {
-            //NOTE coupling by passing the model /!\
             Gathering gathering = model.get(gatheringId);
             view.showSessionsForGathering(gathering);
 
