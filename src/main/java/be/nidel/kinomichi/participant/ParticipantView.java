@@ -21,10 +21,10 @@ public class ParticipantView extends BaseView<ParticipantController> {
     public void displayUserChoices(Menu context){
         this.context = context;
         MenuFactory.backQuitTemplate(context)
-        .addItem("list new participant", "l", this::listParticipantRequest)
+        .addItem("list participants", "l", this::listParticipantRequest)
         .addItem("create new participant", "c", this::createParticipantRequest)
-        .addItem("update new participant", "u", this::updateParticipantRequest)
-        .addItem("delete new participant", "d", this::archiveParticipantRequest)
+        .addItem("update participant (id)", "u", this::updateParticipantRequest)
+        .addItem("delete participant (id)", "d", this::archiveParticipantRequest)
         .renderAndInteract();
     }
 
@@ -45,7 +45,7 @@ public class ParticipantView extends BaseView<ParticipantController> {
 
     private void updateParticipantRequest() {
         OutputUtils.sOutInfo("Updating a participant:");
-        Integer participantId = askInt(
+        int participantId = askInt(
                 new ScannerInput(new Scanner(System.in)),
                 "Enter the participant id"
         );
@@ -70,7 +70,7 @@ public class ParticipantView extends BaseView<ParticipantController> {
 
     private void archiveParticipantRequest() {
         OutputUtils.sOutInfo("Archive a participant:");
-        Integer participantId = askInt(
+        int participantId = askInt(
                 new ScannerInput(new Scanner(System.in)),
                 "Enter the participant id"
         );
