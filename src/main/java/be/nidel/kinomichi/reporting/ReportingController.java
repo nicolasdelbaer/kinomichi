@@ -3,6 +3,7 @@ package be.nidel.kinomichi.reporting;
 import be.nidel.kinomichi.base.BaseController;
 import be.nidel.kinomichi.gathering.Gathering;
 import be.nidel.kinomichi.gathering.GatheringModel;
+import be.nidel.kinomichi.gathering.renderer.RendererGatheringDTO;
 import be.nidel.kinomichi.participant.Participant;
 import be.nidel.kinomichi.participant.ParticipantModel;
 import be.nidel.kinomichi.registration.Registration;
@@ -11,6 +12,7 @@ import be.nidel.kinomichi.registration.RegistrationStatus;
 import be.nidel.kinomichi.session.Session;
 import be.nidel.kinomichi.session.SessionModel;
 import be.nidel.kinomichi.session.SessionType;
+import be.nidel.kinomichi.session.renderer.RendererSessionDTO;
 import be.technifutur.shared.Menu;
 
 import java.math.BigDecimal;
@@ -52,12 +54,23 @@ public class ReportingController extends BaseController {
     public void gatheringOverview(int gatheringId){
         try {
             Gathering gathering = gatheringModel.get(gatheringId);
-            view.renderOverviewReport(gathering);
+            List<RendererSessionDTO> sessions = new ArrayList<>();
+            for (Session session : gathering.getAllSessions())
+            {
+                List<Participant> sessionAttendees = session.getAttendees();
+                Map<Integer, Registration> registrationsByParticipant = getRegistrationBySession(session).stream()
+                        .filter(r -> r.getSessionId() == session.getId())
+                        .collect(Collectors.toMap(
+                                        Registration::getParticipantId, Function.identity()));
+                sessions.add(new RendererSessionDTO(session, sessionAttendees, registrationsByParticipant));
+            }
+            view.renderOverviewReport(new RendererGatheringDTO(gathering, sessions));
         } catch (NoSuchElementException e) {
             view.showInvalidGatheringIdError(gatheringId);
             view.refresh();
         }
     }
+
 
     public void gatheringReporting(int gatheringId) {
         try {

@@ -2,6 +2,8 @@ package be.nidel.kinomichi.reporting;
 
 import be.nidel.kinomichi.base.BaseView;
 import be.nidel.kinomichi.gathering.Gathering;
+import be.nidel.kinomichi.gathering.renderer.GatheringRenderer;
+import be.nidel.kinomichi.gathering.renderer.RendererGatheringDTO;
 import be.nidel.kinomichi.participant.Participant;
 import be.nidel.kinomichi.participant.ParticipantType;
 import be.nidel.kinomichi.pricing.Pricing;
@@ -121,12 +123,6 @@ public class ReportingView extends BaseView<ReportingController> {
     //endregion
 
     //region Renderings
-    public void renderOverviewReport(Gathering gathering) {
-        renderGatheringInfo(gathering);
-        for (Session session : gathering.getAllSessions())
-            renderSession(session);
-        renderPrices(gathering.getPriceList());
-    }
 
     public void renderGatheringStatus(Gathering gathering) {
         ReportingController.Stats stats = controller.getGatheringStats(gathering);
@@ -166,95 +162,9 @@ public class ReportingView extends BaseView<ReportingController> {
         return priceFormatter.toString();
     }
 
-    private void renderGatheringInfo(Gathering gathering) {
-        OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(
-                OutputUtils.ANSI_YELLOW_BACKGROUND + OutputUtils.ANSI_BLACK_BOLD,
-                "- Title: "+gathering.getTitle(),
-                OutputUtils.ANSI_RESET
-        ));
-    }
-
-    private void renderSession(Session session) {
-        String orgaName = session.getOrganizer().map(Participant::getFullName).orElse(OutputUtils.ANSI_YELLOW+ "n/a"+OutputUtils.ANSI_PURPLE);
-        OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(
-                OutputUtils.ANSI_PURPLE,
-                session.getSessionType().emoji() + " Organizer: "+ orgaName + " - "+ session.getSessionType().name(),
-                OutputUtils.ANSI_RESET));
-        OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(
-                OutputUtils.ANSI_BLUE,
-                "Date: " +session.getDay()+ " | "+ session.getStart()+ " -> "+ session.getEnd(),
-                OutputUtils.ANSI_RESET));
-
-        //GET PARTICIPANTS & THEIR REGISTRATIONS
-        List<Participant> sessionAttendees = session.getAttendees();
-        Map<Integer, Registration> registrationsByParticipant = controller.getRegistrationBySession(session).stream()
-                .filter(r -> r.getSessionId() == session.getId())
-                .collect(Collectors.toMap(
-                        Registration::getParticipantId, Function.identity()));
-
-        //ORDER PARTICIPANTS BY STATUS
-        Map<RegistrationStatus, List<Participant>> attendeesBySessionStatus = sessionAttendees.stream()
-                .collect(Collectors.groupingBy(
-                        p -> registrationsByParticipant.get(p.getId()).getStatus(),
-                        Collectors.toList()));
-
-        //DISPLAY ATTENDEE LIST
-        attendeesBySessionStatus.forEach((key, value) -> value.forEach(attendee -> {
-            String attendeeInfo = "\t%s%s%s".formatted(
-                    key.name(),
-                    " - ",
-                    "%s (%s | id: %s)".formatted(attendee.getFullName(), attendee.getParticipantType().name(), attendee.getId())
-            );
-
-            switch (key) {
-                case UNPAID ->
-                        OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(OutputUtils.ANSI_RED, attendeeInfo, OutputUtils.ANSI_RESET));
-                case PAID ->
-                        OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(OutputUtils.ANSI_GREEN, attendeeInfo, OutputUtils.ANSI_RESET));
-                case CANCELLED, WITHDRAWN ->
-                        OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(OutputUtils.ANSI_WHITE_ITALIC, attendeeInfo, OutputUtils.ANSI_RESET));
-                default -> OutputUtils.sOut(OutputUtils.DEFAULT_LINE.formatted(attendeeInfo));
-            }
-        }));
-        System.out.println();
-    }
-
-    private void renderPrices(List<Pricing> priceList) {
-        OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(
-                OutputUtils.ANSI_YELLOW_BACKGROUND + OutputUtils.ANSI_BLACK_BOLD,
-                "- Prices Table",
-                OutputUtils.ANSI_RESET
-        ));
-
-        Map<ParticipantType, List<Pricing>> pricesByParticipantType = priceList.stream()
-                .collect(Collectors.groupingBy(Pricing::getParticipantType));
-
-        List<String> enumString = Arrays
-                .stream(SessionType.values())
-                .map(e -> e.name()).collect(Collectors.toList());
-        enumString.addFirst("$$$");
-
-        String format = "%-11s" + "%-14s".repeat(enumString.size()-1);
-
-        OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(
-                OutputUtils.ANSI_WHITE_BOLD,
-                format.formatted(enumString.toArray()),
-                OutputUtils.ANSI_RESET
-        ));
-
-        pricesByParticipantType.forEach((key, values) -> {
-            List<String> priceRow = new ArrayList<>();
-            priceRow.add(key.name());
-            values.forEach(pricing -> {
-                BigDecimalFormatter priceFormatter = new BigDecimalFormatter(pricing.getPrice()).formatEuro().zeroToFree();
-                priceRow.add(priceFormatter.toString());
-            });
-
-            OutputUtils.sOut(OutputUtils.DEFAULT_LINE.formatted(
-                    format.formatted(priceRow.toArray())
-            ));
-        });
-
+    public void renderOverviewReport(RendererGatheringDTO gatheringDTO) {
+        GatheringRenderer gatheringRenderer = new GatheringRenderer();
+        gatheringRenderer.render(gatheringDTO);
     }
 
     //endregion
