@@ -1,6 +1,7 @@
 package be.nidel.kinomichi.gathering;
 
 import be.nidel.kinomichi.base.BaseView;
+import be.nidel.kinomichi.participant.Participant;
 import be.nidel.kinomichi.participant.ParticipantDTO;
 import be.nidel.kinomichi.participant.ParticipantType;
 import be.nidel.kinomichi.pricing.PricingDTO;
@@ -32,9 +33,19 @@ public class GatheringView extends BaseView<GatheringController> {
                 .addItem("list gatherings", "l", this::listGatheringRequest)
                 .addItem("create new gathering", "c", this::createGatheringRequest)
                 .addItem("update gathering (id)", "u", this::updateGatheringData)
-                .addItem("delete gathering (id)", "d", this::updateGatheringData)
+                .addItem("delete gathering (id)", "d", this::archiveGatheringData)
                 .addItem("manage sessions", "ms", this::manageSessionData);
         this.current.renderAndInteract();
+    }
+
+    private void archiveGatheringData() {
+        OutputUtils.sOutInfo("Archive a gathering:");
+        int participantId = askInt(
+                new ScannerInput(new Scanner(System.in)),
+                "Enter the gathering id"
+        );
+        controller.archiveGathering(participantId);
+        displayUserChoices(context);
     }
 
     private void listGatheringRequest() {
@@ -134,7 +145,17 @@ public class GatheringView extends BaseView<GatheringController> {
             }
         }
     }
+    public void showArchivedFeedback(Gathering gathering){
+        OutputUtils.sOutWarning("%s. %s %s".formatted(
+                gathering.getId(),
+                gathering.getTitle(),
+                "has been archived"
+        ));
+    }
 
+    public void showArchivedErrorFeedback() {
+        OutputUtils.sOutWarning("Cannot execute deletion, bad participant id?");
+    }
 
     public void showInvalidIdError(Integer id) {
         OutputUtils.sOutError("INVALID ID" + id);

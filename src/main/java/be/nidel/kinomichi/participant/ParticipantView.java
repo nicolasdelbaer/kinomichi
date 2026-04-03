@@ -156,7 +156,7 @@ public class ParticipantView extends BaseView<ParticipantController> {
         OutputUtils.sOutWarning("%s. %s %s".formatted(
                 participant.getId(),
                 participant.getFullName(),
-                "has been deleted"
+                "has been archived"
         ));
     }
 

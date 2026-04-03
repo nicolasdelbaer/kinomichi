@@ -2,11 +2,13 @@ package be.nidel.kinomichi.gathering;
 
 import be.nidel.kinomichi.base.KinomichiModelOwner;
 import be.nidel.kinomichi.base.BaseController;
+import be.nidel.kinomichi.participant.Participant;
 import be.nidel.kinomichi.pricing.Pricing;
 import be.nidel.kinomichi.session.SessionRequestEvent;
 import be.technifutur.shared.Menu;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class GatheringController extends BaseController implements KinomichiModelOwner {
     GatheringModel model = new GatheringModel();
@@ -50,5 +52,15 @@ public class GatheringController extends BaseController implements KinomichiMode
     @Override
     public GatheringModel getModel() {
         return model;
+    }
+
+    public void archiveGathering(int gatheringId) {
+        try {
+            Gathering gathering = model.get(gatheringId);
+            gathering.setArchived();
+            view.showArchivedFeedback(gathering);
+        } catch (NoSuchElementException ignored) {
+            view.showArchivedErrorFeedback();
+        }
     }
 }
