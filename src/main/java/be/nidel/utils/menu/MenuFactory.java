@@ -27,10 +27,16 @@ public class MenuFactory {
         return menuController;
     }
 
-    public static MenuController editTemplate(Menu context, Consumer<String> editAction, String field, String content) {
+    public static MenuController editTemplate(Menu context, Consumer<String> editAction, String field, String content, String freeInputPattern) {
         Menu menu = new Menu();
         MenuController menuController = new MenuController(menu, context);
-        menu.addRegexItem("free input", ".*", () -> editAction.accept(menuController.getLastEntry()));
+        menu.addRegexItem("free input", freeInputPattern, () -> {
+            try {
+                editAction.accept(menuController.getLastEntry());
+            } catch (IllegalArgumentException e) {
+                menuController.interact();
+            }
+        });
         menu.addHiddenItem("empty", "", () ->{});
         menu.setPreRender(OutputUtils.STYLISABLE_LINE.formatted(OutputUtils.ANSI_BLACK_BACKGROUND, "Edit Mode - \"enter\": pass", OutputUtils.ANSI_RESET));
         menuController.setPostRender("%sUpdate %s: %s ?%s".formatted(OutputUtils.ANSI_YELLOW, field, content, OutputUtils.ANSI_RESET));

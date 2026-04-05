@@ -43,7 +43,8 @@ public class ParticipantController extends BaseController implements KinomichiMo
             participant.setClubName(participantDTO.clubName());
             participant.setParticipantType(participantDTO.type());
         } catch (NoSuchElementException ignored) {
-            view.showUpdateErrorFeedback();}
+            view.showUpdateErrorFeedback();
+        }
         return participant;
     }
 

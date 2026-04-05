@@ -4,20 +4,17 @@ import be.nidel.kinomichi.base.Archivable;
 import be.nidel.kinomichi.base.BaseEntity;
 import be.nidel.kinomichi.participant.ParticipantType;
 import be.nidel.kinomichi.pricing.Pricing;
+import be.nidel.kinomichi.pricing.PricingGroup;
 import be.nidel.kinomichi.session.Session;
 import be.nidel.kinomichi.participant.Participant;
 import be.nidel.kinomichi.session.SessionType;
-import be.nidel.utils.FormatUtils;
-import be.nidel.utils.OutputUtils;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Gathering extends BaseEntity implements Archivable {
     private String title;
-    private List<Pricing> priceList = new ArrayList<>();
+    private List<PricingGroup> priceGroupList = new ArrayList<>();
     private List<Session> sessionList = new ArrayList<>();
     private boolean archived = false;
 
@@ -26,7 +23,9 @@ public class Gathering extends BaseEntity implements Archivable {
     }
 
     public List<Session> getAllSessions() {
-        return sessionList;
+        return sessionList.stream().filter(
+                session -> !session.isArchived()
+        ).toList();
     }
 
 
@@ -41,12 +40,6 @@ public class Gathering extends BaseEntity implements Archivable {
                 .map(Session::getDay)
                 .distinct()
                 .toList();
-    }
-
-    public void registerAttendeeToSession(Participant attendee, Session[] sessions){
-        for (Session session : sessions) {
-            session.addAttendee(attendee);
-        }
     }
 
     public List<Participant> getAllAttendees() {
@@ -67,17 +60,20 @@ public class Gathering extends BaseEntity implements Archivable {
         this.title = title;
     }
 
-    public void setPrices(List<Pricing> priceList) {
-        this.priceList = priceList;
+    public void setPrices(List<PricingGroup> priceList) {
+        this.priceGroupList = priceList;
     }
 
-    public List<Pricing> getPriceList() {
-        return priceList;
+    public List<Pricing> getPriceGroupList() {
+        return priceGroupList.stream().flatMap(pg -> pg.getPricingList().stream()).toList();
     }
 
     public Pricing getPriceFor(ParticipantType participantType, SessionType sessionType) {
-        Optional<Pricing> result =  priceList.stream()
-                .filter(p -> p.getParticipantType() == participantType && p.getSessionType() == sessionType).findFirst();
+        Optional<Pricing> result =  priceGroupList.stream()
+                .filter(pg -> pg.getSessionType() == sessionType)
+                .flatMap(pg -> pg.getPricingList().stream())
+                .filter(p -> p.getParticipantType() == participantType)
+                .findFirst();
 
         if(result.isPresent()){
             return result.get();
@@ -100,4 +96,7 @@ public class Gathering extends BaseEntity implements Archivable {
     @Override public void setArchived() {archived = true;}
     @Override public void recoverArchive() {archived = false;}
 
+    public List<PricingGroup> getPriceGroups() {
+        return priceGroupList;
+    }
 }

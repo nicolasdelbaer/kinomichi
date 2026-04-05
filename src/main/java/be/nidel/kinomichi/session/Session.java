@@ -18,6 +18,8 @@ public class Session extends BaseEntity implements Archivable {
 
     private int gatheringId = -1;
     private ParticipantGroup attendeeGroup = new ParticipantGroup();
+    private String title;
+    private String description;
     private Participant organizer;
     private SessionType type;
     private LocalDate day;
@@ -25,12 +27,14 @@ public class Session extends BaseEntity implements Archivable {
     private LocalTime end;
     private boolean archived = false;
 
-    public Session(int gatheringId, LocalDate day, LocalTime startTime) {
-        this(gatheringId, day, startTime, 90, SessionType.Exhibition);
+    public Session(int gatheringId, String title, String description, LocalDate day, LocalTime startTime) {
+        this(gatheringId, title, description, day, startTime, 90, SessionType.Exhibition);
     }
 
-    public Session(int gatheringId, LocalDate day, LocalTime startTime, int duration, SessionType type) {
+    public Session(int gatheringId, String title, String description, LocalDate day, LocalTime startTime, int duration, SessionType type) {
         this.gatheringId = gatheringId;
+        this.title = title;
+        this.description = description;
         this.day = day;
         this.start = startTime;
         this.duration = duration;
@@ -41,6 +45,7 @@ public class Session extends BaseEntity implements Archivable {
     @Override
     public String toString() {
         return "Session{" +
+                ", title=" + title +
                 ", day=" + day +
                 ", trainer=" + ((Objects.nonNull(organizer))? organizer.getFullName():"n/a") +
                 ", start=" + start +
@@ -48,6 +53,22 @@ public class Session extends BaseEntity implements Archivable {
                 ", type=" + type.name() +type.emoji() +
                 ",attendees=" + attendeeGroup +
                 '}';
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public LocalTime getStart() {
@@ -100,4 +121,17 @@ public class Session extends BaseEntity implements Archivable {
     @Override public void setArchived() {archived = true;}
     @Override public void recoverArchive() {archived = false;}
 
+    public void setSessionType(SessionType type) {
+        this.type = type;
+    }
+
+    public void setStart(LocalTime start) {
+        this.start = start;
+        this.end = start.plusMinutes(duration);
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+        this.end = start.plusMinutes(duration);
+    }
 }

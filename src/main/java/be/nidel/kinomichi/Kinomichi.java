@@ -3,13 +3,14 @@ package be.nidel.kinomichi;
 import be.nidel.kinomichi.gathering.*;
 import be.nidel.kinomichi.participant.*;
 import be.nidel.kinomichi.pricing.PricingDTO;
+import be.nidel.kinomichi.pricing.PricingGroupDTO;
 import be.nidel.kinomichi.registration.RegistrationController;
 import be.nidel.kinomichi.registration.RegistrationDTO;
 import be.nidel.kinomichi.registration.RegistrationStatus;
 import be.nidel.kinomichi.reporting.ReportingController;
 import be.nidel.kinomichi.session.Session;
 import be.nidel.kinomichi.session.SessionController;
-import be.nidel.kinomichi.session.SessionDTO;
+import be.nidel.kinomichi.session.CreateSessionDTO;
 import be.nidel.kinomichi.session.SessionType;
 import be.nidel.utils.DateUtils;
 import be.nidel.utils.OutputUtils;
@@ -44,6 +45,7 @@ public class Kinomichi {
         reportingController = new ReportingController();
 
         //Link models for state sharing
+        sessionController.setParticipantModel(participantController.getModel());
         registrationController.setModels(
                 participantController.getModel(),
                 sessionController.getModel()
@@ -141,24 +143,28 @@ public class Kinomichi {
         //SESSIONS CREATION
         Consumer<Gathering> daysCreator = (Gathering g) ->{
             sessionController.batchSessionCreation(
-                    new SessionDTO(90,
+                    new CreateSessionDTO(90,
+                    "Default Title","Description",
                     DateUtils.StringDateToLocalDate("28/03/2026"),
                     DateUtils.StringTimeToLocalTime("9:30"),
                             SessionType.Exhibition),
                     g,
                     5);
             sessionController.batchSessionCreation(
-                    new SessionDTO(90,
+                    new CreateSessionDTO(90,
+                            "Default Title","Description",
                     DateUtils.StringDateToLocalDate("29/03/2026"),
                     DateUtils.StringTimeToLocalTime("9:30"),
                             SessionType.Exhibition),
                     g,
                     3);
-            sessionController.createSession(new SessionDTO(360,
+            sessionController.createSession(new CreateSessionDTO(360,
+                    "Default Title","Description",
                     DateUtils.StringDateToLocalDate("28/03/2026"),
                     DateUtils.StringTimeToLocalTime("18:00"),
                     SessionType.Dinner), g);
-            sessionController.createSession(new SessionDTO(720,
+            sessionController.createSession(new CreateSessionDTO(720,
+                    "Default Title","Description",
                     DateUtils.StringDateToLocalDate("28/03/2026"),
                     DateUtils.StringTimeToLocalTime("22:00"),
                     SessionType.Accommodation),g);
@@ -166,27 +172,36 @@ public class Kinomichi {
 
 
         //PRICING CREATION
-        List<PricingDTO> pricingList = List.of(
-                new PricingDTO(ParticipantType.Attendee, SessionType.Exhibition, new BigDecimal("10.00")),
-                new PricingDTO(ParticipantType.Attendee, SessionType.Dinner, new BigDecimal("15.00")),
-                new PricingDTO(ParticipantType.Attendee, SessionType.Accommodation, new BigDecimal("60.00")),
-
-                new PricingDTO(ParticipantType.VIP, SessionType.Exhibition, new BigDecimal("8.00")),
-                new PricingDTO(ParticipantType.VIP, SessionType.Dinner, new BigDecimal("10.00")),
-                new PricingDTO(ParticipantType.VIP, SessionType.Accommodation, new BigDecimal("40.00")),
-
-                new PricingDTO(ParticipantType.Sensei, SessionType.Exhibition, new BigDecimal("10.00")),
-                new PricingDTO(ParticipantType.Sensei, SessionType.Dinner, new BigDecimal("15.00")),
-                new PricingDTO(ParticipantType.Sensei, SessionType.Accommodation, new BigDecimal("60.00")),
-
-                new PricingDTO(ParticipantType.Trainer, SessionType.Exhibition, new BigDecimal("0.00")),
-                new PricingDTO(ParticipantType.Trainer, SessionType.Dinner, new BigDecimal("10.00")),
-                new PricingDTO(ParticipantType.Trainer, SessionType.Accommodation, new BigDecimal("60.00"))
+        List<PricingGroupDTO> pricingList = List.of(
+                new PricingGroupDTO(
+            List.of(
+                                new PricingDTO(ParticipantType.Attendee, SessionType.Accommodation, new BigDecimal("60.00")),
+                                new PricingDTO(ParticipantType.Trainer, SessionType.Accommodation, new BigDecimal("60.00")),
+                                new PricingDTO(ParticipantType.Sensei, SessionType.Accommodation, new BigDecimal("60.00")),
+                                new PricingDTO(ParticipantType.VIP, SessionType.Accommodation, new BigDecimal("40.00"))
+                        ),SessionType.Accommodation
+                ),
+                new PricingGroupDTO(
+                        List.of(
+                                new PricingDTO(ParticipantType.Attendee, SessionType.Exhibition, new BigDecimal("10.00")),
+                                new PricingDTO(ParticipantType.Trainer, SessionType.Exhibition, new BigDecimal("0.00")),
+                                new PricingDTO(ParticipantType.Sensei, SessionType.Exhibition, new BigDecimal("10.00")),
+                                new PricingDTO(ParticipantType.VIP, SessionType.Exhibition, new BigDecimal("8.00"))
+                        ),SessionType.Exhibition
+                ),
+                new PricingGroupDTO(
+                        List.of(
+                            new PricingDTO(ParticipantType.Attendee, SessionType.Dinner, new BigDecimal("15.00")),
+                            new PricingDTO(ParticipantType.Trainer, SessionType.Dinner, new BigDecimal("10.00")),
+                                new PricingDTO(ParticipantType.Sensei, SessionType.Dinner, new BigDecimal("15.00")),
+                                new PricingDTO(ParticipantType.VIP, SessionType.Dinner, new BigDecimal("10.00"))
+                        ),SessionType.Dinner
+                )
         );
 
         //GATHERINGS CREATION
-        daysCreator.accept(gatheringController.createGathering(new GatheringDTO("Stage pour adolescents",pricingList)));
-        daysCreator.accept(gatheringController.createGathering(new GatheringDTO("Stage pour adultes", pricingList)));
+        daysCreator.accept(gatheringController.createGathering(new CreateGatheringDTO("Stage pour adolescents",pricingList)));
+        daysCreator.accept(gatheringController.createGathering(new CreateGatheringDTO("Stage pour adultes", pricingList)));
 
         //REGISTRATION RANDOM CREATION
         List<Participant> participants = participantController.getAllParticipants();

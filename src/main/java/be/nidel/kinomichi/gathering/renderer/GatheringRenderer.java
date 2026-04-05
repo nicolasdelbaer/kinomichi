@@ -7,10 +7,10 @@ import be.nidel.kinomichi.session.renderer.SessionRenderer;
 public class GatheringRenderer{
 
     public void render(RendererGatheringDTO rendererGatheringDTO) {
-        new GatheringInfoRenderer().render(new RendererGatheringInfoDTO(rendererGatheringDTO.gathering()));
+        new GatheringInfoRenderer().render(rendererGatheringDTO.gathering());
         SessionRenderer sessionRenderer = new SessionRenderer();
         for (RendererSessionDTO session : rendererGatheringDTO.sessions())
             sessionRenderer.render(session);
-        new PricingRenderer().render(rendererGatheringDTO.gathering().getPriceList());
+        new PricingRenderer().render(rendererGatheringDTO.gathering().getPriceGroupList());
     }
 }

@@ -19,10 +19,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class GatheringInfoRenderer {
-    public void render(RendererGatheringInfoDTO rendererGatheringDTO) {
+    public void render(Gathering gathering) {
         OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(
                 OutputUtils.ANSI_YELLOW_BACKGROUND + OutputUtils.ANSI_BLACK_BOLD,
-                "- Title: "+rendererGatheringDTO.gathering().getTitle(),
+                "- Title: " + gathering.getTitle(),
                 OutputUtils.ANSI_RESET
         ));
     }

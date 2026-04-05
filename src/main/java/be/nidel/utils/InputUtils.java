@@ -66,6 +66,9 @@ public class InputUtils {
     }
 
     public static void askForEditOrSource(Menu context, Consumer<String> action, String field, String content){
-        MenuFactory.editTemplate(context, action, field, content).renderAndInteract();
+        askForEditOrSource(context, action, field, content, ".*");
+    }
+    public static void askForEditOrSource(Menu context, Consumer<String> action, String field, String content, String freeInputPattern){
+        MenuFactory.editTemplate(context, action, field, content, freeInputPattern).renderAndInteract();
     }
 }

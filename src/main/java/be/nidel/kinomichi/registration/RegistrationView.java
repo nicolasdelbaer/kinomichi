@@ -11,8 +11,6 @@ import be.technifutur.shared.Menu;
 import java.util.Objects;
 import java.util.logging.Logger;
 
-import static be.nidel.utils.InputUtils.askInput;
-
 public class RegistrationView extends BaseView<RegistrationController> {
 
     protected final Logger logger = Logger.getLogger("Kinomichi");
@@ -25,7 +23,7 @@ public class RegistrationView extends BaseView<RegistrationController> {
 
     //TODO refactor this method by splitting :)
     public void displayUserChoices(Menu context){
-        this.context = context;
+        this.menuContext = context;
 
         OutputUtils.sOutInfo(
                 """
@@ -99,7 +97,7 @@ public class RegistrationView extends BaseView<RegistrationController> {
     }
 
     public void continueAddingSession(){
-        MenuFactory.confirmTemplate(context, () -> displayUserChoices(context))
+        MenuFactory.confirmTemplate(menuContext, () -> displayUserChoices(menuContext))
                 .setInteractionMessage("Continue ? (y/n)")
                 .renderAndInteract();
     }

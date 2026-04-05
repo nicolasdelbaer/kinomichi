@@ -5,10 +5,8 @@ import be.nidel.kinomichi.gathering.Gathering;
 import be.nidel.kinomichi.gathering.renderer.GatheringRenderer;
 import be.nidel.kinomichi.gathering.renderer.RendererGatheringDTO;
 import be.nidel.kinomichi.participant.Participant;
-import be.nidel.kinomichi.participant.ParticipantType;
 import be.nidel.kinomichi.pricing.Pricing;
 import be.nidel.kinomichi.registration.Registration;
-import be.nidel.kinomichi.registration.RegistrationStatus;
 import be.nidel.kinomichi.session.Session;
 import be.nidel.kinomichi.session.SessionType;
 import be.nidel.utils.BigDecimalFormatter;
@@ -21,7 +19,6 @@ import be.technifutur.shared.Menu;
 
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static be.nidel.utils.InputUtils.askInt;
@@ -33,7 +30,7 @@ public class ReportingView extends BaseView<ReportingController> {
     }
 
     public void displayUserChoices(Menu context){
-        this.context = context;
+        this.menuContext = context;
 
         int inputId = 1;
         this.current = MenuFactory.backQuitTemplate(context)
@@ -50,20 +47,20 @@ public class ReportingView extends BaseView<ReportingController> {
         InputProvider scanner = new ScannerInput(new Scanner(System.in));
         int gatheringId = askInt(scanner, "Please insert gathering id.");
         controller.gatheringOverview(gatheringId);
-        displayUserChoices(context);
+        displayUserChoices(menuContext);
     }
 
     //TODO liste sessions et statut
     //TODO payé / à payer / Projection total
     //TODO ristourne (opt.)
     private void showParticipantStatus() {
-        displayUserChoices(context);
+        displayUserChoices(menuContext);
     }
     private void showGatheringStatus() {
         InputProvider scanner = new ScannerInput(new Scanner(System.in));
         int gatheringId = askInt(scanner, "Please insert gathering id.");
         controller.gatheringReporting(gatheringId);
-        displayUserChoices(context);
+        displayUserChoices(menuContext);
     }
     private void showReceivableReporting() {
         List<Participant> participants = controller.getUnpaidParticipants();
@@ -117,7 +114,7 @@ public class ReportingView extends BaseView<ReportingController> {
                 OutputUtils.ANSI_RESET
                 ));
         }
-        displayUserChoices(context);
+        displayUserChoices(menuContext);
     }
 
     //endregion

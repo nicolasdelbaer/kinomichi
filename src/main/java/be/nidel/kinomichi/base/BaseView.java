@@ -6,7 +6,7 @@ import be.technifutur.shared.Menu;
 public abstract class BaseView<C extends BaseController> {
 
     protected C controller;
-    protected Menu context;
+    protected Menu menuContext;
     protected MenuController current;
 
     public BaseView(C controller) {

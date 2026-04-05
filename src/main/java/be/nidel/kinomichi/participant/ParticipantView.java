@@ -19,7 +19,7 @@ public class ParticipantView extends BaseView<ParticipantController> {
     }
 
     public void displayUserChoices(Menu context){
-        this.context = context;
+        this.menuContext = context;
         MenuFactory.backQuitTemplate(context)
         .addItem("list participants", "l", this::listParticipantRequest)
         .addItem("create new participant", "c", this::createParticipantRequest)
@@ -40,7 +40,7 @@ public class ParticipantView extends BaseView<ParticipantController> {
                         participant.getParticipantType().name()
         )));
         System.out.println();
-        displayUserChoices(context);
+        displayUserChoices(menuContext);
     }
 
     private void updateParticipantRequest() {
@@ -65,7 +65,7 @@ public class ParticipantView extends BaseView<ParticipantController> {
         }else{
             showUpdateErrorFeedback();
         }
-        displayUserChoices(context);
+        displayUserChoices(menuContext);
     }
 
     private void archiveParticipantRequest() {
@@ -75,13 +75,13 @@ public class ParticipantView extends BaseView<ParticipantController> {
                 "Enter the participant id"
         );
         controller.archiveParticipant(participantId);
-        displayUserChoices(context);
+        displayUserChoices(menuContext);
     }
 
     private void createParticipantRequest() {
         ParticipantDTO dto = gatherParticipantData();
         controller.createParticipant(dto);
-        displayUserChoices(context);
+        displayUserChoices(menuContext);
     }
 
     private ParticipantDTO gatherParticipantData() {
@@ -111,23 +111,23 @@ public class ParticipantView extends BaseView<ParticipantController> {
 
         //Injection of a static provider, it'll get the first input and mock a inputProvider (scanner)
         //to inject the user input if valid. It skips one step of input management
-        askForEditOrSource(context, (provider) -> {
+        askForEditOrSource(menuContext, (provider) -> {
             ctx.firstName = askInput(new StaticInput(provider), "First name?");
         }, "First name", source.getFirstName());
-        askForEditOrSource(context, (provider) -> {
+        askForEditOrSource(menuContext, (provider) -> {
             ctx.lastName = askInput(new StaticInput(provider), "Last name?");
         }, "Last name",source.getLastName());
-        askForEditOrSource(context, (provider) -> {
+        askForEditOrSource(menuContext, (provider) -> {
             ctx.phone = askInput(new StaticInput(provider), "Phone?");
         }, "Phone",source.getPhone());
-        askForEditOrSource(context, (provider) -> {
+        askForEditOrSource(menuContext, (provider) -> {
             ctx.email = askInput(new StaticInput(provider), "Email?");
         }, "Email",source.getEmail());
-        askForEditOrSource(context, (provider) -> {
+        askForEditOrSource(menuContext, (provider) -> {
             ctx.clubName = askInput(new StaticInput(provider), "Club Name?");
         }, "Club name",source.getClubName());
 
-        askForEditOrSource(context, (provider) ->
+        askForEditOrSource(menuContext, (provider) ->
                 ctx.type = requestParticipantType(new StaticInput(provider)),
                 "Participant Type","%s. %s".formatted(source.getParticipantType().ordinal(), source.getParticipantType().name())
         );

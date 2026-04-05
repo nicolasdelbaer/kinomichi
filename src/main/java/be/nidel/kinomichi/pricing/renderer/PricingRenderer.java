@@ -29,17 +29,20 @@ public class PricingRenderer {
                 .map(e -> e.name()).collect(Collectors.toList());
         enumString.addFirst("$$$");
 
-        String format = "%-11s" + "%-14s".repeat(enumString.size()-1);
+        String titleFormat = OutputUtils.ANSI_WHITE_BOLD+"%-11s" + "%-14s".repeat(enumString.size()-1)+OutputUtils.ANSI_RESET;
+        String format = OutputUtils.ANSI_WHITE_BOLD+"%-11s"+OutputUtils.ANSI_RESET + "%-14s".repeat(enumString.size()-1);
 
         OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(
                 OutputUtils.ANSI_WHITE_BOLD,
-                format.formatted(enumString.toArray()),
+                titleFormat.formatted(enumString.toArray()),
                 OutputUtils.ANSI_RESET
         ));
 
         pricesByParticipantType.forEach((key, values) -> {
             List<String> priceRow = new ArrayList<>();
             priceRow.add(key.name());
+            //values.stream().sorted(v -> v.getSessionType().ordinal());
+            values.sort((a,b) -> a.getSessionType().ordinal()-b.getSessionType().ordinal());
             values.forEach(pricing -> {
                 BigDecimalFormatter priceFormatter = new BigDecimalFormatter(pricing.getPrice()).formatEuro().zeroToFree();
                 priceRow.add(priceFormatter.toString());
