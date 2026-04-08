@@ -29,7 +29,14 @@ public class SessionView extends BaseView<SessionController> {
     }
 
     public void displayUserChoices(Menu context){
+        displayUserChoices(context, false);
+    }
+    public void displayUserChoices(Menu context, boolean showList){
         this.menuContext = context;
+
+        if(showList)
+            listSessionsRequest();
+
         current = MenuFactory.backQuitTemplate(context)
             .addItem("list sessions", "l", this::listSessionsRequest)
             .addItem("create new session", "c", this::createSessionRequest)
