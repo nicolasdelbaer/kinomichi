@@ -1,50 +1,57 @@
-## Structure du Menu
+# Projet Atelier Technifutur
 
-**“Que voulez-vous faire ?”**
+## Introduction
 
-1. Gérer les rassemblements
+- Développement Java 
+- Application console de gestion de stages de Kinomichi (art martial)
 
-   *Afficher Liste des rassemblements → id . Nom du rassemblement + date début*
+## Consignes
+Je suis organisateur de stages internationaux de Kinomichi. J'ai besoin d'une application simple pour gérer mes stages, les inscriptions des participants et suivre mon budget.
+C'est moi seul qui gère tout : j'encode les participants, je construis le programme, je suis les inscriptions.
 
-    1. Create new
-    2. Update id
-    3. Archiver id (pas de delete, on conserve l’info mais elle est cachée)
-    4. Gérer les périodes
+### Ce que je veux pouvoir faire
+Gérer mes stages: Un stage a un intitulé et se déroule sur plusieurs jours. Les jours comportent des créneaux horaires. Chaque créneau dure en général 1h30 et est animé par un formateur.
+Pour un samedi soir, je propose en option un souper et/ou un hébergement.
 
-       Afficher les périodes
+Gérer mes participants: Chaque personne a un nom, prénom, téléphone, email et un club d'appartenance. Ce sont soit des participants classiques, soit des formateurs.
 
-        1. Ajouter période
-        2. Modifier période; id
-        3. Archiver période; id
-        4. Supprimer période; id (check pas d’inscription/participation “pending”)
-    5. Réafficher liste des rassemblements
-2. Gérer les participants
-    1. Créer un participant
-    2. Modifier un participant; id
-    3. Archiver un participant; id
-    4. Supprimer un participant; id (check pas d’inscription/participation “pending”)
-3. Encoder une inscription ou participation
+Gérer les inscriptions: Un participant s'inscrit à un stage et choisit ses créneaux selon ce qui lui est accessible. Je veux voir en un coup d'œil qui est inscrit à quoi. Je dois pouvoir encoder les inscriptions et gérer les participations le jour de l'évenement.
 
-   *Afficher liste des périodes actives (définir) → id. Nom rassemblement + nom formatteur + date & plage horaire*
+Gérer les tarifs: Les participants peuvent avoir des tarifs différents selon leur catégorie et le type d'animation.
 
-    1. Choisissez une période
+### Objectifs & Contraintes
+- Application monoposte côté gestion : un seul organisateur encode et administre.
+- Renforcement des bases, experimentation
+- Développement sans base de données
+- Java vanilla, sans framework
 
-       *Afficher Liste des participants ?*
+## Post Mortem
+### En bonus
+Suivi de budget -> Avoir une vue claire des finances liées à chaque stage ou participants.
 
-        1. Inscrire; pId → Set statut as (REGISTERED)
-        2. Désinscrire; pId → Set statut as (WITHDRAWN)
-        3. A participé; pId → Set statut as (PENDING)
-        4. A payé; pId → Set statut as (PAYED)
-        5. N’a pas participé; pId → Set statut as (CANCELLED)
-        6. Absent; pId → Set statut as (ABSENT)
-        7. Réafficher liste des participants
-4. Définir des tarifs
+### Apprentissage
+- Utilisation des streams
+- Mise en place de patterns
+- Utilisation de jar, la gestion du menu est un projet séparé
 
-   *Afficher Liste des tarifs → Tableau Participant Type → Event Type : id. Price*
+### Patterns et techniques utilisées
+- Factory
+- Builder
+- Composite
+- Observer Pattern
+- Génériques
+- Adapter / Proxy
+- MVC basique
+- Composants type renderer pour rendu de vues
+- Héritage, interface, records, DTO
+- Passage de référence dans lambdas
+- Serializable
 
-    1. Ajouter un tarif (id pt; id et; price)
-    2. Updater un tarif
-    3. Réafficher liste des tarifs
-5. Consulter un rapport
-    1. Liste des paiements en attente
-    2. Rapport sur rassemblement
+### Faiblesses
+- Modèle MVC "old school", trop de couplage, aller vers une structure hexagonale.
+- Trop de responsabilité sur les controllers, la vue devrait interroger et non se faire piloter.
+- Communication difficile entre les controllers.
+- Besoin d'utilisation de services dédiés pour une communication et flexibilité accrue.
+- Besoin de unit testing.
+- Les enums sont trop rigides pour le projet au niveau du type de participants.
+- Manque de commentaires
