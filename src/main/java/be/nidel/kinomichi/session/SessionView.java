@@ -13,10 +13,7 @@ import be.technifutur.shared.Menu;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static be.nidel.utils.InputUtils.*;
@@ -55,8 +52,13 @@ public class SessionView extends BaseView<SessionController> {
         GatheringSessionRenderer gatheringSessionRenderer = new GatheringSessionRenderer();
         OutputUtils.sOutTitle(GatheringSessionRenderer.FORMAT.formatted(
                 "ID. ", "TITLE", "TYPE", "ORGANIZER", "DATE", "START", "END"));
-        for (Session session : gathering.getAllSessions()) {
-            gatheringSessionRenderer.render(session);
+        List<Session> allSessions = gathering.getAllSessions();
+        if(allSessions.isEmpty()){
+            OutputUtils.sOutWarning("No sessions");
+        }else{
+            for (Session session : allSessions) {
+                gatheringSessionRenderer.render(session);
+            }
         }
         System.out.println();
     }

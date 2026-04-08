@@ -23,30 +23,37 @@ public class SessionRenderer {
                 "Date: " +session.getDay()+ " | "+ session.getStart()+ " -> "+ session.getEnd(),
                 OutputUtils.ANSI_RESET));
 
-        //ORDER PARTICIPANTS BY STATUS
-        Map<RegistrationStatus, List<Participant>> attendeesBySessionStatus = data.sessionAttendees().stream()
-                .collect(Collectors.groupingBy(
-                        p -> data.registrationsByParticipant().get(p.getId()).getStatus(),
-                        Collectors.toList()));
+        if(data.sessionAttendees().isEmpty())
+        {
+            OutputUtils.sOutWarning("No attendees");
+        }else{
 
-        //DISPLAY ATTENDEE LIST
-        attendeesBySessionStatus.forEach((key, value) -> value.forEach(attendee -> {
-            String attendeeInfo = "\t%s%s%s".formatted(
-                    key.name(),
-                    " - ",
-                    "%s (%s | id: %s)".formatted(attendee.getFullName(), attendee.getParticipantType().name(), attendee.getId())
-            );
+            //ORDER PARTICIPANTS BY STATUS
+            Map<RegistrationStatus, List<Participant>> attendeesBySessionStatus = data.sessionAttendees().stream()
+                    .collect(Collectors.groupingBy(
+                            p -> data.registrationsByParticipant().get(p.getId()).getStatus(),
+                            Collectors.toList()));
 
-            switch (key) {
-                case UNPAID ->
-                        OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(OutputUtils.ANSI_RED, attendeeInfo, OutputUtils.ANSI_RESET));
-                case PAID ->
-                        OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(OutputUtils.ANSI_GREEN, attendeeInfo, OutputUtils.ANSI_RESET));
-                case CANCELLED, WITHDRAWN ->
-                        OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(OutputUtils.ANSI_WHITE_ITALIC, attendeeInfo, OutputUtils.ANSI_RESET));
-                default -> OutputUtils.sOut(OutputUtils.DEFAULT_LINE.formatted(attendeeInfo));
-            }
-        }));
+            //DISPLAY ATTENDEE LIST
+            attendeesBySessionStatus.forEach((key, value) -> value.forEach(attendee -> {
+                String attendeeInfo = "\t%s%s%s".formatted(
+                        key.name(),
+                        " - ",
+                        "%s (%s | id: %s)".formatted(attendee.getFullName(), attendee.getParticipantType().name(), attendee.getId())
+                );
+
+                switch (key) {
+                    case UNPAID ->
+                            OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(OutputUtils.ANSI_RED, attendeeInfo, OutputUtils.ANSI_RESET));
+                    case PAID ->
+                            OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(OutputUtils.ANSI_GREEN, attendeeInfo, OutputUtils.ANSI_RESET));
+                    case CANCELLED, WITHDRAWN ->
+                            OutputUtils.sOut(OutputUtils.STYLISABLE_LINE.formatted(OutputUtils.ANSI_WHITE_ITALIC, attendeeInfo, OutputUtils.ANSI_RESET));
+                    default -> OutputUtils.sOut(OutputUtils.DEFAULT_LINE.formatted(attendeeInfo));
+                }
+            }));
+        }
+
         System.out.println();
     }
 }
