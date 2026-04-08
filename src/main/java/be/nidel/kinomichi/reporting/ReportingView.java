@@ -139,11 +139,11 @@ public class ReportingView extends BaseView<ReportingController> {
         OutputUtils.sOut("%-5s %-24s %-22s".formatted("", "Total paid", getFormatted(paymentForecast.totPaid())));
         OutputUtils.sOut("%-5s %-24s %-22s".formatted("", "Total discount", getFormatted(paymentForecast.totDiscount())));
         OutputUtils.sOut("%-5s %-24s %-22s".formatted("", "Total left",
-                (paymentForecast.totUnpaid().compareTo(BigDecimal.ZERO) == 1? OutputUtils.ANSI_RED:"")+
+                (paymentForecast.totUnpaid().compareTo(BigDecimal.ZERO) > 0 ? OutputUtils.ANSI_RED:"")+
                         getFormatted(paymentForecast.totUnpaid()))
         );
         OutputUtils.sOut("%-5s %-24s %-22s".formatted("", "Forecast",
-                (paymentForecast.forecast().compareTo(BigDecimal.ZERO) == 1? OutputUtils.ANSI_GREEN:"")+
+                (paymentForecast.forecast().compareTo(BigDecimal.ZERO) > 0 ? OutputUtils.ANSI_GREEN:"")+
                         getFormatted(paymentForecast.forecast())));
 
         System.out.println();
