@@ -52,19 +52,50 @@ public class OutputUtils
     public static final String STYLISABLE_LINE = "%s%-53s%s";
 
     public static void sOutTitle(String s) {
-        System.out.printf("%s%s%s%s%n", OutputUtils.ANSI_WHITE_BACKGROUND, OutputUtils.ANSI_BLACK_BOLD, s, OutputUtils.ANSI_RESET);
+        sOutTitle(s, true);
     }
     public static void sOut(String s) {
-        System.out.printf("%s%s%s%n", OutputUtils.ANSI_RESET, s, OutputUtils.ANSI_RESET);
+        sOut(s, true);
     }
     public static void sOutWarning(String s) {
-        System.out.printf("%s%s%s%n", OutputUtils.ANSI_YELLOW, s, OutputUtils.ANSI_RESET);
+        sOutWarning(s, true);
     }
     public static void sOutError(String s) {
-        System.out.printf("%s%s%s%n", OutputUtils.ANSI_RED, s, OutputUtils.ANSI_RESET);
+        sOutError(s, true);
     }
     public static void sOutInfo(String s) {
-        System.out.printf("%s%s%s%n", OutputUtils.ANSI_BLUE_ITALIC, s, OutputUtils.ANSI_RESET);
+        sOutInfo(s, true);
+    }
+
+    public static void sOutTitle(String s, boolean lineSeparator) {
+        String format = "%s%s%s%s";
+        if(lineSeparator)
+            format = "%s%s%s%s%n";
+        System.out.printf(format, OutputUtils.ANSI_WHITE_BACKGROUND, OutputUtils.ANSI_BLACK_BOLD, s, OutputUtils.ANSI_RESET);
+    }
+    public static void sOut(String s, boolean lineSeparator) {
+        String format = "%s%s%s";
+        if(lineSeparator)
+            format = "%s%s%s%n";
+        System.out.printf(format, OutputUtils.ANSI_RESET, s, OutputUtils.ANSI_RESET);
+    }
+    public static void sOutWarning(String s, boolean lineSeparator) {
+        String format = "%s%s%s";
+        if(lineSeparator)
+            format = "%s%s%s%n";
+        System.out.printf(format, OutputUtils.ANSI_YELLOW, s, OutputUtils.ANSI_RESET);
+    }
+    public static void sOutError(String s, boolean lineSeparator) {
+        String format = "%s%s%s";
+        if(lineSeparator)
+            format = "%s%s%s%n";
+        System.out.printf(format, OutputUtils.ANSI_RED, s, OutputUtils.ANSI_RESET);
+    }
+    public static void sOutInfo(String s, boolean lineSeparator) {
+        String format = "%s%s%s";
+        if(lineSeparator)
+            format = "%s%s%s%n";
+        System.out.printf(format, OutputUtils.ANSI_BLUE_ITALIC, s, OutputUtils.ANSI_RESET);
     }
 
     public static void sOutBye() {

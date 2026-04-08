@@ -39,7 +39,7 @@ public class MenuFactory {
         });
         menu.addHiddenItem("empty", "", () ->{});
         menu.setPreRender(OutputUtils.STYLISABLE_LINE.formatted(OutputUtils.ANSI_BLACK_BACKGROUND, "Edit Mode - \"enter\": pass", OutputUtils.ANSI_RESET));
-        menuController.setPostRender("%sUpdate %s: %s ?%s".formatted(OutputUtils.ANSI_YELLOW, field, content, OutputUtils.ANSI_RESET));
+        menuController.setInteractionMessage("%sUpdate %s: %s ?%s".formatted(OutputUtils.ANSI_YELLOW, field, content, OutputUtils.ANSI_RESET));
         return menuController;
     }
 }

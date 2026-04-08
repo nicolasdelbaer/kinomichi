@@ -67,13 +67,13 @@ public class MenuController {
 
     public void interact() {
         if(Objects.nonNull(interactionMessage) && !interactionMessage.isEmpty())
-            OutputUtils.sOutWarning(interactionMessage);
+            OutputUtils.sOutWarning(interactionMessage, false);
         currentMenu.interact();
     }
 
     public void renderAndInteract() {
         if(Objects.nonNull(interactionMessage) && !interactionMessage.isEmpty())
-            OutputUtils.sOutWarning(interactionMessage);
+            OutputUtils.sOutWarning(interactionMessage, false);
         currentMenu.renderAndInteract();
     }
     public void setTitle(String title) {

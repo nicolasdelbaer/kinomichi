@@ -107,7 +107,7 @@ public class GatheringView extends BaseView<GatheringController> {
         String[] prices;
 
         int count = ParticipantType.values().length;
-        String instructions = "Enter 1 price for all or specify all prices, \ne.g.: %s or %s"
+        String instructions = "Enter 1 price for all or specify all prices, \ne.g.: (%s) or (%s)"
                 .formatted("price", FormatUtils.removeLast("price;".repeat(count)));
         OutputUtils.sOutInfo(instructions);
         do{

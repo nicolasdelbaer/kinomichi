@@ -42,7 +42,7 @@ public class RegistrationView extends BaseView<RegistrationController> {
         menu.addRegexItem("Test regex",
                         "[0-9];[0-9];[0-9]",
                         () -> this.treatRegistrationInput(menu))
-            .setInteractionMessage("                  Format: 1;4;1                      ");
+            .setInteractionMessage("                  Format: 1;4;1                      \n");
         menu.renderAndInteract();
     }
 

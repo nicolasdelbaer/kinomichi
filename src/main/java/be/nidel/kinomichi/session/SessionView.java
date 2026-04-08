@@ -35,18 +35,23 @@ public class SessionView extends BaseView<SessionController> {
         this.menuContext = context;
 
         if(showList)
-            listSessionsRequest();
+            listSessions();
 
         current = MenuFactory.backQuitTemplate(context)
             .addItem("list sessions", "l", this::listSessionsRequest)
             .addItem("create new session", "c", this::createSessionRequest)
-            .addItem("update session", "u", this::updateSessionRequest)
-            .addItem("archive session", "d", this::archiveSession)
+            .addItem("update session (id)", "u", this::updateSessionRequest)
+            .addItem("archive session (id)", "d", this::archiveSession)
         ;
         current.renderAndInteract();
     }
 
     private void listSessionsRequest() {
+        listSessions();
+        displayUserChoices(menuContext);
+    }
+
+    private void listSessions() {
         GatheringSessionRenderer gatheringSessionRenderer = new GatheringSessionRenderer();
         OutputUtils.sOutTitle(GatheringSessionRenderer.FORMAT.formatted(
                 "ID. ", "TITLE", "TYPE", "ORGANIZER", "DATE", "START", "END"));
@@ -54,7 +59,6 @@ public class SessionView extends BaseView<SessionController> {
             gatheringSessionRenderer.render(session);
         }
         System.out.println();
-        displayUserChoices(menuContext);
     }
 
     private void createSessionRequest() {
