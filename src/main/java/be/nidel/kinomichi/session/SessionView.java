@@ -105,7 +105,9 @@ public class SessionView extends BaseView<SessionController> {
         askForEditOrSource(menuContext, (provider) -> {
             int participantId = askInt(new StaticInput(provider), "Organizer (id)");
             ctx.organizer = controller.getParticipantById(participantId).orElse(null);
-        }, "Organizer", organizerName);
+            OutputUtils.sOutWarning("(id: %s) %s".formatted(ctx.organizer.getId(), ctx.organizer.getFullName()));
+
+        }, "Organizer (id)", organizerName);
         askForEditOrSource(menuContext, (provider) -> {
             ctx.title = askInput(new StaticInput(provider), "Title");
         }, "Title", ctx.title);
@@ -166,7 +168,7 @@ public class SessionView extends BaseView<SessionController> {
 
     public void continueAddingSession(){
         MenuFactory.confirmTemplate(menuContext, this::gatherSessionData)
-                .setInteractionMessage("Continue adding sessions ? (y/n)")
+                .setInteractionMessage("Continue adding sessions ? (y/n)\n")
                 .renderAndInteract();
     }
     private void archiveSession() {
