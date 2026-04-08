@@ -9,7 +9,6 @@ import be.nidel.kinomichi.session.SessionModel;
 import be.technifutur.shared.Menu;
 
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class RegistrationController extends BaseController implements KinomichiModelOwner {
@@ -71,5 +70,15 @@ public class RegistrationController extends BaseController implements KinomichiM
     @Override
     public RegistrationModel getModel() {
         return model;
+    }
+
+    @Override
+    public Object getSaveable() {
+        return model;
+    }
+
+    @Override
+    public void loadData(Object o) {
+        model = (RegistrationModel) o;
     }
 }

@@ -52,6 +52,7 @@ public class GatheringView extends BaseView<GatheringController> {
             controller.updateGathering(updateSessionDTO);
             displayUserChoices(menuContext);
         }
+
     }
 
     private void archiveGathering() {

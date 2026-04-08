@@ -2,18 +2,17 @@ package be.nidel.kinomichi.session;
 
 import be.nidel.kinomichi.base.Archivable;
 import be.nidel.kinomichi.base.BaseEntity;
-import be.nidel.kinomichi.base.KinomichiTrainerException;
 import be.nidel.kinomichi.participant.ParticipantGroup;
 import be.nidel.kinomichi.participant.Participant;
-import be.nidel.kinomichi.participant.ParticipantType;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class Session extends BaseEntity implements Archivable {
+public class Session extends BaseEntity implements Archivable, Serializable {
     private int duration;
 
     private int gatheringId = -1;

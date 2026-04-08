@@ -6,4 +6,7 @@ public abstract class BaseController {
     public void silenceView(boolean b) {
         silentView = b;
     }
+
+    public abstract Object getSaveable();
+    public abstract void loadData(Object o);
 }

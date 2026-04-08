@@ -119,6 +119,7 @@ public class ReportingController extends BaseController {
         return sessionModel.getAllSession();
     }
 
+
     //endregion
 
 
@@ -216,4 +217,12 @@ public class ReportingController extends BaseController {
     }
 
 
+    @Override
+    public Object getSaveable() {
+        return null;
+    }
+
+    @Override
+    public void loadData(Object o) {
+    }
 }

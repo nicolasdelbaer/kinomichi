@@ -3,12 +3,13 @@ package be.nidel.kinomichi.gathering;
 import be.nidel.kinomichi.base.KinomichiModel;
 import be.nidel.utils.OutputUtils;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-public class GatheringModel implements KinomichiModel {
+public class GatheringModel implements KinomichiModel, Serializable {
     private Map<Integer, Gathering> gatheringList = new HashMap<>();
 
     public boolean isIdValid(Integer instanceId) {
@@ -38,4 +39,6 @@ public class GatheringModel implements KinomichiModel {
                 .filter(e -> !e.getValue().isArchived())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
+
+
 }

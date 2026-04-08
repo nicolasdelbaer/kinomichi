@@ -3,12 +3,13 @@ package be.nidel.kinomichi.session;
 import be.nidel.kinomichi.base.KinomichiModel;
 import be.nidel.utils.OutputUtils;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-public class SessionModel implements KinomichiModel {
+public class SessionModel implements KinomichiModel, Serializable {
     private Map<Integer, Session> sessionList = new HashMap<>();
     public boolean isIdValid(Integer instanceId) {
         return sessionList.containsKey(instanceId);

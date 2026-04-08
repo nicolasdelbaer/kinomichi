@@ -1,9 +1,13 @@
 package be.nidel.kinomichi.participant;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParticipantGroup {
+public class ParticipantGroup implements Serializable {
+
+    private List<Participant> participantList = new ArrayList<>();
 
     public boolean add(Participant participant) {
         return participantList.add(participant);
@@ -13,7 +17,6 @@ public class ParticipantGroup {
         return participantList.remove(participant);
     }
 
-    private List<Participant> participantList = new ArrayList<>();
 
     @Override
     public String toString() {

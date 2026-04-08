@@ -1,13 +1,12 @@
 package be.nidel.kinomichi.pricing;
 
-import be.nidel.kinomichi.pricing.renderer.PricingRenderer;
 import be.nidel.kinomichi.session.SessionType;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 
-public class PricingGroup {
+public class PricingGroup implements Serializable {
     List<Pricing> pricingList = new ArrayList<>();
     SessionType sessionType;
 
@@ -40,22 +39,6 @@ public class PricingGroup {
         this.sessionType = sessionType;
     }
 
-//    public String pricesToString() {
-//        StringBuilder sb = new StringBuilder();
-//
-//        for (Pricing pricing : pricingList) {
-//            sb.append(pricing.getSessionType().emoji());
-//            sb.append(" ");
-//            sb.append(pricing.getSessionType().name());
-//            sb.append(": ");
-//            sb.append(pricing.getParticipantType());
-//            sb.append(" | ");
-//            sb.append(pricing.getPrice());
-//            sb.append("\n");
-//
-//        }
-//        return sb.toString();
-//    }
     public String pricesToString() {
         StringBuilder sb = new StringBuilder();
 

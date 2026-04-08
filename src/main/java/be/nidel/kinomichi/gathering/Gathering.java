@@ -9,10 +9,11 @@ import be.nidel.kinomichi.session.Session;
 import be.nidel.kinomichi.participant.Participant;
 import be.nidel.kinomichi.session.SessionType;
 
+import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
 
-public class Gathering extends BaseEntity implements Archivable {
+public class Gathering extends BaseEntity implements Archivable, Serializable {
     private String title;
     private List<PricingGroup> priceGroupList = new ArrayList<>();
     private List<Session> sessionList = new ArrayList<>();
@@ -99,4 +100,5 @@ public class Gathering extends BaseEntity implements Archivable {
     public List<PricingGroup> getPriceGroups() {
         return priceGroupList;
     }
+    //endregion
 }

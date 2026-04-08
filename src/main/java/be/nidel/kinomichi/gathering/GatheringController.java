@@ -6,6 +6,7 @@ import be.nidel.kinomichi.pricing.Pricing;
 import be.nidel.kinomichi.pricing.PricingDTO;
 import be.nidel.kinomichi.pricing.PricingGroup;
 import be.nidel.kinomichi.pricing.PricingGroupDTO;
+import be.nidel.kinomichi.session.Session;
 import be.nidel.kinomichi.session.SessionRequestEvent;
 import be.technifutur.shared.Menu;
 
@@ -14,8 +15,8 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class GatheringController extends BaseController implements KinomichiModelOwner {
-    GatheringModel model = new GatheringModel();
-    GatheringView view = new GatheringView(this);
+    private GatheringModel model = new GatheringModel();
+    private GatheringView view = new GatheringView(this);
 
     public SessionRequestEvent onSessionRequest = new SessionRequestEvent();
 
@@ -23,6 +24,7 @@ public class GatheringController extends BaseController implements KinomichiMode
         view.displayUserChoices(menu);
     }
 
+    //Sending event for session controller
     public void sessionMenuRequest(Menu menu, Integer gatheringId) {
         if(model.isIdValid(gatheringId)) {
             Gathering gathering = model.get(gatheringId);
@@ -65,7 +67,13 @@ public class GatheringController extends BaseController implements KinomichiMode
     }
 
     public Optional<Gathering> getGatheringById(int gatheringId) {
-        return Optional.ofNullable(model.get(gatheringId));
+        Optional<Gathering> returnValue;
+        try {
+            returnValue = Optional.ofNullable(model.get(gatheringId));
+        } catch (NoSuchElementException e) {
+            returnValue = Optional.empty();
+        }
+        return returnValue;
     }
 
     public Gathering updateGathering(UpdateGatheringDTO updateGatheringDTO) {
@@ -100,5 +108,15 @@ public class GatheringController extends BaseController implements KinomichiMode
                         pg.getSessionType()
                 ))
                 .toList();
+    }
+
+    @Override
+    public Object getSaveable() {
+        return model;
+    }
+
+    @Override
+    public void loadData(Object o) {
+        model = (GatheringModel) o;
     }
 }

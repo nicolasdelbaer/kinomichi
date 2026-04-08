@@ -1,6 +1,8 @@
 package be.nidel.kinomichi.base;
 
-public abstract class BaseEntity {
+import java.io.Serializable;
+
+public abstract class BaseEntity implements Serializable {
     protected int id = -1;
     public int getId() {
         return id;

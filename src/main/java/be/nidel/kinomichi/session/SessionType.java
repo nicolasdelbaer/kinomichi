@@ -1,9 +1,10 @@
 package be.nidel.kinomichi.session;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Optional;
 
-public enum SessionType {
+public enum SessionType implements Serializable {
     Exhibition(100, "🥋"),
     Dinner(200, "🧑‍🍳"),
     Accommodation(300, "🏨")

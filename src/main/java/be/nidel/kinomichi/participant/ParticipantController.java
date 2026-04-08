@@ -2,8 +2,11 @@ package be.nidel.kinomichi.participant;
 
 import be.nidel.kinomichi.base.BaseController;
 import be.nidel.kinomichi.base.KinomichiModelOwner;
+import be.nidel.kinomichi.gathering.Gathering;
+import be.nidel.kinomichi.gathering.GatheringModel;
 import be.technifutur.shared.Menu;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -11,7 +14,7 @@ import java.util.Optional;
 
 public class ParticipantController extends BaseController implements KinomichiModelOwner {
 
-    private final ParticipantModel model = new ParticipantModel();
+    private ParticipantModel model = new ParticipantModel();
     private final ParticipantView view = new ParticipantView(this);
 
     public List<Participant> getAllParticipants(){
@@ -57,12 +60,13 @@ public class ParticipantController extends BaseController implements KinomichiMo
     }
 
     public Optional<Participant> getParticipantById(Integer participantId) {
-        Optional<Participant> participant = Optional.empty();
+        Optional<Participant> returnValue;
         try {
-            participant = Optional.ofNullable(model.get(participantId));
-        } catch (Exception ignored) {
+            returnValue = Optional.ofNullable(model.get(participantId));
+        } catch (NoSuchElementException e) {
+            returnValue = Optional.empty();
         }
-        return participant;
+        return returnValue;
     }
 
     public void archiveParticipant(Integer participantId) {
@@ -73,5 +77,15 @@ public class ParticipantController extends BaseController implements KinomichiMo
         } catch (NoSuchElementException ignored) {
             view.showArchivedErrorFeedback();
         }
+    }
+
+    @Override
+    public Object getSaveable() {
+        return model;
+    }
+
+    @Override
+    public void loadData(Object o) {
+        model = (ParticipantModel) o;
     }
 }

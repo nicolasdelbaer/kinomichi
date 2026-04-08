@@ -1,9 +1,10 @@
 package be.nidel.kinomichi.participant;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Optional;
 
-public enum ParticipantType {
+public enum ParticipantType implements Serializable {
     Attendee(100, "🙎"),
     Trainer(200, "🧘"),
     Sensei(400, "🏅"),

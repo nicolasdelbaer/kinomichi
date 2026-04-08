@@ -3,12 +3,13 @@ package be.nidel.kinomichi.participant;
 import be.nidel.kinomichi.base.KinomichiModel;
 import be.nidel.utils.OutputUtils;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-public class ParticipantModel implements KinomichiModel {
+public class ParticipantModel implements KinomichiModel, Serializable {
 
     private Map<Integer, Participant> participantList = new HashMap<>();
 

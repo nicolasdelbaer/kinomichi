@@ -1,9 +1,10 @@
 package be.nidel.kinomichi.registration;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Optional;
 
-public enum RegistrationStatus {
+public enum RegistrationStatus implements Serializable {
     REGISTERED, //registered
     WITHDRAWN, //was registered but cancelled before the event
     UNPAID, //has participated and must pay

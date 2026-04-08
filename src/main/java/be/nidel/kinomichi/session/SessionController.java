@@ -15,7 +15,7 @@ import java.util.Optional;
 
 public class SessionController extends BaseController implements KinomichiModelOwner {
     private ParticipantModel participantModel;
-    private final SessionModel model = new SessionModel();
+    private SessionModel model = new SessionModel();
     private final SessionView view = new SessionView(this);
 
     public Session createSession(CreateSessionDTO createSessionDTO, Gathering gathering) {
@@ -65,7 +65,7 @@ public class SessionController extends BaseController implements KinomichiModelO
 
     public void showManageMenu(Menu context, Gathering gathering) {
         view.setGatheringData(gathering);
-        view.displayUserChoices(context);
+        view.displayUserChoices(context, true);
     }
 
     public List<Session> getAllSessions() {
@@ -87,7 +87,13 @@ public class SessionController extends BaseController implements KinomichiModelO
     }
 
     public Optional<Session> getSessionById(int sessionId) {
-        return Optional.ofNullable(model.get(sessionId));
+        Optional<Session> returnValue;
+        try {
+            returnValue = Optional.ofNullable(model.get(sessionId));
+        } catch (NoSuchElementException e) {
+            returnValue = Optional.empty();
+        }
+         return returnValue;
     }
 
     public Session updateSession(UpdateSessionDTO updateSessionDTO) {
@@ -108,6 +114,22 @@ public class SessionController extends BaseController implements KinomichiModelO
     }
 
     public Optional<Participant> getParticipantById(int participantId) {
-        return Optional.ofNullable(participantModel.get(participantId));
+        Optional<Participant> returnValue;
+        try {
+            returnValue = Optional.ofNullable(participantModel.get(participantId));
+        } catch (NoSuchElementException e) {
+            returnValue = Optional.empty();
+        }
+        return returnValue;
+    }
+
+    @Override
+    public Object getSaveable() {
+        return model;
+    }
+
+    @Override
+    public void loadData(Object o) {
+        model = (SessionModel) o;
     }
 }

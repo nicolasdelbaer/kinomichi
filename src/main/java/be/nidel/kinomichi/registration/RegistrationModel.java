@@ -3,12 +3,13 @@ package be.nidel.kinomichi.registration;
 import be.nidel.kinomichi.base.KinomichiModel;
 import be.nidel.utils.OutputUtils;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-public class RegistrationModel implements KinomichiModel {
+public class RegistrationModel implements KinomichiModel, Serializable {
     private Map<Integer, Registration> registrationList = new HashMap<>();
 
     public boolean isIdValid(Integer instanceId) {

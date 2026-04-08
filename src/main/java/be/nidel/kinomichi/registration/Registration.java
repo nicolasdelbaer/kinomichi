@@ -2,7 +2,9 @@ package be.nidel.kinomichi.registration;
 
 import be.nidel.kinomichi.base.BaseEntity;
 
-public class Registration extends BaseEntity {
+import java.io.Serializable;
+
+public class Registration extends BaseEntity implements Serializable {
     private RegistrationStatus status = RegistrationStatus.REGISTERED;
     private int participantId;
     private int sessionId;

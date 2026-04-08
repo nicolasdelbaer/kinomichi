@@ -3,7 +3,9 @@ package be.nidel.kinomichi.participant;
 import be.nidel.kinomichi.base.Archivable;
 import be.nidel.kinomichi.base.BaseEntity;
 
-public class Participant extends BaseEntity implements Archivable {
+import java.io.Serializable;
+
+public class Participant extends BaseEntity implements Archivable, Serializable {
     private String firstName;
     private String lastName;
     private String phone = "n/a";

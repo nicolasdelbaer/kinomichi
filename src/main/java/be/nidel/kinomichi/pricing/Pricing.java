@@ -5,9 +5,10 @@ import be.nidel.kinomichi.participant.Participant;
 import be.nidel.kinomichi.participant.ParticipantType;
 import be.nidel.kinomichi.session.SessionType;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class Pricing extends BaseEntity {
+public class Pricing extends BaseEntity implements Serializable {
     SessionType sessionType;
     ParticipantType participantType;
     BigDecimal price = new BigDecimal("15");

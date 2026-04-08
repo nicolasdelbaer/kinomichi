@@ -17,6 +17,7 @@ import be.nidel.utils.OutputUtils;
 import be.nidel.utils.RandomUtils;
 import be.technifutur.shared.Menu;
 
+import java.io.*;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.Consumer;
@@ -24,6 +25,7 @@ import java.util.logging.Logger;
 
 public class Kinomichi {
 
+    public static final String SAVE_FILENAME = "./saves/kinomichi.sav";
     private final Logger logger = Logger.getLogger("Kinomichi");
 
     GatheringController gatheringController;
@@ -33,17 +35,41 @@ public class Kinomichi {
     ReportingController reportingController;
 
     public Kinomichi() {
-        initControllers();
-        defaultData();
+        //kinomichi.populateWithFakeData();
+        createControllers(); //controllers need to be setup to load data
+        loadData(); //load saved file
+        initControllers(); // share models with controllers
     }
 
-    private void initControllers() {
+    public void loadData() {
+        // Deserialization
+        try {
+            FileInputStream file = new FileInputStream(SAVE_FILENAME);
+            ObjectInputStream in = new ObjectInputStream(file);
+
+            participantController.loadData(in.readObject());
+            registrationController.loadData(in.readObject());
+            sessionController.loadData(in.readObject());
+            gatheringController.loadData(in.readObject());
+
+            in.close();
+            file.close();
+            System.out.println("Data has been loaded");
+
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void createControllers() {
         gatheringController = new GatheringController();
         sessionController = new SessionController();
         participantController = new ParticipantController();
         registrationController = new RegistrationController();
         reportingController = new ReportingController();
+    }
 
+    private void initControllers() {
         //Link models for state sharing
         sessionController.setParticipantModel(participantController.getModel());
         registrationController.setModels(
@@ -66,6 +92,25 @@ public class Kinomichi {
     public void launch() {
         displayWelcomePanel();
         displayMenu();
+        handleShutdown();
+    }
+
+    private void handleShutdown() {
+        // Serialization
+        try {
+            FileOutputStream file = new FileOutputStream(SAVE_FILENAME);
+            ObjectOutputStream out = new ObjectOutputStream(file);
+            out.writeObject(participantController.getSaveable());
+            out.writeObject(registrationController.getSaveable());
+            out.writeObject(sessionController.getSaveable());
+            out.writeObject(gatheringController.getSaveable());
+            out.close();
+            file.close();
+            System.out.println("Data has been saved");
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void displayWelcomePanel() {
@@ -101,7 +146,7 @@ public class Kinomichi {
     }
 
 
-    public void defaultData() {
+    public void populateWithFakeData() {
         registrationController.silenceView(true);
         logger.fine("DEBUG populating data");
 
