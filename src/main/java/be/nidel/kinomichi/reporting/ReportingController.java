@@ -145,10 +145,16 @@ public class ReportingController extends BaseController {
         }
 
         return new Stats(
-                counters.get(RegistrationStatus.REGISTERED),
+                counters.get(RegistrationStatus.REGISTERED) +
+                            counters.get(RegistrationStatus.UNPAID) +
+                            counters.get(RegistrationStatus.PAID) +
+                            counters.get(RegistrationStatus.WITHDRAWN)
+                ,
                 counters.get(RegistrationStatus.UNPAID) +
-                              counters.get(RegistrationStatus.PAID),
-                counters.get(RegistrationStatus.CANCELLED),
+                              counters.get(RegistrationStatus.PAID)
+                ,
+                counters.get(RegistrationStatus.CANCELLED)
+                ,
                 counters.get(RegistrationStatus.WITHDRAWN)
         );
     }
