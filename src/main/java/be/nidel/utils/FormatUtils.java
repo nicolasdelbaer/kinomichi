@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 
 public class FormatUtils {
 
+    public static final String PHONE_REGEX = "^\\d{6,14}$";
+    public static final String EMAIL_REGEX = "^[\\w._%+\\-]+@[\\w.\\-]+\\.[a-zA-Z]{2,}$";
+
     public static String truncate(String s, int maxLength) {
         return s.length() <= maxLength ? s : s.substring(0, maxLength - 3) + "...";
     }

@@ -1,7 +1,5 @@
 package be.nidel.utils;
 
-import be.nidel.kinomichi.participant.ParticipantType;
-import be.nidel.kinomichi.session.SessionType;
 import be.nidel.utils.inputprovider.InputProvider;
 import be.nidel.utils.menu.MenuFactory;
 import be.technifutur.shared.Menu;
@@ -10,12 +8,8 @@ import java.math.BigDecimal;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.InputMismatchException;
-import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.Scanner;
 import java.util.function.Consumer;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class InputUtils {
@@ -75,7 +69,7 @@ public class InputUtils {
                 input = null;
                 input = askInput(inputProvider, inputRequest);
                 input = FormatUtils.trimWhitespaces(input);
-                hasMatch = Pattern.matches(EMAIL_REGEX,input);
+                hasMatch = Pattern.matches(FormatUtils.EMAIL_REGEX,input);
             } catch (IllegalArgumentException | NullPointerException ignored) {
                 OutputUtils.sOutWarning("Wrong format, pls try again");
             }
@@ -91,7 +85,7 @@ public class InputUtils {
                 input = null;
                 input = askInput(inputProvider, inputRequest + " format(0032 484 888 777)");
                 input = FormatUtils.trimWhitespaces(input);
-                hasMatch = Pattern.matches(PHONE_REGEX,input);
+                hasMatch = Pattern.matches(FormatUtils.PHONE_REGEX,input);
             } catch (IllegalArgumentException | NullPointerException ignored) {
                 OutputUtils.sOutWarning("Wrong format, pls try again");
             }
@@ -107,6 +101,4 @@ public class InputUtils {
     }
 
 
-    public static final String PHONE_REGEX = "^\\d{6,14}$";
-    public static final String EMAIL_REGEX = "^[\\w._%+\\-]+@[\\w.\\-]+\\.[a-zA-Z]{2,}$";
 }
