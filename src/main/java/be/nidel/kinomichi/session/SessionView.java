@@ -126,23 +126,14 @@ public class SessionView extends BaseView<SessionController> {
     }
 
     private CreateSessionDTO gatherSessionData() {
-
         class Context{
             int duration = 90;
-            Participant organizer = null;
         }
         Context ctx = new Context();
-
 
         InputProvider scanner = new ScannerInput(new Scanner(System.in));
         String title = askInput(scanner, "Title");
         String description = askInput(scanner, "Description");
-
-        askForEditOrSource(menuContext, (provider) -> {
-            int participantId = askInt(new StaticInput(provider), "Organizer (id)");
-            ctx.organizer = controller.getParticipantById(participantId).orElse(null);
-        }, "Organizer", "n/a");
-
         OutputUtils.sOutInfo("A session needs the date & time + duration");
         LocalDate date = askDate(scanner, "Day (dd/mm/yyyy)");
         LocalTime time = askTime(scanner, "From Time (hh:mm)");
