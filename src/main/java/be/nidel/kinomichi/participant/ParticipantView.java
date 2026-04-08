@@ -89,8 +89,8 @@ public class ParticipantView extends BaseView<ParticipantController> {
         InputProvider scanner = new ScannerInput(new Scanner(System.in));
         String firstName = askInput(scanner,"First name?");
         String lastName = askInput(scanner,"Last name?");
-        String phone = askInput(scanner,"Phone?");
-        String email = askInput(scanner,"Email?");
+        String phone = askPhone(scanner,"Phone?");
+        String email = askEmail(scanner,"Email?");
         String clubName = askInput(scanner,"Club Name?");
         ParticipantType type = requestParticipantType(scanner);
 
@@ -118,10 +118,10 @@ public class ParticipantView extends BaseView<ParticipantController> {
             ctx.lastName = askInput(new StaticInput(provider), "Last name?");
         }, "Last name",source.getLastName());
         askForEditOrSource(menuContext, (provider) -> {
-            ctx.phone = askInput(new StaticInput(provider), "Phone?");
+            ctx.phone = askPhone(new StaticInput(provider), "Phone?");
         }, "Phone",source.getPhone());
         askForEditOrSource(menuContext, (provider) -> {
-            ctx.email = askInput(new StaticInput(provider), "Email?");
+            ctx.email = askEmail(new StaticInput(provider), "Email?");
         }, "Email",source.getEmail());
         askForEditOrSource(menuContext, (provider) -> {
             ctx.clubName = askInput(new StaticInput(provider), "Club Name?");

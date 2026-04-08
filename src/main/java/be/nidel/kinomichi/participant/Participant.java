@@ -2,6 +2,7 @@ package be.nidel.kinomichi.participant;
 
 import be.nidel.kinomichi.base.Archivable;
 import be.nidel.kinomichi.base.BaseEntity;
+import be.nidel.utils.FormatUtils;
 
 import java.io.Serializable;
 
@@ -35,7 +36,7 @@ public class Participant extends BaseEntity implements Archivable, Serializable 
     }
 
     public String getPhone() {
-        return phone;
+        return FormatUtils.formattedPhoneNumber(phone);
     }
 
     public void setPhone(String phone) {
@@ -71,7 +72,7 @@ public class Participant extends BaseEntity implements Archivable, Serializable 
         return "Participant{" +
                 firstName + ", " +
                 lastName + ", " +
-                phone + ", " +
+                getPhone() + ", " +
                 email + ", " +
                 clubName + ", " +
                 type +

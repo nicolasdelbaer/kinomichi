@@ -15,6 +15,8 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class InputUtils {
 
@@ -65,10 +67,46 @@ public class InputUtils {
         return inputProvider.nextLine();
     }
 
+    public static String askEmail(InputProvider inputProvider, String inputRequest) {
+        boolean hasMatch = false;
+        String input = null;
+        do{
+            try{
+                input = null;
+                input = askInput(inputProvider, inputRequest);
+                input = FormatUtils.trimWhitespaces(input);
+                hasMatch = Pattern.matches(EMAIL_REGEX,input);
+            } catch (IllegalArgumentException | NullPointerException ignored) {
+                OutputUtils.sOutWarning("Wrong format, pls try again");
+            }
+        }while(Objects.isNull(input) || !hasMatch);
+        return input;
+    }
+
+    public static String askPhone(InputProvider inputProvider, String inputRequest) {
+        boolean hasMatch = false;
+        String input = null;
+        do{
+            try{
+                input = null;
+                input = askInput(inputProvider, inputRequest + " format(0032 484 888 777)");
+                input = FormatUtils.trimWhitespaces(input);
+                hasMatch = Pattern.matches(PHONE_REGEX,input);
+            } catch (IllegalArgumentException | NullPointerException ignored) {
+                OutputUtils.sOutWarning("Wrong format, pls try again");
+            }
+        }while(Objects.isNull(input) || !hasMatch);
+        return input;
+    }
+
     public static void askForEditOrSource(Menu context, Consumer<String> action, String field, String content){
         askForEditOrSource(context, action, field, content, ".*");
     }
     public static void askForEditOrSource(Menu context, Consumer<String> action, String field, String content, String freeInputPattern){
         MenuFactory.editTemplate(context, action, field, content, freeInputPattern).renderAndInteract();
     }
+
+
+    public static final String PHONE_REGEX = "^\\d{6,14}$";
+    public static final String EMAIL_REGEX = "^[\\w._%+\\-]+@[\\w.\\-]+\\.[a-zA-Z]{2,}$";
 }
