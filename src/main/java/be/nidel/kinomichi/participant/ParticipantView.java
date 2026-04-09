@@ -111,24 +111,24 @@ public class ParticipantView extends BaseView<ParticipantController> {
 
         //Injection of a static provider, it'll get the first input and mock a inputProvider (scanner)
         //to inject the user input if valid. It skips one step of input management
-        askForEditOrSource(menuContext, (provider) -> {
-            ctx.firstName = askInput(new StaticInput(provider), "First name?");
+        askForEditOrSource(menuContext, (provided) -> {
+            ctx.firstName = askInput(new StaticInput(provided), "First name?");
         }, "First name", source.getFirstName());
-        askForEditOrSource(menuContext, (provider) -> {
-            ctx.lastName = askInput(new StaticInput(provider), "Last name?");
+        askForEditOrSource(menuContext, (provided) -> {
+            ctx.lastName = askInput(new StaticInput(provided), "Last name?");
         }, "Last name",source.getLastName());
-        askForEditOrSource(menuContext, (provider) -> {
-            ctx.phone = askPhone(new StaticInput(provider), "Phone?");
+        askForEditOrSource(menuContext, (provided) -> {
+            ctx.phone = askPhone(new StaticInput(provided), "Phone?");
         }, "Phone",source.getPhone());
-        askForEditOrSource(menuContext, (provider) -> {
-            ctx.email = askEmail(new StaticInput(provider), "Email?");
+        askForEditOrSource(menuContext, (provided) -> {
+            ctx.email = askEmail(new StaticInput(provided), "Email?");
         }, "Email",source.getEmail());
-        askForEditOrSource(menuContext, (provider) -> {
-            ctx.clubName = askInput(new StaticInput(provider), "Club Name?");
+        askForEditOrSource(menuContext, (provided) -> {
+            ctx.clubName = askInput(new StaticInput(provided), "Club Name?");
         }, "Club name",source.getClubName());
 
-        askForEditOrSource(menuContext, (provider) ->
-                ctx.type = requestParticipantType(new StaticInput(provider)),
+        askForEditOrSource(menuContext, (provided) ->
+                ctx.type = requestParticipantType(new StaticInput(provided)),
                 "Participant Type","%s. %s".formatted(source.getParticipantType().ordinal(), source.getParticipantType().name())
         );
         return new ParticipantDTO(ctx.firstName, ctx.lastName, ctx.phone, ctx.email, ctx.clubName, ctx.type);

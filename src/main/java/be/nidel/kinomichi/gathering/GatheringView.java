@@ -3,7 +3,6 @@ package be.nidel.kinomichi.gathering;
 import be.nidel.kinomichi.base.BaseView;
 import be.nidel.kinomichi.gathering.renderer.GatheringSessionRenderer;
 import be.nidel.kinomichi.participant.ParticipantType;
-import be.nidel.kinomichi.pricing.Pricing;
 import be.nidel.kinomichi.pricing.PricingDTO;
 import be.nidel.kinomichi.pricing.PricingGroup;
 import be.nidel.kinomichi.pricing.PricingGroupDTO;

@@ -1,6 +1,8 @@
 package be.nidel.utils;
 
 import be.nidel.utils.inputprovider.InputProvider;
+import be.nidel.utils.inputprovider.ScannerInput;
+import be.nidel.utils.inputprovider.StaticInput;
 import be.nidel.utils.menu.MenuFactory;
 import be.technifutur.shared.Menu;
 
@@ -9,6 +11,7 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
+import java.util.Scanner;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
@@ -45,34 +48,26 @@ public class InputUtils {
         return result;
     }
 
-    public static BigDecimal askBigDecimal(InputProvider inputProvider, String inputRequest) {
-        BigDecimal result = null;
-        do{
-            try{
-                result = new BigDecimal(askInput(inputProvider, inputRequest));
-            } catch (IllegalArgumentException|NullPointerException ignored) {}
-        }while(Objects.isNull(result));
-
-        return result;
-    }
-
     public static String askInput(InputProvider inputProvider, String inputRequest) {
         OutputUtils.sOutInfo(inputRequest);
         return inputProvider.nextLine();
     }
 
     public static String askEmail(InputProvider inputProvider, String inputRequest) {
-        boolean hasMatch = false;
         String input = null;
+        boolean hasMatch = false;
         do{
-            try{
+            try {
                 input = null;
-                input = askInput(inputProvider, inputRequest);
+                input = askInput(inputProvider, "Email?");
                 input = FormatUtils.trimWhitespaces(input);
                 hasMatch = Pattern.matches(FormatUtils.EMAIL_REGEX,input);
-            } catch (IllegalArgumentException | NullPointerException ignored) {
-                OutputUtils.sOutWarning("Wrong format, pls try again");
-            }
+                if (!hasMatch){
+                    OutputUtils.sOutWarning("Wrong format, pls try again");
+                    inputProvider = new ScannerInput(new Scanner(System.in));
+                }
+            } catch (Exception ignored) { }
+
         }while(Objects.isNull(input) || !hasMatch);
         return input;
     }
@@ -88,6 +83,7 @@ public class InputUtils {
                 hasMatch = Pattern.matches(FormatUtils.PHONE_REGEX,input);
             } catch (IllegalArgumentException | NullPointerException ignored) {
                 OutputUtils.sOutWarning("Wrong format, pls try again");
+                inputProvider = new ScannerInput(new Scanner(System.in));
             }
         }while(Objects.isNull(input) || !hasMatch);
         return input;
